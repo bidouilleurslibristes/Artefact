@@ -6,6 +6,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
+#define TIMEOUT 3000
 
 // Functions definitions :
 void connection ();
@@ -18,15 +19,20 @@ void setup() {
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
-
-  connection();
 }
 
 
 void loop () {
-  Serial.println("connected");
-  delay (5000);
+  if (!connected)
+    connection();
+  else
+    pong();
+
+  // Insert functions calls here to do things between two pings
 }
+
+
+long last_ping = 0;
 
 void connection () {
   connected = FALSE;
@@ -36,10 +42,10 @@ void connection () {
   while (!connected) {
     // Send bonjour using the serial port
     Serial.print("BONJOUR ");
-    Serial.println(ARDUINO_ID);
+    Serial.println((int)ARDUINO_ID);
     
     if (Serial.available()) {
-      char pc_response = Serial.read();
+      char pc_response = (char) Serial.parseInt();
       
       if(pc_response == ARDUINO_ID)
         connected = TRUE;
@@ -50,19 +56,25 @@ void connection () {
   
   // turn the LED on when connected
   digitalWrite(ledPin, HIGH);
+  last_ping = millis();
 }
 
 
 void pong () {
   String str = "";
-  String pong = "PONG";
+  String pong = "PING ?";
+  String pong = "PONG !";
 
-  Serial.setTimeout(1000);
-  str = Serial.readStringUntil('\n');
-  
-  if (str == NULL) {
-    connected = FALSE; 
-  } else {
-    connected = pong.equals(str) ? TRUE : FALSE;
+  // In case of no new data
+  if (!Serial.available()) {
+    if (millis() - last_ping > TIMEOUT)
+      connected = FALSE;
+    return;
   }
+
+  // In case of new data
+  str = Serial.readStringUntil('\n');
+  connected = ping.equals(str) ? TRUE : FALSE;
+  if (connected)
+    Serial.println(pong);
 }
