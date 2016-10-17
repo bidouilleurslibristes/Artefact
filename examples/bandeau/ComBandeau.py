@@ -1,7 +1,7 @@
 import serial
 
-ser_led = serial.Serial('/dev/ttyACM2',9600)
-ser_button = serial.Serial('/dev/ttyACM1',9600)
+ser_led = serial.Serial('/dev/ttyACM2', 9600)
+ser_button = serial.Serial('/dev/ttyACM1', 9600)
 
 def envoie (n):
     ser_led.write(n).to_bytes(1,byteorder='big')
