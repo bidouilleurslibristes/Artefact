@@ -23,9 +23,9 @@ void setup() {
 
 
 void loop () {
-  if (!connected)
+  if (!connected) {
     connection();
-  else
+  } else
     pong();
 
   // Insert functions calls here to do things between two pings
@@ -49,10 +49,10 @@ void connection () {
       
       if(pc_response == ARDUINO_ID)
         connected = TRUE;
-    }
-    
-    Serial.println("CONNECTED");
+    } else
+      delay(1000);
   }
+  Serial.println("CONNECTED");
   
   // turn the LED on when connected
   digitalWrite(ledPin, HIGH);
@@ -62,7 +62,7 @@ void connection () {
 
 void pong () {
   String str = "";
-  String pong = "PING ?";
+  String ping = "PING ?";
   String pong = "PONG !";
 
   // In case of no new data
@@ -75,6 +75,8 @@ void pong () {
   // In case of new data
   str = Serial.readStringUntil('\n');
   connected = ping.equals(str) ? TRUE : FALSE;
-  if (connected)
+  if (connected) {
     Serial.println(pong);
+    last_ping = millis();
+  }
 }
