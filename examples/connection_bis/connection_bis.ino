@@ -35,24 +35,32 @@ void loop () {
 long last_ping = 0;
 
 void connection () {
+  Serial.flush();
+  
   connected = FALSE;
   char ARDUINO_ID = EEPROM.read(EEPROM_ID_ADDRESS);
 
   // Connection
   while (!connected) {
     // Send bonjour using the serial port
-    Serial.print("BONJOUR ");
-    Serial.println((int)ARDUINO_ID);
-    
     if (Serial.available()) {
-      char pc_response = (char) Serial.parseInt();
+      //Serial.println(Serial.read());
+      //char pc_response = (char) Serial.parseInt();
       
-      if(pc_response == ARDUINO_ID)
+      String str = Serial.readString();
+      int val = str.toInt();
+      
+      if(val == ARDUINO_ID)
         connected = TRUE;
-    } else
-      delay(1000);
+    } else {
+      Serial.print("BONJOUR ");
+      Serial.println((int)ARDUINO_ID);
+      delay(500);
+    }
   }
+  Serial.flush();
   Serial.println("CONNECTED");
+  Serial.flush();
   
   // turn the LED on when connected
   digitalWrite(ledPin, HIGH);
