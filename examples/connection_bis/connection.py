@@ -2,9 +2,16 @@
 import time
 
 import serial
+from serial.serialutil import SerialException
+from serial.tools import list_ports
 
 # ser = serial.Serial('/dev/cu.usbserial-DA00T1YU')
-ser = serial.Serial('/dev/ttyACM1', timeout=1, baudrate=115200)
+
+
+def devices_connected(patterns):
+    for pattern in patterns:
+        for port in list_ports.grep(pattern):
+            yield port.device
 
 
 def try_connection(serial_port):
@@ -55,7 +62,7 @@ def heartbeat(serial_port):
     return True
 
 
-while True:
+def main():
     ser.flushInput()
     ser.flushOutput()
 
@@ -72,3 +79,20 @@ while True:
         if (time.time() - last_heartbeat) > 1:
             connected = heartbeat(ser)
             last_heartbeat = time.time()
+
+
+while True:
+    ser = None
+    any_devices = False
+    for port in devices_connected(["2341:0043", "caca:aaaa"]):
+        any_devices = True
+        ser = serial.Serial(port, timeout=1, baudrate=115200)
+
+    if not any_devices:
+        time.sleep(1)
+        continue
+
+    try:
+        main()
+    except (SerialException, OSError) as e:
+        print("cassé", e)
