@@ -4,9 +4,7 @@ import time
 import serial
 
 # ser = serial.Serial('/dev/cu.usbserial-DA00T1YU')
-ser = serial.Serial('/dev/ttyACM0', timeout=1)
-ser.flushInput()
-ser.flushOutput()
+ser = serial.Serial('/dev/ttyACM1', timeout=1, baudrate=115200)
 
 
 def try_connection(serial_port):
@@ -45,12 +43,32 @@ def try_connection(serial_port):
     return True
 
 
-connected = False
-while not connected:
-    connected = try_connection(ser)
-    print("connected : ", connected)
-    time.sleep(0.1)
+def heartbeat(serial_port):
+    heartbeat_text = "PING ?\n".encode()
+    serial_port.write(heartbeat_text)
+    text = serial_port.readline().decode("ascii").strip()
+    print("heartbeat from arduino: ", text)
+    if not text:
+        return False
+    if "PONG !" not in text:
+        return False
+    return True
+
 
 while True:
-    if ser.inWaiting() > 0:
-        print(ser.readline().decode("ascii").strip())
+    ser.flushInput()
+    ser.flushOutput()
+
+    connected = False
+    while not connected:
+        connected = try_connection(ser)
+        print("connected : ", connected)
+        time.sleep(0.1)
+
+    last_heartbeat = 0
+    while connected:
+        if ser.inWaiting() > 0:
+            print(ser.readline().decode("ascii").strip())
+        if (time.time() - last_heartbeat) > 1:
+            connected = heartbeat(ser)
+            last_heartbeat = time.time()

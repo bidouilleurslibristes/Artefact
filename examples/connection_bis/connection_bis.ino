@@ -16,7 +16,7 @@ BOOL connected = FALSE;
 char ledPin = 13;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 }
@@ -25,12 +25,13 @@ void setup() {
 void loop () {
   if (!connected) {
     connection();
-  } else
-    pong();
-
+  } else {
+      pong();
+  }
   // Insert functions calls here to do things between two pings
+  delay(500);
 }
-
+  
 
 long last_ping = 0;
 
@@ -43,10 +44,7 @@ void connection () {
   // Connection
   while (!connected) {
     // Send bonjour using the serial port
-    if (Serial.available()) {
-      //Serial.println(Serial.read());
-      //char pc_response = (char) Serial.parseInt();
-      
+    if (Serial.available()) {      
       String str = Serial.readString();
       int val = str.toInt();
       
@@ -69,6 +67,7 @@ void connection () {
 
 
 void pong () {
+
   String str = "";
   String ping = "PING ?";
   String pong = "PONG !";
@@ -82,9 +81,15 @@ void pong () {
 
   // In case of new data
   str = Serial.readStringUntil('\n');
-  connected = ping.equals(str) ? TRUE : FALSE;
+  
+  if (ping.equals(str))
+    connected = TRUE;
+  else 
+    connected = FALSE;
+    
   if (connected) {
     Serial.println(pong);
     last_ping = millis();
   }
+
 }
