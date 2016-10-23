@@ -9,6 +9,7 @@
 
 // Functions definitions :
 void connection ();
+void _connection ();
 
 
 BOOL connected = FALSE;
@@ -28,12 +29,30 @@ void loop () {
   delay (5000);
 }
 
+void serialFlush(){
+  while(Serial.available() > 0) {
+    char t = Serial.read();
+  }
+} 
+
 void connection () {
   connected = FALSE;
   char ARDUINO_ID = EEPROM.read(EEPROM_ID_ADDRESS);
 
   // Connection
-  while (!connected) {
+  while(!connected){
+    serialFlush();
+    connected = _connection(ARDUINO_ID);
+    serialFlush();
+  }
+}  
+  
+BOOL _connection(char ARDUINO_ID){
+  BOOL connected = FALSE; 
+  int retry = 0;
+  
+  while (retry < 10 || connected) {
+    retry++;
     BOOL part1 = FALSE;
     
     /*
@@ -58,12 +77,18 @@ void connection () {
     /*
     STEP 3: receive back ID and if ID is correct
     */
+    BOOL response_ok = FALSE;
     while (!Serial.available()) {
       char pc_response = Serial.read();
       Serial.println(pc_response);
       if(pc_response!=ARDUINO_ID)
-        continue;
+        response_ok = FALSE;
+      else
+        response_ok = TRUE;
     }
+    if (!response_ok)
+      continue;
+    
     /*
     STEP 4: send CONNECTED string to finalize
     */
@@ -73,4 +98,5 @@ void connection () {
   
   // turn the LED on when connected
   digitalWrite(ledPin, HIGH);
+  return connected;
 }
