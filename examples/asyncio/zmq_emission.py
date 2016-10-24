@@ -1,22 +1,40 @@
+import asyncio
 import json
-import time
+
 import zmq
+import zmq.asyncio
 
-c = zmq.Context()
-s = c.socket(zmq.PUB)
+ctx = zmq.asyncio.Context()
 
-protocol = "tcp"
-port = "5556"
-adress = "127.0.0.1"
-url = "{}://{}:{}".format(protocol, adress, port)
-s.bind(url)
-print('Publisher bound to url : {}'.format(url))
 
-i = 0
-channel = "1"
-while True:
-    message = {"data": i}
-    s.send_multipart([channel, json.dumps(message)])
-    print(json.dumps(message))
-    i += 1
-    time.sleep(2)
+@asyncio.coroutine
+def receive_status():
+    sock = ctx.socket(zmq.SUB)
+    sock.bind("tcp://127.0.0.1:5557")
+    sock.setsockopt(zmq.SUBSCRIBE, b"")
+
+    while True:
+        msg = yield from sock.recv_multipart()
+        print("updated status : {}".format(msg))
+
+
+@asyncio.coroutine
+def send_command():
+    socket = ctx.socket(zmq.PUB)
+    socket.bind("tcp://127.0.0.1:5556")
+    i = 0
+    channel = b"1"
+    while True:
+        yield from asyncio.sleep(2)
+        message = {"data": i}
+        socket.send_multipart([channel, json.dumps(message).encode("utf8")])
+        print("sending : ", json.dumps(message))
+        i += 1
+
+
+loop = zmq.asyncio.ZMQEventLoop()
+asyncio.set_event_loop(loop)
+
+asyncio.async(send_command())
+loop.run_until_complete(receive_status())
+loop.run_forever()
