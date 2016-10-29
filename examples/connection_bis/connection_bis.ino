@@ -31,23 +31,23 @@ void loop () {
   // Insert functions calls here to do things between two pings
   delay(500);
 }
-  
+
 
 long last_ping = 0;
 
 void connection () {
   Serial.flush();
-  
+
   connected = FALSE;
   char ARDUINO_ID = EEPROM.read(EEPROM_ID_ADDRESS);
 
   // Connection
   while (!connected) {
     // Send bonjour using the serial port
-    if (Serial.available()) {      
+    if (Serial.available()) {
       String str = Serial.readString();
       int val = str.toInt();
-      
+
       if(val == ARDUINO_ID)
         connected = TRUE;
     } else {
@@ -59,7 +59,7 @@ void connection () {
   Serial.flush();
   Serial.println("CONNECTED");
   Serial.flush();
-  
+
   // turn the LED on when connected
   digitalWrite(ledPin, HIGH);
   last_ping = millis();
@@ -81,12 +81,12 @@ void pong () {
 
   // In case of new data
   str = Serial.readStringUntil('\n');
-  
+
   if (ping.equals(str))
     connected = TRUE;
-  else 
+  else
     connected = FALSE;
-    
+
   if (connected) {
     Serial.println(pong);
     last_ping = millis();
