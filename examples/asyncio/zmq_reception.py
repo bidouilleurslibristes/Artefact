@@ -17,7 +17,7 @@ asyncio.set_event_loop(loop)
 @asyncio.coroutine
 def recv_and_process():
     sock = ctx.socket(zmq.SUB)
-    sock.connect("tcp://127.0.0.1:5556")
+    sock.connect("tcp://0.0.0.0:5556")
     sock.setsockopt(zmq.SUBSCRIBE, b"")
 
     while True:
