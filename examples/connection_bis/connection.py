@@ -8,7 +8,8 @@ from serial.tools import list_ports
 # ser = serial.Serial('/dev/cu.usbserial-DA00T1YU')
 
 
-def devices_connected(patterns):
+def list_devices_connected(patterns):
+    """Enumerate plugged devices with USB PID/VID matching the patterns provided as argument."""
     for pattern in patterns:
         for port in list_ports.grep(pattern):
             yield port.device
@@ -18,7 +19,7 @@ def try_connection(serial_port):
     time.sleep(1)
 
     # Try to read a BONJOUR message
-    txt = "toto"
+    txt = ""
     while not txt.startswith("BONJOUR"):
         nb_bytes = serial_port.inWaiting()
         if nb_bytes == 0:
@@ -62,10 +63,9 @@ def heartbeat(serial_port):
     return True
 
 
-def main():
+def _main(ser):
     ser.flushInput()
     ser.flushOutput()
-
     connected = False
     while not connected:
         connected = try_connection(ser)
@@ -81,18 +81,26 @@ def main():
             last_heartbeat = time.time()
 
 
+def main(devices):
+    ser = devices[list(devices.keys())[0]]
+    try:
+        _main(ser)
+    except (SerialException, OSError) as e:
+        print("cassé", e)
+        devices.pop(ser.port)
+
+
+devices = {}
 while True:
     ser = None
-    any_devices = False
-    for port in devices_connected(["2341:0043", "caca:aaaa"]):
-        any_devices = True
-        ser = serial.Serial(port, timeout=1, baudrate=115200)
+    for port in list_devices_connected(["2341:0043"]):
+        if port not in devices:
+            ser = serial.Serial(port, timeout=1, baudrate=115200)
+            devices[port] = ser
 
-    if not any_devices:
+    if not devices:
         time.sleep(1)
         continue
 
-    try:
-        main()
-    except (SerialException, OSError) as e:
-        print("cassé", e)
+    main(devices)
+    print("connected devices : ", devices)
