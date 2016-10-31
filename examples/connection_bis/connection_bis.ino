@@ -29,6 +29,7 @@ void loop () {
       pong();
   }
   // Insert functions calls here to do things between two pings
+  Serial.println("Button 1");
   delay(500);
 }
 
