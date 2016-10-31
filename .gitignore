@@ -1,2 +1,5 @@
 ## generated file
 examples/flash_eeprom/flash_eeprom.ino
+
+## pyc
+__pycache__/
