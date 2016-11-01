@@ -3,3 +3,7 @@ examples/flash_eeprom/flash_eeprom.ino
 
 ## pyc
 __pycache__/
+
+## sublime text stuff
+*.sublime-project
+*.sublime-workspace
