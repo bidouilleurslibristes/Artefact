@@ -61,9 +61,20 @@ class SerialDevice(Thread):
         self.msg_out = msg_out
         self.msg_error = msg_error
 
+        self._stop = False
+
+    def stop(self):
+        """Stop the device mainloop."""
+        self._stop = True
+
+    def _disconnect(self):
+        """Handle disconnection stuff."""
+        self.connected = False
+        self.device_id = None
+
     def _run(self):
         """Connect to a device and read / write / send periodic heartbeat."""
-        while True:
+        while not self._stop:
             while not self.connected:
                 self.connect()
                 time.sleep(0.1)
@@ -84,13 +95,17 @@ class SerialDevice(Thread):
             logger.error("Unknown exception")
             logger.exception(e)
             self.msg_error.append(self)
+        else:
+            logger.info("End of serial mainloop -- {}".format(self))
+            self.msg_error.append(self)
+            self._disconnect()
 
     def _read_device_id(self):
         txt = ""
         while not txt.startswith("BONJOUR"):
             nb_bytes = self.serial.inWaiting()
             if nb_bytes == 0:
-                self.connected = False
+                self._disconnect()
                 continue
             txt = self.serial.readline().decode("ascii").strip()
         return txt.split(' ')[1]
@@ -103,10 +118,10 @@ class SerialDevice(Thread):
         # Verify the CONNECTED message
         text = self.serial.readline().decode("ascii").strip()
         if not text:
-            self.connected = False
+            self._disconnect()
             return self.connected
         if "CONNECTED" not in text:
-            self.connected = False
+            self._disconnect()
             return self.connected
 
         self.connected = True
@@ -118,6 +133,7 @@ class SerialDevice(Thread):
         # Try to read a BONJOUR message and get the arduino unique id
         device_id = self._read_device_id()
         if not device_id:
+            self._disconnect()
             return False
 
         # Send back the response for connection
@@ -145,8 +161,7 @@ class SerialDevice(Thread):
         text = self.serial.readline().decode("ascii").strip()
         logger.debug("heartbeat from arduino: ".format(text))
         if not text and "PONG !" not in text:
-            self.connected = False
-            self.device_id = None
+            self._disconnect()
             logger.info(str(self))
             return False
 
