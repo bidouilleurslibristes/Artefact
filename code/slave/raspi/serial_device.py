@@ -38,7 +38,7 @@ class SerialDevice(Thread):
     Serial Communication Protocol (SSCP), described in the documentation.
     """
 
-    def __init__(self, port, msg_in, msg_out, msg_error):
+    def __init__(self, port, msg_in, msg_out: "defaultdict of iterables", msg_error):
         """Inialise a serial device."""
         Thread.__init__(self)
 
@@ -73,6 +73,7 @@ class SerialDevice(Thread):
                 time.sleep(0.1)
 
             self.read_from_device()
+            self.send_to_device()
 
             if (time.time() - self.last_heartbeat) > 1:
                 self.heartbeat()
@@ -172,6 +173,21 @@ class SerialDevice(Thread):
         while self.serial.inWaiting():
             message = self.serial.readline().decode("ascii").strip()
             self.msg_in.append((self.device_id, message))
+
+    def send_to_device(self):
+        r"""Send data from msg_out box to the connected arduino.
+
+        The msg_out is a dictionnary of queues contenaing
+        messages for each device and messages are the string
+         transmitted to the arduino.
+        If the string doen't end with carriage return (\n) we add it.
+        """
+        msg_out = self.msg_out[self.device_id]
+        while msg_out:
+            msg = msg_out.pop()
+            if not msg.endswith('\n'):
+                msg += "\n"
+            self.serial.write(msg.encode)
 
     def __repr__(self):
         text_connected = "connected to {}".format(self.device_id)

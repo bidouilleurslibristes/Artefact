@@ -25,15 +25,15 @@ class NetworkCommunication(Thread):
 
     def __init__(
             self,
-            inbox: "iterable", outbox: "iterable",
+            inbox: "dict of iterable", outbox: "iterable",
             topics: "iterable" = None
     ):
         """Constructor for the class.
 
         Arguments:
-         * inbox: messages from the Master
+         * inbox: messages from the Master, used for slaves and / or devices
          * outbox: messages to send to the Master
-         * topics: the topics to subscribe to. If any, we listen to everything.
+         * topics: the topics to subscribe to. If any, we listen to everything
         """
         Thread.__init__(self)
 
@@ -95,10 +95,11 @@ class NetworkCommunication(Thread):
             self.sock_out.send_multipart(msg)
 
     def receive_messages_from_master(self):
-        """Receive messages from the master and populate the inbox."""
+        """Receive messages from the master and populate the inbox for the correct device."""
         sockets = dict(self.poller.poll(20))
         if not sockets:
             return
         msg = self.sock_in.recv_multipart()  # we only have one listening socket
         logger.debug("received {} from master".format(msg))
-        self.messages_from_master.append(msg)
+        device_id, message_string = msg
+        self.messages_from_master[device_id].append(msg)

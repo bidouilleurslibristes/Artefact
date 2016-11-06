@@ -1,13 +1,13 @@
 """Main for the arduino connection."""
 
 import time
-from collections import deque
+from collections import deque, defaultdict
 import logging
 from serial_device import SerialDevice, list_devices_connected
 from network import NetworkCommunication
 
 messages_from_devices = deque()
-messages_to_devices = deque()
+messages_to_devices = defaultdict(deque)
 messages_exceptions = deque()
 connected_devices = set([])
 
