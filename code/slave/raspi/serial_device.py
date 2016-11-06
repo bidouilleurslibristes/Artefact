@@ -64,6 +64,7 @@ class SerialDevice(Thread):
         """Handle disconnection stuff."""
         self.connected = False
         self.device_id = None
+        self.serial.close()
 
     def _run(self):
         """Connect to a device and read / write / send periodic heartbeat."""
