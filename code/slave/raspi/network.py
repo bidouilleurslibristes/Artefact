@@ -24,7 +24,7 @@ class NetworkCommunication(Thread):
     """
 
     def __init__(
-            self,
+            self, master_adress: "str",
             inbox: "dict of iterable", outbox: "iterable",
             topics: "iterable" = None
     ):
@@ -38,6 +38,8 @@ class NetworkCommunication(Thread):
         Thread.__init__(self)
 
         self.topics = topics or [b""]
+
+        self.master_adress = master_adress
 
         self.ctx = zmq.Context()
         self.poller = zmq.Poller()
@@ -81,7 +83,7 @@ class NetworkCommunication(Thread):
 
     def configure_socket_out(self):
         """Create ZMQ socket emitting to the master."""
-        server_adress_out = "tcp://127.0.0.1:5557"
+        server_adress_out = "tcp://{}:5557".format(self.master_adress)
 
         self.sock_out = self.ctx.socket(zmq.PUB)
         self.sock_out.connect(server_adress_out)

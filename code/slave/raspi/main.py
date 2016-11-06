@@ -3,6 +3,7 @@
 import time
 from collections import deque, defaultdict
 import logging
+import sys
 from serial_device import SerialDevice, list_devices_connected
 from network import NetworkCommunication
 
@@ -23,7 +24,13 @@ logger.setLevel(logging.INFO)
 
 
 def _main():
-    nc = NetworkCommunication(messages_to_devices, messages_from_devices)
+    master_adress = sys.argv[1]
+
+    nc = NetworkCommunication(
+        master_adress,
+        messages_to_devices,
+        messages_from_devices
+    )
     nc.start()
 
     serial_ids = ["2a03:0043"]
