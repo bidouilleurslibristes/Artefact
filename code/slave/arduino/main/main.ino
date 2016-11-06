@@ -20,7 +20,7 @@ char button1Pin = 2;
 
 void setupButtons(){
   pinMode(button1Pin, INPUT);
-  digitalWrite(button1Pin, HIGH); // connect internal pull-up
+  digitalWrite(button1Pin, INPUT_PULLUP); // connect internal pull-up
 }
 
 void setup() {
