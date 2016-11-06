@@ -64,7 +64,6 @@ class SerialDevice(Thread):
         """Handle disconnection stuff."""
         self.connected = False
         self.device_id = None
-        self.serial.close()
 
     def _run(self):
         """Connect to a device and read / write / send periodic heartbeat."""
@@ -79,6 +78,7 @@ class SerialDevice(Thread):
             if (time.time() - self.last_heartbeat) > 1:
                 self.heartbeat()
                 self.last_heartbeat = time.time()
+            time.sleep(0.01)
 
     def run(self):
         """Try to connect and raise SerialDeviceException if there is a disconnection."""
@@ -94,6 +94,8 @@ class SerialDevice(Thread):
             logger.info("End of serial mainloop -- {}".format(self))
             self.msg_error.append(self)
             self._disconnect()
+        finally:
+            self.serial.close()
 
     def _read_device_id(self):
         txt = ""

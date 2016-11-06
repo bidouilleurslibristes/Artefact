@@ -50,6 +50,7 @@ class NetworkCommunication(Thread):
         self.messages_to_master = outbox
 
         self._running = True
+        logger.debug("new network")
 
     def run(self):
         """

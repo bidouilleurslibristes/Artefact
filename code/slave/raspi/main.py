@@ -22,18 +22,17 @@ FORMAT = (
 logging.basicConfig(format=FORMAT)
 logger.setLevel(logging.INFO)
 
+master_adress = sys.argv[1]
+nc = NetworkCommunication(
+    master_adress,
+    messages_to_devices,
+    messages_from_devices
+)
+nc.start()
+
 
 def _main():
-    master_adress = sys.argv[1]
-
-    nc = NetworkCommunication(
-        master_adress,
-        messages_to_devices,
-        messages_from_devices
-    )
-    nc.start()
-
-    serial_ids = ["2a03:0043"]
+    serial_ids = ["2a03:0043", "2341:0043"]
     ports = list(list_devices_connected(serial_ids))
     for port in ports:
         if port in connected_devices:
