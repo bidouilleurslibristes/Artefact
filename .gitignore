@@ -4,6 +4,9 @@ examples/flash_eeprom/flash_eeprom.ino
 ## pyc
 __pycache__/
 
+## virtualenvs
+venv
+
 ## sublime text stuff
 *.sublime-project
 *.sublime-workspace
