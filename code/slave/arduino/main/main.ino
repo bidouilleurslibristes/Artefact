@@ -110,11 +110,14 @@ void parseMessage(String message){
 }
 
 void setLedButtonsColor(String message){
+  digitalWrite(ledPin, HIGH);
+  Serial.println("led button color");
 
 }
 
 void setLedStripColor(String message){
-
+  digitalWrite(ledPin, LOW);
+  Serial.println("strip color");
 }
 
 void setSwagButtonLed(String message){

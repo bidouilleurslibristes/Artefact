@@ -46,17 +46,18 @@ def _main():
         )
         serial_device.start()
         connected_devices.add(port)
-    print("connected devices", connected_devices)
 
 
 def main():
     """Manage the devices list."""
     _main()
+
     while messages_exceptions:
         broken_device = messages_exceptions.pop()
         print("cassé", str(broken_device))
         print(messages_from_devices)
         connected_devices.remove(broken_device.port)
+
     messages_from_devices.append(
         ["slave1", "connected devices", str(connected_devices)]
     )

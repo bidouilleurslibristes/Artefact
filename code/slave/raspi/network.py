@@ -103,6 +103,6 @@ class NetworkCommunication(Thread):
         if not sockets:
             return
         msg = self.sock_in.recv_multipart()  # we only have one listening socket
-        logger.debug("received {} from master".format(msg))
+        logger.info("received {} from master".format(msg))
         device_id, message_string = msg
         self.messages_from_master[device_id].append(msg)

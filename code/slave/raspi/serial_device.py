@@ -190,6 +190,7 @@ class SerialDevice(Thread):
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
+            logging.INFO(msg)
             self.serial.write(msg.encode)
 
     def __repr__(self):
