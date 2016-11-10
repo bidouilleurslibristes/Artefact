@@ -1,0 +1,15 @@
+---
+- hosts: all
+
+  vars:
+    zoomachine:
+      - git_url: https://github.com/yoann-dufresne/ZooMachine-3.git
+      - path: ""
+
+
+  tasks:
+  - name: HOME
+    debug: msg={{ansible_env.HOME}}
+  - name: ZooMachine
+    debug: msg={{zoomachine.git_url}}
+    debug: msg={{ansible_env.HOME}}/{{zoomachine.path}}
