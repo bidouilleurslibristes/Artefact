@@ -105,4 +105,4 @@ class NetworkCommunication(Thread):
         msg = self.sock_in.recv_multipart()  # we only have one listening socket
         logger.info("received {} from master".format(msg))
         device_id, message_string = msg
-        self.messages_from_master[device_id].append(message_string)
+        self.messages_from_master[device_id.decode()].append(message_string.decode())
