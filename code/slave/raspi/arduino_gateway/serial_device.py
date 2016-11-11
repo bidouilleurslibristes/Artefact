@@ -186,12 +186,12 @@ class SerialDevice(Thread):
         If the string doen't end with carriage return (\n) we add it.
         """
         msg_out = self.msg_out[self.device_id]
-        logger.info(msg_out)
+        logging.info(self.device_id)
         while msg_out:
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logging.info(msg)
+            # logging.info(msg)
             self.serial.write(msg.encode())
 
     def __repr__(self):
