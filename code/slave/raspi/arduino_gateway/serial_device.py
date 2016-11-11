@@ -191,7 +191,8 @@ class SerialDevice(Thread):
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logging.info("sending to the arduino: {}".format(msg))
+            logger.info("sending to the arduino: {}".format(msg))
+            #import ipdb; ipdb.set_trace()
             self.serial.write(msg.encode())
 
     def __repr__(self):
