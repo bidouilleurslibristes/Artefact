@@ -55,6 +55,7 @@ def _main():
 def main():
     """Manage the devices list."""
     _main()
+    logger.info(messages_to_devices)
 
     while messages_exceptions:
         broken_device = messages_exceptions.pop()
