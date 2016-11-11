@@ -1,0 +1,9 @@
+[slaves]
+slave1.local ansible_user=pi ansible_ssh_user=pi
+
+[masters]
+master.local ansible_user=pi ansible_ssh_user=pi
+
+[raspis]
+slaves
+masters
