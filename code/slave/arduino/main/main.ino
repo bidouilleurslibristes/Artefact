@@ -12,10 +12,13 @@
 void connection ();
 
 
+int button1_pressed = 0;
+
 BOOL connected = FALSE;
 long last_ping = 0;
 
-char ledPin = 10;
+char ledPin = LED_BUILTIN;
+char ledPin2 = 10;
 char button1Pin = 2;
 
 void setupButtons(){
@@ -26,7 +29,10 @@ void setupButtons(){
 void setup() {
   Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
   digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin2, LOW);
+
 }
 
 
@@ -110,13 +116,13 @@ void parseMessage(String message){
 }
 
 void setLedButtonsColor(String message){
-  digitalWrite(ledPin, HIGH);
+  digitalWrite(ledPin2, HIGH);
   Serial.println("led button color");
 
 }
 
 void setLedStripColor(String message){
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin2, LOW);
   Serial.println("strip color");
 }
 
@@ -126,7 +132,13 @@ void setSwagButtonLed(String message){
 
 
 void scanButtons(){
-  int button1_pressed = !digitalRead(button1Pin);
+
+  if(button1_pressed == 1)
+    button1_pressed = 0;
+  else
+    button1_pressed = 1;
+
+
   if (button1_pressed)
       digitalWrite(ledPin, HIGH);
   else
