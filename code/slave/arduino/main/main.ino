@@ -15,7 +15,7 @@ void connection ();
 BOOL connected = FALSE;
 long last_ping = 0;
 
-char ledPin = 13;
+char ledPin = 10;
 char button1Pin = 2;
 
 void setupButtons(){
