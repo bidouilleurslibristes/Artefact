@@ -10,3 +10,6 @@ venv
 ## sublime text stuff
 *.sublime-project
 *.sublime-workspace
+
+## dockerfile
+Dockerfile
