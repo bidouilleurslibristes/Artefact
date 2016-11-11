@@ -10,7 +10,7 @@ ctx = zmq.asyncio.Context()
 @asyncio.coroutine
 def receive_status():
     sock = ctx.socket(zmq.SUB)
-    sock.bind("tcp://127.0.0.1:5557")
+    sock.bind("tcp://0.0.0.0:5557")
     sock.setsockopt(zmq.SUBSCRIBE, b"")
 
     while True:
@@ -21,7 +21,7 @@ def receive_status():
 @asyncio.coroutine
 def send_command():
     socket = ctx.socket(zmq.PUB)
-    socket.bind("tcp://127.0.0.1:5556")
+    socket.bind("tcp://0.0.0.0:5556")
     i = 0
     channel = b"2"
     while True:
