@@ -1,0 +1,86 @@
+#include <Adafruit_NeoPixel.h>
+#define pinRuban 6
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, pinRuban, NEO_GRB);
+
+// Ne doit plus servir
+uint32_t couleur[7];
+
+uint32_t animation;
+
+uint32_t goal[32][];
+uint32_t state[32][];
+uint32_t initialState[32][];
+
+int MatriceCouleurs = [[0,0,0],[40, 01, 01],[01, 35, 02],[02, 02, 50],[30, 28, 0],[30, 0, 40],[0, 35, 25],[40,15,0],[20,20,20]];
+
+void animate(){
+  for (int led=0; led<32; led++){
+    for (int rgb = 0; rgb <3; rgb++){
+      state[led][rgb]=state[led][rgb]+(state[led][rgb]+
+    }
+}
+
+
+void setup() {
+  Serial.begin(9600);
+  //randomSeed(analogRead(0));
+  strip.begin();
+  
+  //Définition couleurs POUR INFO : ne doit plus servir
+  couleur[0] = strip.Color(00, 00, 00);// blanc
+  couleur[1] = strip.Color(40, 01, 01);// rouge ok
+  couleur[2] = strip.Color(01, 35, 02);// vert ok
+  couleur[3] = strip.Color(02, 02, 50);// bleu ok
+  couleur[4] = strip.Color(30, 28, 0);// jaune ok
+  couleur[5] = strip.Color(30, 0, 40);// mauve ok
+  couleur[6] = strip.Color(0, 35, 25);//turquoise ok
+  couleur[7] = strip.Color(40,15,0);// orange ok
+  couleur[8] = strip.Color(20,20,20);// blanc ok
+
+  
+  // Remise à zéro
+  for (int led=0;led<32;led++){
+    strip.setPixelColor(led,couleur[0]);
+    strip.show();
+  }
+  
+}
+
+// Lecture du Serial. 1er octet = n° d'animation. 32 octets pour liste des couleurs.
+void readSerial(){
+    if(Serial.available()>=33){
+      animation = Serial.read();
+    for (int i = 0; i < 32; i++) {
+      char info = Serial.read();
+      goal[i]=info;
+    }
+    
+    //print test infos bien reçues
+    Serial.println(animation);
+    for (int i = 0; i < 32; i++) {
+      Serial.print(goal[i]);
+    }
+    Serial.println();
+  }
+}
+  
+
+void loop() {
+  for (int color = 0;color<8;color++){
+    readSerial();
+    for (int i = 0;i<32;i++){
+      strip.setPixelColor(i,couleur[color]);
+      Serial.println(couleur[color]);
+      Serial.println(i);
+      strip.show();
+      delay(10);
+    }
+    delay(1000);
+    for (int led=0;led<32;led++){
+      strip.setPixelColor(led,couleur[0]);
+      strip.show();
+    }
+  }
+
+}
