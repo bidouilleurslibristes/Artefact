@@ -73,7 +73,7 @@ class NetworkCommunication(Thread):
 
     def configure_socket_in(self):
         """Create ZMQ socket listening to the master."""
-        server_adress_in = "tcp://0.0.0.0:5556"
+        server_adress_in = "tcp://{}:5556".format(self.master_adress)
 
         self.sock_in = self.ctx.socket(zmq.SUB)
         self.sock_in.connect(server_adress_in)
@@ -103,6 +103,8 @@ class NetworkCommunication(Thread):
         if not sockets:
             return
         msg = self.sock_in.recv_multipart()  # we only have one listening socket
+        msg = [s.decode() for s in msg]
         logger.info("received {} from master".format(msg))
         device_id, message_string = msg
-        self.messages_from_master[device_id].append(msg)
+        self.messages_from_master[device_id].append(
+            message_string)

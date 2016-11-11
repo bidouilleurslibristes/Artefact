@@ -186,12 +186,13 @@ class SerialDevice(Thread):
         If the string doen't end with carriage return (\n) we add it.
         """
         msg_out = self.msg_out[self.device_id]
+
         while msg_out:
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logging.INFO(msg)
-            self.serial.write(msg.encode)
+            logging.info("sending to the arduino: {}".format(msg))
+            self.serial.write(msg.encode())
 
     def __repr__(self):
         text_connected = "connected to {}".format(self.device_id)

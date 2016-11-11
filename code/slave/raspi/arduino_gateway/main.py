@@ -3,6 +3,7 @@
 """Main for the arduino connection."""
 
 import time
+import socket
 from collections import deque, defaultdict
 import logging
 import sys
@@ -14,6 +15,7 @@ messages_to_devices = defaultdict(deque)
 messages_exceptions = deque()
 connected_devices = set([])
 
+HOSTNAME = socket.gethostname()
 
 logger = logging.getLogger('root')
 FORMAT = (
@@ -61,7 +63,7 @@ def main():
         connected_devices.remove(broken_device.port)
 
     messages_from_devices.append(
-        ["slave1", "connected devices", str(connected_devices)]
+        [HOSTNAME, "connected devices", str(connected_devices)]
     )
 
 if __name__ == '__main__':
