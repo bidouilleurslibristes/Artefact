@@ -5,7 +5,7 @@
   vars:
     zoomachine:
       git_url: https://github.com/yoann-dufresne/ZooMachine-3.git
-      path: "{{ansible_env.HOME}}/ZooMachine-3"
+      path: /home/pi/ZooMachine-3
       requirement_path: code/slave/raspi/requirements.txt
     update_cache: yes
 
@@ -19,12 +19,14 @@
         - git
         - vim
         - python3
+        - htop
         - python3-pip
         - libsmpeg-dev
 
     - name: Copy Zoomachine repository
-      git: repo="{{zoomachine.git_url}}" dest="{{zoomachine.path}}"
+      git: repo="{{zoomachine.git_url}}" dest="{{zoomachine.path}}" force=true
+      become_user: pi
 
     - name: Install pip dependancies
       pip:
-        requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} execuable="/usr/bin/pip3"
+        requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} executable="/usr/bin/pip3"
