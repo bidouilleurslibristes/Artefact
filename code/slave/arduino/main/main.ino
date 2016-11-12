@@ -1,5 +1,6 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
+#include "Adafruit_TLC5947.h"
 
 #define TRUE 42
 #define FALSE (!42)
@@ -8,6 +9,14 @@
 #define EEPROM_ID_ADDRESS 0
 #define TIMEOUT 3000
 #define LED_STRIP_IN 3
+
+// Driver LED
+#define NUM_TLC5974 1
+#define data   4
+#define clock   5
+#define latch   6
+#define oe  12
+Adafruit_TLC5947 tlc = Adafruit_TLC5947(NUM_TLC5974, clock, data, latch);
 
 // Functions definitions :
 void connection ();
@@ -18,9 +27,20 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, pinRuban, NEO_GRB);
 
 char animation;
 uint32_t colors[9];
+int buttonColors[9][3] = {
+  {4095,4095,4095}, // noir
+  {0,4095,4095}, // Rouge
+  {4095,0,4095}, // vert
+  {4095,4095,0}, // bleu
+  {0,2200,4095}, // Jaune
+  {0,4095,0}, // Mauve
+  {4095,0,0}, //Cyan
+  {0,3500,4095}, // Orange
+  {0,0,0} // Blanc
+};
 
 void initColors(){
-  colors[0] = strip.Color(00, 00, 00);// blanc
+  colors[0] = strip.Color(00, 00, 00);// noir
   colors[1] = strip.Color(40, 01, 01);// rouge ok
   colors[2] = strip.Color(01, 35, 02);// vert ok
   colors[3] = strip.Color(02, 02, 50);// bleu ok
@@ -64,23 +84,39 @@ void setupButtons(){
   }
 }
 
+void setLedButtonsColor(String message);
+void setupDriver () {
+  tlc.begin();
+  if (oe >= 0) {
+    pinMode(oe, OUTPUT);
+    digitalWrite(oe, HIGH);
+  }
+
+  for (int led=0 ; led<8 ; led++) {
+    tlc.setLED(led, 4095, 4095, 4095);
+  }
+  tlc.write();
+  setLedButtonsColor("044444444");
+}
+
 void setup() {
   Serial.begin(115200);
   pinMode(LED_STRIP_IN, INPUT_PULLUP);
-  is_led_strip = digitalRead(LED_STRIP_IN) == HIGH;
-  
+  is_led_strip = digitalRead(LED_STRIP_IN) == LOW;
+
+  // Board LED
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
+  // Init
+  initColors();
   if (is_led_strip) {
     strip.begin();
-    initColors();
   } else {
     initButtons ();
     setupButtons ();
+    setupDriver();
   }
-
-
 }
 
 
@@ -164,33 +200,46 @@ void parseMessage(String message){
 }
 
 void setLedButtonsColor(String message){
-  //digitalWrite(ledPin2, HIGH);
-  //Serial.println("led button color");
-
+  // AC*8 (annimation + 8 colors (between 0 and 8))
+  animation = message.charAt(0); // not used for now
+  
+  for (int i = 1;i<33;i++){
+    int index = message.charAt(i) - '0';
+    if(index < 0 || index > 8){
+      Serial.println("bad color index ");
+      Serial.print("index mess :");
+      Serial.print(index); Serial.print(' ');
+      Serial.println(message);
+    }
+    
+    //buttonColors
+    tlc.setLED(i-1, buttonColors[index][0],buttonColors[index][1],buttonColors[index][2]);
+  }
+  tlc.write();
 }
 
 void setLedStripColor(String message){
   // AC*32 (annimation + 32 colors (between 0 and 8))
-    animation = message.charAt(0); // not used for now
-    
-    for (int i = 1;i<33;i++){
-      int index = message.charAt(i) - '0';
-      if(index < 0 || index > 8){
-        Serial.println("bad color index ");
-        Serial.print("index mess :");
-        Serial.print(index); Serial.print(' ');
-        Serial.println(message);
-      }
-
-      uint32_t color = colors[index];
-
-      strip.setPixelColor(i, color);
+  animation = message.charAt(0); // not used for now
+  
+  for (int i = 1;i<33;i++){
+    int index = message.charAt(i) - '0';
+    if(index < 0 || index > 8){
+      Serial.println("bad color index ");
+      Serial.print("index mess :");
+      Serial.print(index); Serial.print(' ');
+      Serial.println(message);
     }
-    strip.show();
+
+    uint32_t color = colors[index];
+
+    strip.setPixelColor(i, color);
+  }
+  strip.show();
 }
 
 void setSwagButtonLed(String message){
-
+  
 }
 
 void scanButtons(){
@@ -208,9 +257,17 @@ void scanButtons(){
       buttonsStatus[i] = 0;
     }
 
-    Serial.print("button-");
-    Serial.print(i);
-    Serial.println();
+    if (changed) {
+      Serial.print("button-");
+      Serial.print(i);
+      Serial.print("-");
+      if (button_pressed) {
+        Serial.print("UP");
+      } else {
+        Serial.print("DOWN");
+      }
+      Serial.println();
+    }
   }
 }
 
