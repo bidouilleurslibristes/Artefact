@@ -119,3 +119,72 @@ class TimeEnigma(Enigma):
         # on met le dernier à noir
         self.state.led_stripes[self.different_strip_number][self.sequence_idx] = "noir"
         signal.alarm(1)
+
+
+class SimonEnigma(Enigma):
+
+    #penser à eteindre les boutons lors de la sequence
+
+    def __init__(self, color_number, sequence_size):
+        self.solved = False
+        self.loose = False
+        self.current = 0
+        self.colors = ["rouge", "vert", "bleu", "jaune"]
+        self.color_number = color_number
+        self.sequence_size = sequence_size
+        # init buttons
+        for i in range(8):
+            for j in range(len(self.colors)):
+                self.state.led_buttons[i][j] = self.colors[j]
+
+        self.init_sequence()
+
+    def show_sequence(self):
+        for i in range(self.sequence_size):
+            # Mettre tous les bandeaux à noir
+            self.state.set_all_led_strip("noir")
+            # Mettre le bon bandeau à la bonne couleur
+            self.state.set_led_strip(self.sequenceColors[i], self.sequencePositions[i])
+            # Force l'affichage sur les leds
+            self.states.notify_slaves()
+            time.sleep(1)
+            # Remet au noir
+            self.state.set_all_led_strip("noir")
+            self.states.notify_slaves()
+            time.sleep(1)
+            
+            
+    def init_sequence(self, sequence_size):
+        self.sequenceColors = []
+        self.sequencePositions = []
+        
+        for i in range(self.sequence_size):
+            self.sequenceColors.add(random.choice(self.colors[self.color_number:]))
+            self.sequencePositions.add(random.randInt(7))
+
+    def update_from_device(self, device_id, button_id, button_state):
+        if button_state == "UP":
+            return
+        if device_id != self.sequencePositions[self.current]:
+            self.on_error()
+        if button_id != self.state.led_buttons[device_id][self.colors.index(self.sequenceColors(self.current))]:
+            self.on_error()
+        
+        self.current += 1
+        if self.sequence_size == self.current:
+            self.win()
+        
+
+    def error():
+        self.loose = True
+        self.state.set_all_led_strip("rouge")
+        self.states.notify_slaves()
+        time.sleep(2);
+
+    def win():
+        self.solved = True
+        self.state.set_all_led_strip("vert")
+        self.states.notify_slaves()
+        time.sleep(2)
+
+
