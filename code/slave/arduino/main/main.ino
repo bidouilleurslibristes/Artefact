@@ -1,13 +1,13 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 
-// 3 char ID
 #define TRUE 42
 #define FALSE (!42)
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
 #define TIMEOUT 3000
+#define LED_STRIP_IN 3
 
 // Functions definitions :
 void connection ();
@@ -37,6 +37,7 @@ int button1_pressed = 0;
 
 BOOL connected = FALSE;
 
+char is_led_strip = TRUE;
 char ledPin = LED_BUILTIN;
 char ledPin2 = 10;
 char button1Pin = 2;
@@ -48,6 +49,9 @@ void setupButtons(){
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_STRIP_IN, INPUT_PULLUP);
+  is_led_strip = digitalRead(LED_STRIP_IN) == HIGH;
+  
   pinMode(ledPin, OUTPUT);
   pinMode(ledPin2, OUTPUT);
   digitalWrite(ledPin, LOW);
@@ -127,7 +131,7 @@ void parseMessage(String message){
   char firstChar = message.charAt(0);
   message.remove(0, 1);
 
-   if(firstChar == '1'){
+   if(firstChar == '1' && is_led_strip){
     setLedStripColor(message);
    }
    if(firstChar == '2'){
