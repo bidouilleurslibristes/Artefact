@@ -54,6 +54,7 @@ void initColors(){
 // BUTTONS : 8 + swag
 int buttons[9];
 char buttonsStatus[9];
+int swagLedPin = 2;
 
 void initButtons() {
   buttons[0] = 8;
@@ -85,6 +86,7 @@ void setupButtons(){
 }
 
 void setLedButtonsColor(String message);
+void setSwagButtonLed(String message);
 void setupDriver () {
   tlc.begin();
   if (oe >= 0) {
@@ -96,7 +98,8 @@ void setupDriver () {
     tlc.setLED(led, 4095, 4095, 4095);
   }
   tlc.write();
-  setLedButtonsColor("044444444");
+  setLedButtonsColor("012345678");
+  setSwagButtonLed("31");
 }
 
 void setup() {
@@ -239,7 +242,11 @@ void setLedStripColor(String message){
 }
 
 void setSwagButtonLed(String message){
-  
+  if (message.charAt(1) == '0') {
+    digitalWrite(swagLedPin, LOW);
+  } else {
+    digitalWrite(swagLedPin, HIGH);
+  }
 }
 
 void scanButtons(){
