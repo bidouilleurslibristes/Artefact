@@ -1,9 +1,19 @@
 [slaves]
-slave1.local ansible_user=pi ansible_ssh_user=pi
+slave1.local
+#slave2.local
+#slave3.local
+#slave4.local
+#slave5.local
+#slave6.local
+#slave7.local
 
 [masters]
-master.local ansible_user=pi ansible_ssh_user=pi
+master.local
 
 [raspis:children]
 slaves
 masters
+
+[raspis:vars]
+ansible_user=pi
+ansible_ssh_user=pi

@@ -30,3 +30,14 @@
     - name: Install pip dependancies
       pip:
         requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} executable="/usr/bin/pip3"
+
+    - name: Copy slave systemd init script
+      copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root
+      when: inventory_hostname != "master.local"
+
+    - name: Copy master systemd init script
+      copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root
+      when: inventory_hostname == "master.local"
+
+    - name: Settup systemd script
+      systemd: state=started name=init_zoomachine3.service enabled=True
