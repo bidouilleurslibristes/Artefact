@@ -79,7 +79,7 @@ class MasterNetwork(Thread):
         msg = self.socket_from_slaves.recv_multipart()  # we only have one listening socket
         msg = [s.decode() for s in msg]
 
-        logger.debug("from arduinos -- message: {}".format(msg))
+        logger.info("from arduinos -- message: {}".format(msg))
 
         if 'slave' in msg[0]:
             device_id, status, connected = msg

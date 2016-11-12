@@ -2,7 +2,7 @@ import logging
 import time
 from collections import deque
 from network import MasterNetwork
-from enigma import SwagEnigma
+from enigma import SimonEnigma
 from state import State
 
 logger = logging.getLogger('root')
@@ -23,24 +23,36 @@ network = MasterNetwork(messages_to_slaves, arduino_messages, status_messages)
 network.start()
 
 s = State(messages_to_slaves)
-se = SwagEnigma(s)
 
+difficulty = 3
+se = SimonEnigma(s, 4, difficulty)
+ses = [se]
 
 def main():
-    print("messages from arduino : ", arduino_messages)
-    print("messages from slaves : ", status_messages)
+    #print("messages from arduino : ", arduino_messages)
+    #print("messages from slaves : ", status_messages)
+    global difficulty
 
     while arduino_messages:
         arduino_id, message = arduino_messages.pop()
         if "button" in message:
             _, button_id, status = message.split("-")
-            se.update_from_devices(arduino_id, button_id, status)
+            ses[0].update_from_devices(arduino_id, button_id, status)
         else:
             logger.error("WTF: {}".format(message))
 
     status_messages.clear()
 
+    if ses[0].loose:
+        difficulty = 3
+        ses[0].reinit()
+
+    if ses[0].solved:
+        difficulty += 1
+        ses[0] = SimonEnigma(s, 4, difficulty)
+
+
 if __name__ == '__main__':
     while 1:
         main()
-        time.sleep(0.1)
+        time.sleep(0.05)

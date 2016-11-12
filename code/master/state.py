@@ -112,7 +112,7 @@ class State():
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}".format(commande, string_color)
-            self.message_to_slaves.append(("led button", str(arduino_id), res))
+            self.message_to_slaves.append((str(arduino_id), res))
 
     def notify_swag_buttons(self):
         commande = "3"
@@ -124,13 +124,13 @@ class State():
 
     def __repr__(self):
         res = ""
-        res += "Led strips"
+        res += "Led strips: \n"
         for strip in self.led_stripes:
-            res += "  * \n".join(strip)
+            res += "  * ".join(strip) + "\n"
 
         res += "\n\n"
-        res += "Swag Buttons"
+        res += "Swag Buttons : \n"
         for light in self.swag_button_light:
-            res += "  * \n".join(light)
+            res += "{} - ".format(light)
 
         return res

@@ -126,7 +126,8 @@ class SimonEnigma(Enigma):
 
     #penser à eteindre les boutons lors de la sequence
 
-    def __init__(self, color_number, sequence_size):
+    def __init__(self, state, color_number, sequence_size):
+        super(SimonEnigma, self).__init__(state)
         self.solved = False
         self.loose = False
         self.current = 0
@@ -139,6 +140,7 @@ class SimonEnigma(Enigma):
                 self.state.led_buttons[i][j] = self.colors[j]
 
         self.init_sequence()
+        self.show_sequence()
 
     def show_sequence(self):
         for i in range(self.sequence_size):
@@ -147,45 +149,56 @@ class SimonEnigma(Enigma):
             # Mettre le bon bandeau à la bonne couleur
             self.state.set_led_strip(self.sequenceColors[i], self.sequencePositions[i])
             # Force l'affichage sur les leds
-            self.states.notify_slaves()
+            self.state.notify_slaves()
             time.sleep(1)
             # Remet au noir
             self.state.set_all_led_strip("noir")
-            self.states.notify_slaves()
+            self.state.notify_slaves()
             time.sleep(1)
-            
-            
-    def init_sequence(self, sequence_size):
+
+    def init_sequence(self):
         self.sequenceColors = []
         self.sequencePositions = []
-        
-        for i in range(self.sequence_size):
-            self.sequenceColors.add(random.choice(self.colors[self.color_number:]))
-            self.sequencePositions.add(random.randInt(7))
 
-    def update_from_device(self, device_id, button_id, button_state):
+        for i in range(self.sequence_size):
+            self.sequenceColors.append(random.choice(self.colors[:self.color_number]))
+            self.sequencePositions.append(random.randint(0, 7))
+
+    def update_from_devices(self, device_id, button_id, button_state):
+        device_id = int(device_id)
+        button_id = int(button_id)
         if button_state == "UP":
             return
         if device_id != self.sequencePositions[self.current]:
-            self.on_error()
-        if button_id != self.state.led_buttons[device_id][self.colors.index(self.sequenceColors(self.current))]:
-            self.on_error()
-        
+            self.error()
+            return
+
+        color = self.colors[button_id]
+        if color != self.sequenceColors[self.current]:
+            self.error()
+            return
+
         self.current += 1
         if self.sequence_size == self.current:
             self.win()
-        
 
-    def error():
+
+    def error(self):
         self.loose = True
+        print("ON ERROR")
         self.state.set_all_led_strip("rouge")
-        self.states.notify_slaves()
-        time.sleep(2);
-
-    def win():
-        self.solved = True
-        self.state.set_all_led_strip("vert")
-        self.states.notify_slaves()
+        self.state.notify_slaves()
         time.sleep(2)
 
+    def win(self):
+        print("WIN")
+        self.solved = True
+        self.state.set_all_led_strip("vert")
+        self.state.notify_slaves()
+        time.sleep(2)
 
+    def reinit(self):
+        self.current = 0
+        self.loose = False
+        self.solved = False
+        self.show_sequence()
