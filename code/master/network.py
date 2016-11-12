@@ -1,6 +1,6 @@
 import logging
+import time
 from threading import Thread
-from collections import deque
 
 import zmq
 
@@ -11,7 +11,7 @@ logger = logging.getLogger('root')
 class MasterNetwork(Thread):
     """Network communication for the master."""
 
-    def __init__(self, messages_to_slaves):
+    def __init__(self, messages_to_slaves, messages_from_arduinos, messages_from_slaves):
         """Constructor for the class.
 
         Arguments:
@@ -19,8 +19,6 @@ class MasterNetwork(Thread):
          * outbox: messages to send to the Master
         """
         Thread.__init__(self)
-
-        self.messages_to_slaves = messages_to_slaves
 
         self.ctx = zmq.Context()
         self.poller = zmq.Poller()
@@ -30,28 +28,22 @@ class MasterNetwork(Thread):
 
         self.arduinos_ids = list(range(17))
 
-        self.arduino_messages = deque()
-        self.status_messages = deque()
+        self.configure_socket_from_slaves()
+        self.configure_socket_to_slaves()
 
-    def configure_socket_from_slaves_arduinos(self):
+        self.messages_to_slaves = messages_to_slaves
+        self.arduino_messages = messages_from_arduinos
+        self.status_messages = messages_from_slaves
+
+    def configure_socket_from_slaves(self):
         """Create ZMQ socket listening to the master."""
-        self.socket_from_arduinos = self.ctx.socket(zmq.SUB)
-        self.socket_from_arduinos.bind("tcp://0.0.0.0:5557")
-        for topic in self.arduinos_ids:
-            self.socket_from_arduinos.setsockopt(zmq.SUBSCRIBE, topic)
+        self.socket_from_slaves = self.ctx.socket(zmq.SUB)
+        self.socket_from_slaves.bind("tcp://0.0.0.0:5557")
+        self.socket_from_slaves.setsockopt(zmq.SUBSCRIBE, b'')
 
-        self.poller.register(self.socket_from_arduinos, zmq.POLLIN)
-
-    def configure_socket_from_slaves_statuses(self):
-        """Create ZMQ socket listening to the master."""
-        self.socket_from_slaves_statuses = self.ctx.socket(zmq.SUB)
-        self.socket_from_slaves_statuses.bind("tcp://0.0.0.0:5557")
-        self.socket_from_slaves_statuses.setsockopt(zmq.SUBSCRIBE, b"slave")
-
-        self.poller.register(self.socket_from_slaves_statuses, zmq.POLLIN)
+        self.poller.register(self.socket_from_slaves, zmq.POLLIN)
 
     def configure_socket_to_slaves(self):
-        """Create ZMQ socket emitting to the master."""
         self.socket_to_slaves = self.ctx.socket(zmq.PUB)
         self.socket_to_slaves.bind("tcp://0.0.0.0:5556")
 
@@ -84,18 +76,24 @@ class MasterNetwork(Thread):
         if not sockets:
             return
 
-        if self.socket_from_arduinos in sockets:
-            message = [s.decode() for s in self.sock_in.recv_multipart()]
-            device_id, message_string = message
-            self.arduino_messages.append((device_id, message_string))
+        msg = self.socket_from_slaves.recv_multipart()  # we only have one listening socket
+        msg = [s.decode() for s in msg]
 
-        if self.socket_from_slaves_statuses in sockets:
-            message = [s.decode() for s in self.sock_in.recv_multipart()]
-            device_id, message_string = message
-            self.status_messages.append((device_id, message_string))
+        logger.info("from arduinos -- message: {}".format(msg))
+
+        if 'slave' in msg[0]:
+            device_id, status, connected = msg
+            self.status_messages.append((device_id, status, connected))
+        else:
+            # button from arduino
+            device_id, message_string = msg
+            self.arduino_messages.append((device_id, message_string))
 
     def send_command(self):
         """Send a command to the slaves, with a channel and a message."""
         while self.messages_to_slaves:
             msg = self.messages_to_slaves.pop()
-            self.socket_to_slaves.send_multipart(msg)
+            message = [s.encode() for s in msg]
+            self.socket_to_slaves.send_multipart(message)
+            logger.info("sending to arduinos : {}".format(message))
+            time.sleep(0.01)

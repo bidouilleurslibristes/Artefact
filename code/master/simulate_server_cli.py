@@ -8,8 +8,7 @@ ctx = zmq.Context()
 
 def send_command():
     socket = ctx.socket(zmq.PUB)
-    socket.bind("tcp://0.0.0.0:5556")
-    i = 0
+    socket.connect("tcp://127.0.0.1:5557")
     channel = b"2"
     message = "plop"
 
