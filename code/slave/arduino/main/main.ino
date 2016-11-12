@@ -61,7 +61,7 @@ void initButtons() {
   buttons[1] = 9;
   buttons[2] = 10;
   buttons[3] = 11;
-  buttons[4] = 12;
+  buttons[4] = A3;
   buttons[5] = A0;
   buttons[6] = A1;
   buttons[7] = A2;
@@ -98,7 +98,7 @@ void setupDriver () {
     tlc.setLED(led, 4095, 4095, 4095);
   }
   tlc.write();
-  setLedButtonsColor("012345678");
+  setLedButtonsColor("011118888");
   setSwagButtonLed("31");
 }
 
@@ -250,7 +250,7 @@ void setSwagButtonLed(String message){
 }
 
 void scanButtons(){
-  for (int i=0 ; i<8 ; i++) {
+  for (int i=0 ; i<9 ; i++) {
     int button_pressed = digitalRead(buttons[i]) == HIGH;
     int changed = FALSE;
     
