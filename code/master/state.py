@@ -112,8 +112,7 @@ class State():
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}".format(commande, string_color)
-            #self.message_to_slaves.append(("led button", str(arduino_id), res))
-            self.message_to_slaves.append(("0", res))
+            self.message_to_slaves.append(("led button", str(arduino_id), res))
 
     def notify_swag_buttons(self):
         commande = "3"
