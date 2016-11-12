@@ -36,6 +36,7 @@ class SwagEnigma(Enigma):
                 self.state.set_all_led_strip("vert")
 
         self.state.set_led_strip("rouge", self.different_strip_number)
+        self.state.notify_slaves()
 
     def update_from_devices(self, device_id, button_id, button_state):
         """Update the state game after receiving a button push."""
