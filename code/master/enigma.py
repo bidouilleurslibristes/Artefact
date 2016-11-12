@@ -114,8 +114,8 @@ class TimeEnigma(Enigma):
             return
         # On decalle toutes les leds
         for i in reversed(range(len(self.sequence))):
-            self.state.led_stripes[self.different_strip_number][self.sequence_idx + i + 1] = \
-                self.state.led_stripes[self.different_strip_number][self.sequence_idx + i]
+            self.state.led_stripes[self.different_strip_number][self.sequence_idx + i] = \
+                self.state.led_stripes[self.different_strip_number][self.sequence_idx + i - 1]
         # on met le dernier à noir
         self.state.led_stripes[self.different_strip_number][self.sequence_idx] = "noir"
         signal.alarm(1)
