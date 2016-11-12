@@ -11,7 +11,7 @@ from serial_device import SerialDevice, list_devices_connected
 from network import NetworkCommunication
 
 messages_from_devices = deque()
-messages_to_devices = defaultdict(deque)
+messages_to_devices = defaultdict(lambda: deque(maxlen=100))
 messages_exceptions = deque()
 connected_devices = set([])
 
