@@ -31,8 +31,9 @@ void initColors(){
   colors[8] = strip.Color(20,20,20);// blanc ok
 }
 
-// BUTTONS
-int buttons[8];
+// BUTTONS : 8 + swag
+int buttons[9];
+char buttonsStatus[9];
 
 void initButtons() {
   buttons[0] = 8;
@@ -43,6 +44,7 @@ void initButtons() {
   buttons[5] = A0;
   buttons[6] = A1;
   buttons[7] = A2;
+  buttons[8] = 7;
 }
 
 
@@ -55,9 +57,10 @@ char is_led_strip = TRUE;
 char ledPin = LED_BUILTIN;
 
 void setupButtons(){
-  for (int i=0 ; i<8 ; i++) {
+  for (int i=0 ; i<9 ; i++) {
     pinMode(buttons[i], INPUT);
     digitalWrite(buttons[i], INPUT_PULLUP); // connect internal pull-up
+    buttonsStatus[i] = 0;
   }
 }
 
@@ -190,23 +193,25 @@ void setSwagButtonLed(String message){
 
 }
 
-
 void scanButtons(){
-  // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  if(button1_pressed == 1)
-    button1_pressed = 0;
-  else
-    button1_pressed = 1;
+  for (int i=0 ; i<8 ; i++) {
+    int button_pressed = digitalRead(buttons[i]) == HIGH;
+    int changed = FALSE;
+    
+    if(button_pressed && buttonsStatus[i] == 0) {
+      changed = TRUE;
+      buttonsStatus[i] = 1;
+    }
+    
+    if(!button_pressed && buttonsStatus[i] == 1) {
+      changed = TRUE;
+      buttonsStatus[i] = 0;
+    }
 
-
-  if (button1_pressed)
-      digitalWrite(ledPin, HIGH);
-  else
-      digitalWrite(ledPin, LOW);
-
-  //Serial.print("button-");
-  //Serial.print(button1_pressed);
-  //Serial.println();
+    Serial.print("button-");
+    Serial.print(i);
+    Serial.println();
+  }
 }
 
 
