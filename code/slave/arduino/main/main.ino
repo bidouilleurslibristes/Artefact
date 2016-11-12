@@ -32,6 +32,20 @@ void initColors(){
 }
 
 // BUTTONS
+int buttons[8];
+
+void initButtons() {
+  buttons[0] = 8;
+  buttons[1] = 9;
+  buttons[2] = 10;
+  buttons[3] = 11;
+  buttons[4] = 12;
+  buttons[5] = A0;
+  buttons[6] = A1;
+  buttons[7] = A2;
+}
+
+
 long last_ping = 0;
 int button1_pressed = 0;
 
@@ -39,12 +53,12 @@ BOOL connected = FALSE;
 
 char is_led_strip = TRUE;
 char ledPin = LED_BUILTIN;
-char ledPin2 = 10;
-char button1Pin = 2;
 
 void setupButtons(){
-  pinMode(button1Pin, INPUT);
-  digitalWrite(button1Pin, INPUT_PULLUP); // connect internal pull-up
+  for (int i=0 ; i<8 ; i++) {
+    pinMode(buttons[i], INPUT);
+    digitalWrite(buttons[i], INPUT_PULLUP); // connect internal pull-up
+  }
 }
 
 void setup() {
@@ -53,11 +67,15 @@ void setup() {
   is_led_strip = digitalRead(LED_STRIP_IN) == HIGH;
   
   pinMode(ledPin, OUTPUT);
-  pinMode(ledPin2, OUTPUT);
   digitalWrite(ledPin, LOW);
-  digitalWrite(ledPin2, LOW);
-  strip.begin();
-  initColors();
+
+  if (is_led_strip) {
+    strip.begin();
+    initColors();
+  } else {
+    initButtons ();
+    setupButtons ();
+  }
 
 
 }
@@ -134,16 +152,16 @@ void parseMessage(String message){
    if(firstChar == '1' && is_led_strip){
     setLedStripColor(message);
    }
-   if(firstChar == '2'){
+   if(firstChar == '2' && !is_led_strip){
     setLedButtonsColor(message);
    }
-   if(firstChar == '3'){
+   if(firstChar == '3' && !is_led_strip){
     setSwagButtonLed(message);
    }
 }
 
 void setLedButtonsColor(String message){
-  digitalWrite(ledPin2, HIGH);
+  //digitalWrite(ledPin2, HIGH);
   //Serial.println("led button color");
 
 }
@@ -174,7 +192,7 @@ void setSwagButtonLed(String message){
 
 
 void scanButtons(){
-
+  // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if(button1_pressed == 1)
     button1_pressed = 0;
   else
