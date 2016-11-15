@@ -1,5 +1,5 @@
 #include <Adafruit_NeoPixel.h>
-#define pinRuban 6
+#define pinRuban 7
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, pinRuban, NEO_GRB);
 

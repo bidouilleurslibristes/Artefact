@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 3000
+#define TIMEOUT 300000
 #define LED_STRIP_IN 3
 
 // Driver LED
@@ -98,7 +98,7 @@ void setupDriver () {
     tlc.setLED(led, 4095, 4095, 4095);
   }
   tlc.write();
-  setLedButtonsColor("011118888");
+  setLedButtonsColor("088888888");
   setSwagButtonLed("31");
 }
 
