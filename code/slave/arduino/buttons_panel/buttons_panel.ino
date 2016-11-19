@@ -10,34 +10,15 @@
 #define TIMEOUT 300000
 #define LED_STRIP_IN 3
 
-// Driver LED
-#define NUM_TLC5974 1
-#define data   4
-#define clock   5
-#define latch   6
-#define oe  12
-Adafruit_TLC5947 tlc = Adafruit_TLC5947(NUM_TLC5974, clock, data, latch);
 
 // Functions definitions :
 void connection ();
 
-// LED STRIP
+// LED buttons
 int pinRuban = 6;
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, pinRuban, NEO_GRB);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(8, pinRuban, NEO_GRB);
 
-char animation;
 uint32_t colors[9];
-int buttonColors[9][3] = {
-  {4095,4095,4095}, // noir
-  {0,4095,4095}, // Rouge
-  {4095,0,4095}, // vert
-  {4095,4095,0}, // bleu
-  {0,2200,4095}, // Jaune
-  {0,4095,0}, // Mauve
-  {4095,0,0}, //Cyan
-  {0,3500,4095}, // Orange
-  {0,0,0} // Blanc
-};
 
 void initColors(){
   colors[0] = strip.Color(00, 00, 00);// noir
@@ -57,15 +38,15 @@ char buttonsStatus[9];
 int swagLedPin = 2;
 
 void initButtons() {
-  buttons[0] = 8;
-  buttons[1] = 9;
-  buttons[2] = 10;
-  buttons[3] = 11;
-  buttons[4] = A3;
-  buttons[5] = A0;
-  buttons[6] = A1;
-  buttons[7] = A2;
-  buttons[8] = 7;
+  buttons[0] = A0;
+  buttons[1] = A1;
+  buttons[2] = A2;
+  buttons[3] = A3;
+  buttons[4] = A4;
+  buttons[5] = A5;
+  buttons[6] = 8;
+  buttons[7] = 9;
+  buttons[8] = 10;
 }
 
 
@@ -87,20 +68,6 @@ void setupButtons(){
 
 void setLedButtonsColor(String message);
 void setSwagButtonLed(String message);
-void setupDriver () {
-  tlc.begin();
-  if (oe >= 0) {
-    pinMode(oe, OUTPUT);
-    digitalWrite(oe, HIGH);
-  }
-
-  for (int led=0 ; led<8 ; led++) {
-    tlc.setLED(led, 4095, 4095, 4095);
-  }
-  tlc.write();
-  setLedButtonsColor("088888888");
-  setSwagButtonLed("31");
-}
 
 void setup() {
   Serial.begin(115200);
@@ -111,29 +78,31 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
-  // Init
-  initColors();
-  if (is_led_strip) {
-    strip.begin();
-  } else {
-    initButtons ();
-    setupButtons ();
-    setupDriver();
+  strip.begin();
+  initButtons ();
+  initColors ();
+  setupButtons ();
+
+  while (42) {
+    main_loop();
   }
 }
 
 
-void loop () {
+void main_loop () {
   if (!connected) {
     connection();
   } else {
     if (millis() - last_ping > TIMEOUT)
       connected = FALSE;
 
-    readInput();
+    if (Serial.available())
+      readInput();
     scanButtons();
   }
 }
+
+void loop () {}
 
 
 void connection () {
@@ -190,53 +159,28 @@ void parseMessage(String message){
 
   char firstChar = message.charAt(0);
   message.remove(0, 1);
-
-   if(firstChar == '1' && is_led_strip){
-    setLedStripColor(message);
-   }
-   if(firstChar == '2' && !is_led_strip){
+  
+  if(firstChar == '2' && !is_led_strip){
     setLedButtonsColor(message);
-   }
-   if(firstChar == '3' && !is_led_strip){
+  } else if(firstChar == '3' && !is_led_strip){
     setSwagButtonLed(message);
-   }
+  }
 }
 
 void setLedButtonsColor(String message){
-  // AC*8 (annimation + 8 colors (between 0 and 8))
-  animation = message.charAt(0); // not used for now
-  
-  for (int i = 1;i<33;i++){
+  for (int i = 1;i<9;i++){
     int index = message.charAt(i) - '0';
     if(index < 0 || index > 8){
       Serial.println("bad color index ");
       Serial.print("index mess :");
       Serial.print(index); Serial.print(' ');
       Serial.println(message);
+      continue;
     }
     
     //buttonColors
-    tlc.setLED(i-1, buttonColors[index][0],buttonColors[index][1],buttonColors[index][2]);
-  }
-  tlc.write();
-}
-
-void setLedStripColor(String message){
-  // AC*32 (annimation + 32 colors (between 0 and 8))
-  animation = message.charAt(0); // not used for now
-  
-  for (int i = 1;i<33;i++){
-    int index = message.charAt(i) - '0';
-    if(index < 0 || index > 8){
-      Serial.println("bad color index ");
-      Serial.print("index mess :");
-      Serial.print(index); Serial.print(' ');
-      Serial.println(message);
-    }
-
     uint32_t color = colors[index];
-
-    strip.setPixelColor(i, color);
+    strip.setPixelColor(i-1, color);
   }
   strip.show();
 }
@@ -250,32 +194,49 @@ void setSwagButtonLed(String message){
 }
 
 void scanButtons(){
+  bool meta_changed = false;
+  
   for (int i=0 ; i<9 ; i++) {
-    int button_pressed = digitalRead(buttons[i]) == HIGH;
-    int changed = FALSE;
+    int button_pressed = digitalRead(buttons[i]) == LOW;
+    bool changed = false;
     
     if(button_pressed && buttonsStatus[i] == 0) {
-      changed = TRUE;
+      changed = true;
       buttonsStatus[i] = 1;
     }
     
     if(!button_pressed && buttonsStatus[i] == 1) {
-      changed = TRUE;
+      changed = true;
       buttonsStatus[i] = 0;
     }
 
     if (changed) {
+      meta_changed = true;
       Serial.print("button-");
       Serial.print(i);
       Serial.print("-");
       if (button_pressed) {
-        Serial.print("UP");
-      } else {
         Serial.print("DOWN");
+      } else {
+        Serial.print("UP");
       }
       Serial.println();
+
+      if (button_pressed && i!= 8) {
+        setSwagButtonLed("30");
+        String msg = "2";
+        for (int i=0 ; i<8 ; i++)
+          msg += "" + ('0' + i);
+        setLedButtonsColor(msg);
+      } else if (button_pressed && i==8) {
+        setSwagButtonLed("31");
+        setLedButtonsColor("200000000");
+      }
     }
   }
+
+  if (meta_changed)
+    delay(30);
 }
 
 
