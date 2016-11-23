@@ -36,7 +36,7 @@ nc.start()
 
 
 def _main():
-    serial_ids = ["2a03:0043", "2341:0043"]
+    serial_ids = ["2a03:0043", "2341:0043", "2341:0243"]
     ports = list(list_devices_connected(serial_ids))
     for port in ports:
         if port in connected_devices:
