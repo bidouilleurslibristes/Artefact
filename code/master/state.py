@@ -1,4 +1,4 @@
-"""Modelisation for the game"""
+"""Modelisation for the game."""
 
 
 COLORS = {
@@ -15,8 +15,16 @@ COLORS = {
 
 
 class State():
-    """Plop."""
+    """Class to store the game state.
+
+    The state is modified by the different enigmas.
+
+    The state is also is charge to build the messages to the slaves.
+    this is why it needs the "message_to_slaves" box.
+    """
+
     def __init__(self, message_to_slaves):
+        """Empty state."""
         self.led_stripes = [
             ["noir" for i in range(32)],  # arduino 8
             ["noir" for i in range(32)],  # arduino 9
@@ -75,6 +83,7 @@ class State():
         self.message_to_slaves = message_to_slaves
 
     def set_all_led_strip(self, color):
+        """Set all led strips to a given color."""
         self.led_stripes = [
             [color for i in range(32)],
             [color for i in range(32)],
@@ -87,6 +96,7 @@ class State():
         ]
 
     def set_led_strip(self, color, number):
+        """Set a led strip to a color."""
         self.led_stripes[number] = [color for i in range(32)]
 
     def notify_slaves(self):
@@ -96,16 +106,19 @@ class State():
         self.notify_swag_buttons()
 
     def notify_led_strip(self):
+        """Build the messages to set the led strips colors."""
         commande = "1"
         animation = "A"
-        for index, arduino_id in enumerate(range(8, 16)):
-            colors = self.led_stripes[index]
+        arduino_id = 8  # we use only one arduino for the led strips.
+
+        for index, colors in enumerate(self.led_stripes):
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
-            res = "{}{}{}".format(commande, animation, string_color)
+            res = "{}{}{}{}".format(commande, index, animation, string_color)
             self.message_to_slaves.append((str(arduino_id), res))
 
     def notify_led_buttons(self):
+        """Build the messages to set the buttons colors."""
         commande = "2"
         for index, arduino_id in enumerate(range(0, 8)):
             colors = self.led_buttons[index]
@@ -115,6 +128,7 @@ class State():
             self.message_to_slaves.append((str(arduino_id), res))
 
     def notify_swag_buttons(self):
+        """Build the message to set the swag buttons colors."""
         commande = "3"
         for index, arduino_id in enumerate(range(0, 8)):
             on_off = self.swag_button_light[index]
