@@ -1,9 +1,9 @@
 [slaves]
 slave1.local
-slave2.local
-slave3.local
+#slave2.local
+#slave3.local
 slave4.local
-slave5.local
+#slave5.local
 #slave6.local
 #slave7.local
 

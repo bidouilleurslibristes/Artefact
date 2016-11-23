@@ -21,10 +21,10 @@
         - python3
         - htop
         - python3-pip
-        - libavbin-dev
-        - libavbin0
+        # - libavbin-dev
+        # - libavbin0
 
-    - name: Copy Zoomachine repository
+    - name: Clone Zoomachine repository
       git: repo="{{zoomachine.git_url}}" dest="{{zoomachine.path}}" force=true
       become_user: pi
 
