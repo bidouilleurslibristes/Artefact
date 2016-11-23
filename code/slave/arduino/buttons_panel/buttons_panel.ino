@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 300000
+#define TIMEOUT 500000
 #define LED_STRIP_IN 3
 
 
@@ -152,14 +152,14 @@ void readInput(){
 void parseMessage(String message){
   /*
   Protocol :
-   * 1AC1C2C3C4... : LED STRIP COLORS, message starts with 1 followed by 32 led colors as defined in color.h => 33 bytes total
-   * 2R1G1B1R2G2B2.... : LED BUTTON COLORS, message starts with 2 followed by 9*3 bytes for each led RGB color => 28 bytes total
+   * 11AC1C2C3C4... : LED STRIP COLORS, message starts with 1 followed by the strip ID, by 32 led colors as defined in color.h => 34 bytes total
+   * 2C1C2C3.... : LED BUTTON COLORS, message starts with 2 followed by 8 bytes for each led RGB color => 9 bytes total
    * 30/1 : SWAG BUTTON ON, message starts with 3 followed by "0" or "1" (resp off and on) => 2 bytes total
   */
 
   char firstChar = message.charAt(0);
   message.remove(0, 1);
-  
+
   if(firstChar == '2' && !is_led_strip){
     setLedButtonsColor(message);
   } else if(firstChar == '3' && !is_led_strip){
@@ -168,6 +168,8 @@ void parseMessage(String message){
 }
 
 void setLedButtonsColor(String message){
+  Serial.print("set button colors received messages : "); Serial.println(message);
+
   for (int i = 1;i<9;i++){
     int index = message.charAt(i) - '0';
     if(index < 0 || index > 8){
@@ -177,7 +179,7 @@ void setLedButtonsColor(String message){
       Serial.println(message);
       continue;
     }
-    
+
     //buttonColors
     uint32_t color = colors[index];
     strip.setPixelColor(i-1, color);
@@ -186,6 +188,9 @@ void setLedButtonsColor(String message){
 }
 
 void setSwagButtonLed(String message){
+  Serial.print("swan button led received messages : "); Serial.println(message);
+
+
   if (message.charAt(1) == '0') {
     digitalWrite(swagLedPin, LOW);
   } else {
@@ -195,16 +200,16 @@ void setSwagButtonLed(String message){
 
 void scanButtons(){
   bool meta_changed = false;
-  
+
   for (int i=0 ; i<9 ; i++) {
     int button_pressed = digitalRead(buttons[i]) == LOW;
     bool changed = false;
-    
+
     if(button_pressed && buttonsStatus[i] == 0) {
       changed = true;
       buttonsStatus[i] = 1;
     }
-    
+
     if(!button_pressed && buttonsStatus[i] == 1) {
       changed = true;
       buttonsStatus[i] = 0;
@@ -224,9 +229,10 @@ void scanButtons(){
 
       if (button_pressed && i!= 8) {
         setSwagButtonLed("30");
-        String msg = "2";
-        for (int i=0 ; i<8 ; i++)
-          msg += "" + ('0' + i);
+        String msg = "200000000";
+        for (int i=0 ; i<8 ; i++){
+          msg[i+1] = ('0' + ((1+i)%8) + 1);
+        }
         setLedButtonsColor(msg);
       } else if (button_pressed && i==8) {
         setSwagButtonLed("31");
@@ -237,6 +243,8 @@ void scanButtons(){
 
   if (meta_changed)
     delay(30);
+
+   delay(5);
 }
 
 
