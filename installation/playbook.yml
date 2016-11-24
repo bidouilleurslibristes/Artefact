@@ -41,4 +41,4 @@
       when: inventory_hostname == "master.local"
 
     - name: Settup systemd script
-      systemd: state=started name=init_zoomachine3.service enabled=True
+      systemd: state=started name=init_zoomachine3.service enabled=True restarted=True reloaded=True

@@ -1,14 +1,14 @@
 [slaves]
-slave1.local
+slave1
 #slave2.local
 #slave3.local
-slave4.local
+slave4
 #slave5.local
 #slave6.local
 #slave7.local
 
 [masters]
-master.local
+master
 
 [raspis:children]
 slaves
