@@ -5,7 +5,7 @@ import serial
 from serial.serialutil import SerialException
 from serial.tools import list_ports
 
-# ser = serial.Serial('/dev/cu.usbserial-DA00T1YU')
+INTERVAL_BETWEEN_HEARTBEATS = 5  # in seconds
 
 
 def list_devices_connected(patterns):
@@ -76,7 +76,7 @@ def _main(ser):
     while connected:
         if ser.inWaiting() > 0:
             print(ser.readline().decode("ascii").strip())
-        if (time.time() - last_heartbeat) > 1:
+        if (time.time() - last_heartbeat) > INTERVAL_BETWEEN_HEARTBEATS:
             connected = heartbeat(ser)
             last_heartbeat = time.time()
 
