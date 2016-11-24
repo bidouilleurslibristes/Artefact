@@ -13,6 +13,11 @@ COLORS = {
     "blanc": 8,
 }
 
+ARDUINOS_CONNECTED_TO_PANELS = [
+    15, 11, 1, 13, 4, 5, 6, 7  # index : panel ID and value : arduino ID
+]
+ARDUINO_LED_STRIPS_ID = 8  # we use only one arduino for the led strips.
+
 
 class State():
     """Class to store the game state.
@@ -109,18 +114,17 @@ class State():
         """Build the messages to set the led strips colors."""
         commande = "1"
         animation = "A"
-        arduino_id = 8  # we use only one arduino for the led strips.
 
         for index, colors in enumerate(self.led_stripes):
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}{}{}".format(commande, index, animation, string_color)
-            self.message_to_slaves.append((str(arduino_id), res))
+            self.message_to_slaves.append((str(ARDUINO_LED_STRIPS_ID), res))
 
     def notify_led_buttons(self):
         """Build the messages to set the buttons colors."""
         commande = "2"
-        for index, arduino_id in enumerate(range(0, 8)):
+        for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
             colors = self.led_buttons[index]
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
@@ -130,7 +134,7 @@ class State():
     def notify_swag_buttons(self):
         """Build the message to set the swag buttons colors."""
         commande = "3"
-        for index, arduino_id in enumerate(range(0, 8)):
+        for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
             on_off = self.swag_button_light[index]
             on_off_formatted = int(on_off)
             res = "{}{}".format(commande, on_off_formatted)
