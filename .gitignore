@@ -13,3 +13,6 @@ venv
 
 ## dockerfile
 Dockerfile
+
+## ansible stuff
+*.retry
