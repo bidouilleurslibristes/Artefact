@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 10000
+#define TIMEOUT 1000000
 
 
 // Functions definitions :
@@ -18,28 +18,33 @@ int pinsRuban[8] = {
   4, 5, 6, 7,   // led strips 0, 1, 2, 3
   8, 9, 10, 11  // led strips 4, 5, 6, 7
 };
+
 Adafruit_NeoPixel strips[8];
 
 void initStrips(){
   for(int i = 0; i < 8; i++){
-    Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, pinsRuban[i], NEO_GRB);
-    strips[i] = strip;
-    strip.begin();
+    strips[i] = Adafruit_NeoPixel(32, pinsRuban[i], NEO_GRB);
+    strips[i].begin();
   }
 }
 
+int freeRam () {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
 
 uint32_t colors[9];
 void initColors(){
-  colors[0] = strips[0].Color(00, 00, 00);// noir
-  colors[1] = strips[0].Color(40, 01, 01);// rouge ok
-  colors[2] = strips[0].Color(01, 35, 02);// vert ok
-  colors[3] = strips[0].Color(02, 02, 50);// bleu ok
-  colors[4] = strips[0].Color(30, 28, 0);// jaune ok
-  colors[5] = strips[0].Color(30, 0, 40);// mauve ok
-  colors[6] = strips[0].Color(0, 35, 25);//turquoise ok
-  colors[7] = strips[0].Color(40,15,0);// orange ok
-  colors[8] = strips[0].Color(20,20,20);// blanc ok
+  colors[0] = Adafruit_NeoPixel::Color(00, 00, 00);// noir
+  colors[1] = Adafruit_NeoPixel::Color(40, 01, 01);// rouge ok
+  colors[2] = Adafruit_NeoPixel::Color(01, 35, 02);// vert ok
+  colors[3] = Adafruit_NeoPixel::Color(02, 02, 50);// bleu ok
+  colors[4] = Adafruit_NeoPixel::Color(30, 28, 0);// jaune ok
+  colors[5] = Adafruit_NeoPixel::Color(30, 0, 40);// mauve ok
+  colors[6] = Adafruit_NeoPixel::Color(0, 35, 25);//turquoise ok
+  colors[7] = Adafruit_NeoPixel::Color(40,15,0);// orange ok
+  colors[8] = Adafruit_NeoPixel::Color(20,20,20);// blanc ok
 }
 
 
@@ -59,7 +64,11 @@ void setup() {
   // Init
   initStrips();
   initColors();
-
+  for(int i=0;i<8;i++){
+    Serial.print("set color strip : ") ; Serial.println(i);
+    strips[i].setPixelColor(6,255,255,255);
+    strips[i].show();
+  }
   while (42) {
     main_loop();
   }
@@ -128,7 +137,7 @@ void readInput(){
 void parseMessage(String message){
   /*
   Protocol :
-   * 1NAC1C2C3C4...C32 : LED STRIP COLORS, message starts with 1 followed by the strip ID, by 32 led colors as defined in color.h => 34 bytes total
+   * 1ANC1C2C3C4...C32 : LED STRIP COLORS, message starts with 1 followed by the strip ID, by 32 led colors as defined in color.h => 34 bytes total
   */
 
   char firstChar = message.charAt(0);
@@ -140,28 +149,34 @@ void parseMessage(String message){
 }
 
 void setLedStripColor(String message){
-  // AC*32 (annimation + 32 colors (between 0 and 8))
+  // AIC*32 (annimation + 32 colors (between 0 and 8))
   char animation;
   int strip_id;
 
-  animation = message.charAt(0); // not used for now
-  strip_id = message.charAt(1) - '0';
+  animation = message[0]; // not used for now
+  strip_id = message[1] - '0';
 
   for (int i = 2;i<33;i++){
-    int index = message.charAt(i) - '0';
-
+    Serial.print("received message : "); Serial.println(message);
+    Serial.print("free RAM : "); Serial.println(freeRam());
+    int index = message[i] - '0';
     if(index < 0 || index > 8){
       Serial.println("bad color index ");
-      Serial.print("index mess :");
-      Serial.print(index); Serial.print(' ');
+      Serial.print("i : ") ; Serial.print(i) ; Serial.print(" -- charAt i : ") ; Serial.print(message[i]); Serial.print("  -- index mess :"); Serial.print(index); Serial.print(' ');
       Serial.println(message);
+      return;
     }
 
+    Serial.print("set color : "); Serial.print(index) ; Serial.print(" to ledstrip : "); Serial.println(strip_id);
     uint32_t color = colors[index];
 
-    strips[strip_id].setPixelColor(i, color);
+    strips[strip_id].setPixelColor(i-2, color);
   }
-  strips[strip_id].show();
+
+  for(int i=0; i<8; i++){
+    Serial.print("Show Strip : "); Serial.println(i);
+    strips[i].show();
+  }
 }
 
 
