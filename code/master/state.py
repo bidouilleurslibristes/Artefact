@@ -118,7 +118,7 @@ class State():
         for index, colors in enumerate(self.led_stripes):
             colors_formatted = [COLORS[c] for c in colors]
             string_color = "".join(map(str, colors_formatted))
-            res = "{}{}{}{}".format(commande, index, animation, string_color)
+            res = "{}{}{}{}".format(commande, animation, index, string_color)
             self.message_to_slaves.append((str(ARDUINO_LED_STRIPS_ID), res))
 
     def notify_led_buttons(self):
