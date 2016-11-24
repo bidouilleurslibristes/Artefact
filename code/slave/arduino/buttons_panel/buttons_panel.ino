@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 500000
+#define TIMEOUT 10000
 #define LED_STRIP_IN 3
 
 
@@ -226,18 +226,6 @@ void scanButtons(){
         Serial.print("UP");
       }
       Serial.println();
-
-      if (button_pressed && i!= 8) {
-        setSwagButtonLed("30");
-        String msg = "200000000";
-        for (int i=0 ; i<8 ; i++){
-          msg[i+1] = ('0' + ((1+i)%8) + 1);
-        }
-        setLedButtonsColor(msg);
-      } else if (button_pressed && i==8) {
-        setSwagButtonLed("31");
-        setLedButtonsColor("200000000");
-      }
     }
   }
 
