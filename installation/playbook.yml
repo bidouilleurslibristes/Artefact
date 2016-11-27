@@ -37,11 +37,11 @@
 
     - name: Copy slave systemd init script
       copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
-      when: inventory_hostname != "master"
+      when: "master" not in inventory_hostname
 
     - name: Copy master systemd init script
       copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
-      when: inventory_hostname == "master"
+      when: "master" in inventory_hostname
 
     - name: Settup systemd script
       systemd: state=started name=init_zoomachine3.service enabled=True
