@@ -16,7 +16,9 @@ FORMAT = (
     ' :: %(message)s'
 )
 
-handler = SentryHandler('https://dc8afd81d6a24eb287b37d449dff0a7f@sentry.io/103075')
+handler = SentryHandler(
+    'https://5351cd7e946648c2a537ed641f5b4663:56cb93aa44df4e0a92e4fec93fc9ccd8@sentry.io/103075'
+)
 logging.basicConfig(format=FORMAT)
 setup_logging(handler)
 logger.setLevel(logging.INFO)
