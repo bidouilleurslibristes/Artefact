@@ -86,7 +86,10 @@ class MasterNetwork(Thread):
             self.status_messages.append((device_id, status, connected))
         else:
             # button from arduino
-            device_id, message_string = msg
+            try:
+                device_id, message_string = msg
+            except:
+                return  # bof bof bod
             self.arduino_messages.append((device_id, message_string))
 
     def send_command(self):
