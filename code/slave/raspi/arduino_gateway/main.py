@@ -24,7 +24,7 @@ FORMAT = (
     ' :: %(message)s'
 )
 logging.basicConfig(format=FORMAT)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 master_adress = sys.argv[1]
 nc = NetworkCommunication(
@@ -36,7 +36,7 @@ nc.start()
 
 
 def _main():
-    serial_ids = ["2a03:0043", "2341:0043", "2341:0243"]
+    serial_ids = ["2a03:0043", "2341:0043", "2341:0243", "214b:7000"]
     ports = list(list_devices_connected(serial_ids))
     for port in ports:
         if port in connected_devices:
