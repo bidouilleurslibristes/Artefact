@@ -1,1 +1,3 @@
-slave1.local
+master
+slave1
+slave4

@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /home/pi/ZooMachine-3/code/slave/raspi/arduino_gateway/main.py master.local
+ExecStart=/usr/bin/python3 /home/pi/ZooMachine-3/code/slave/raspi/arduino_gateway/main.py master
 
 [Install]
 WantedBy=multi-user.target

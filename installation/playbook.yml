@@ -21,6 +21,9 @@
         - python3
         - htop
         - python3-pip
+        - python-dev
+        - python3-dev
+        - libzmq-dev
         # - libavbin-dev
         # - libavbin0
 
@@ -33,12 +36,26 @@
         requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} executable="/usr/bin/pip3"
 
     - name: Copy slave systemd init script
-      copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root
-      when: inventory_hostname != "master.local"
+      copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
+      when: inventory_hostname != "master"
 
     - name: Copy master systemd init script
-      copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root
-      when: inventory_hostname == "master.local"
+      copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
+      when: inventory_hostname == "master"
 
     - name: Settup systemd script
-      systemd: state=started name=init_zoomachine3.service enabled=True restarted=True reloaded=True
+      systemd: state=started name=init_zoomachine3.service enabled=True
+
+    - name: Restart services
+      systemd: state=restarted name=init_zoomachine3.service enabled=True
+
+    - name: restart machine
+      shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+      async: 1
+      poll: 0
+      become: true
+      ignore_errors: true
+
+    - name: waiting for server to come back
+      local_action: wait_for host={{ inventory_hostname }} state=started delay=30 timeout=300
+      become: false
