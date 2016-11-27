@@ -28,12 +28,13 @@ FORMAT = (
     ' :: %(message)s'
 )
 handler = SentryHandler(
-    'https://5351cd7e946648c2a537ed641f5b4663:56cb93aa44df4e0a92e4fec93fc9ccd8@sentry.io/103075'
+    'https://5351cd7e946648c2a537ed641f5b4663:56cb93aa44df4e0a92e4fec93fc9ccd8@sentry.io/103075',
+    level=logging.ERROR
 )
 
 logging.basicConfig(format=FORMAT)
 setup_logging(handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 master_adress = sys.argv[1]
 nc = NetworkCommunication(
@@ -77,5 +78,8 @@ def main():
 
 if __name__ == '__main__':
     while 1:
-        main()
+        try:
+            main()
+        except Exception as e:
+            logger.exception(e)
         time.sleep(1)
