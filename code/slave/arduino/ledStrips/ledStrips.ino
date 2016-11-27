@@ -19,13 +19,27 @@ int pinsRuban[8] = {
   8, 9, 10, 11  // led strips 4, 5, 6, 7
 };
 
-Adafruit_NeoPixel strips[8];
+//Adafruit_NeoPixel _a = Adafruit_NeoPixel(32, 4, NEO_GRB);
+//Adafruit_NeoPixel _b = Adafruit_NeoPixel(32, 5, NEO_GRB);
+
+Adafruit_NeoPixel strips[8] = {
+  Adafruit_NeoPixel(32, 4, NEO_GRB),
+  Adafruit_NeoPixel(32, 5, NEO_GRB),
+  Adafruit_NeoPixel(32, 6, NEO_GRB),
+  Adafruit_NeoPixel(32, 7, NEO_GRB),
+  Adafruit_NeoPixel(32, 8, NEO_GRB),
+  Adafruit_NeoPixel(32, 9, NEO_GRB),
+  Adafruit_NeoPixel(32, 10, NEO_GRB),
+  Adafruit_NeoPixel(32, 11, NEO_GRB)
+};
 
 void initStrips(){
   for(int i = 0; i < 8; i++){
-    strips[i] = Adafruit_NeoPixel(32, pinsRuban[i], NEO_GRB);
+    //strips[i] = Adafruit_NeoPixel(32, pinsRuban[i], NEO_GRB);
     strips[i].begin();
   }
+  //_a.begin();
+  //_b.begin();
 }
 
 int freeRam () {
@@ -65,7 +79,7 @@ void setup() {
   initStrips();
   initColors();
   for(int i=0;i<8;i++){
-    Serial.print("set color strip : ") ; Serial.println(i);
+    //Serial.print("set color strip : ") ; Serial.println(i);
     strips[i].setPixelColor(6,255,255,255);
     strips[i].show();
   }
@@ -155,26 +169,45 @@ void setLedStripColor(String message){
 
   animation = message[0]; // not used for now
   strip_id = message[1] - '0';
+  Serial.println(message);
 
-  for (int i = 2;i<33;i++){
-    Serial.print("received message : "); Serial.println(message);
-    Serial.print("free RAM : "); Serial.println(freeRam());
+  for (int i = 2;i<34;i++){
     int index = message[i] - '0';
     if(index < 0 || index > 8){
       Serial.println("bad color index ");
-      Serial.print("i : ") ; Serial.print(i) ; Serial.print(" -- charAt i : ") ; Serial.print(message[i]); Serial.print("  -- index mess :"); Serial.print(index); Serial.print(' ');
+      
+      Serial.print("i : ") ; Serial.print(i) ;
+      Serial.print(" -- charAt i : ") ;
+      Serial.print(message[i]);
+      Serial.print("  -- index mess :");
+      Serial.print(index);
+      Serial.print(' ');
       Serial.println(message);
       return;
     }
 
-    Serial.print("set color : "); Serial.print(index) ; Serial.print(" to ledstrip : "); Serial.println(strip_id);
+    /*Serial.print("set color : ");
+    Serial.print(index) ;
+    Serial.print(" index : ");
+    Serial.print(i) ;
+    Serial.print(" to ledstrip : ");
+    Serial.println(strip_id);*/
     uint32_t color = colors[index];
 
+    /*switch (strip_id % 2) {
+      case 0:
+        _a.setPixelColor(i-2, color);
+        break;
+      case 1:
+        _b.setPixelColor(i-2, color);
+        break;
+    }*/
+    
     strips[strip_id].setPixelColor(i-2, color);
   }
 
   for(int i=0; i<8; i++){
-    Serial.print("Show Strip : "); Serial.println(i);
+    //Serial.print("Show Strip : "); Serial.println(i);
     strips[i].show();
   }
 }
