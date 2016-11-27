@@ -5,15 +5,21 @@ from network import MasterNetwork
 from enigma import SimonEnigma
 from state import State
 
+from raven.handlers.logging import SentryHandler
+from raven.conf import setup_logging
+
+
 logger = logging.getLogger('root')
 FORMAT = (
     '[%(asctime)s :: %(levelname)s '
     '%(filename)s:%(lineno)s - %(funcName)10s() ]'
     ' :: %(message)s'
 )
-logging.basicConfig(format=FORMAT)
-logger.setLevel(logging.INFO)
 
+handler = SentryHandler('https://dc8afd81d6a24eb287b37d449dff0a7f@sentry.io/103075')
+logging.basicConfig(format=FORMAT)
+setup_logging(handler)
+logger.setLevel(logging.INFO)
 
 messages_to_slaves = deque()
 arduino_messages = deque()
