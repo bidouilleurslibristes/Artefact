@@ -1,5 +1,4 @@
-import asyncio
-import json
+"""Code to simulate server emission."""
 
 import zmq
 
@@ -8,7 +7,7 @@ ctx = zmq.Context()
 
 def send_command():
     socket = ctx.socket(zmq.PUB)
-    socket.connect("tcp://127.0.0.1:5557")
+    socket.bind("tcp://127.0.0.1:5556")
     channel = b"2"
     message = "plop"
 
