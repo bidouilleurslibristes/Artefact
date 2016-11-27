@@ -10,6 +10,10 @@ import sys
 from serial_device import SerialDevice, list_devices_connected
 from network import NetworkCommunication
 
+from raven.handlers.logging import SentryHandler
+from raven.conf import setup_logging
+
+
 messages_from_devices = deque()
 messages_to_devices = defaultdict(lambda: deque(maxlen=100))
 messages_exceptions = deque()
@@ -23,8 +27,14 @@ FORMAT = (
     '%(filename)s:%(lineno)s - %(funcName)10s() ]'
     ' :: %(message)s'
 )
+handler = SentryHandler(
+    'https://5351cd7e946648c2a537ed641f5b4663:56cb93aa44df4e0a92e4fec93fc9ccd8@sentry.io/103075',
+    level=logging.ERROR
+)
+
 logging.basicConfig(format=FORMAT)
-logger.setLevel(logging.DEBUG)
+setup_logging(handler)
+logger.setLevel(logging.INFO)
 
 master_adress = sys.argv[1]
 nc = NetworkCommunication(
@@ -68,5 +78,8 @@ def main():
 
 if __name__ == '__main__':
     while 1:
-        main()
+        try:
+            main()
+        except Exception as e:
+            logger.exception(e)
         time.sleep(1)
