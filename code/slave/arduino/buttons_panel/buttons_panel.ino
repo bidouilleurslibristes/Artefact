@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 10000
+#define TIMEOUT 30000
 #define LED_STRIP_IN 3
 
 
@@ -170,8 +170,9 @@ void parseMessage(String message){
 void setLedButtonsColor(String message){
   Serial.print("set button colors received messages : "); Serial.println(message);
 
-  for (int i = 1;i<9;i++){
-    int index = message.charAt(i) - '0';
+  for (int i = 0;i<8;i++){
+    char c = message[i];
+    int index = (int)(c - '0');
     if(index < 0 || index > 8){
       Serial.println("bad color index ");
       Serial.print("index mess :");
@@ -182,7 +183,7 @@ void setLedButtonsColor(String message){
 
     //buttonColors
     uint32_t color = colors[index];
-    strip.setPixelColor(i-1, color);
+    strip.setPixelColor(i, color);
   }
   strip.show();
 }
@@ -191,7 +192,7 @@ void setSwagButtonLed(String message){
   Serial.print("swan button led received messages : "); Serial.println(message);
 
 
-  if (message.charAt(1) == '0') {
+  if (message[0] == '0') {
     digitalWrite(swagLedPin, LOW);
   } else {
     digitalWrite(swagLedPin, HIGH);
@@ -214,7 +215,7 @@ void scanButtons(){
       changed = true;
       buttonsStatus[i] = 0;
     }
-
+    
     if (changed) {
       meta_changed = true;
       Serial.print("button-");
