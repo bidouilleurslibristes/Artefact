@@ -168,8 +168,6 @@ void parseMessage(String message){
 }
 
 void setLedButtonsColor(String message){
-  Serial.print("set button colors received messages : "); Serial.println(message);
-
   for (int i = 0;i<8;i++){
     char c = message[i];
     int index = (int)(c - '0');
@@ -189,9 +187,6 @@ void setLedButtonsColor(String message){
 }
 
 void setSwagButtonLed(String message){
-  Serial.print("swan button led received messages : "); Serial.println(message);
-
-
   if (message[0] == '0') {
     digitalWrite(swagLedPin, LOW);
   } else {
@@ -215,7 +210,7 @@ void scanButtons(){
       changed = true;
       buttonsStatus[i] = 0;
     }
-    
+
     if (changed) {
       meta_changed = true;
       Serial.print("button-");
