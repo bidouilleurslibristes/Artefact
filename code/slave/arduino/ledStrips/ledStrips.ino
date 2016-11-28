@@ -169,7 +169,6 @@ void setLedStripColor(String message){
 
   animation = message[0]; // not used for now
   strip_id = message[1] - '0';
-  Serial.println(message);
 
   for (int i = 2;i<34;i++){
     int index = message[i] - '0';
