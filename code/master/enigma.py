@@ -35,7 +35,7 @@ class SimpleEnigma(Enigma):
             self.state.set_all_led_strip("orange")
         self.state.notify_slaves()
 
-    def update_from_device(self, device_id, button_id, button_state):
+    def update_from_devices(self, device_id, button_id, button_state):
         """update the game without using the arguments."""
         if self.is_solved:
             self.state.set_all_swag_buttons(True)
