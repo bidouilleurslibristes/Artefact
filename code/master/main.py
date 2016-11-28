@@ -2,7 +2,7 @@ import logging
 import time
 from collections import deque
 from network import MasterNetwork
-from enigma import SimonEnigma, SwagEnigma, SimpleEnigma
+from enigma import SimonEnigma, SwagEnigma, SimpleEnigma, Waiting
 from state import State
 
 from raven.handlers.logging import SentryHandler

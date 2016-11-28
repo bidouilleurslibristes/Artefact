@@ -71,7 +71,7 @@ class Waiting(Enigma):
                 colors[led_on_index] = "blanc"
             self.state.notify_slaves()
             i += 1
-            time.sleep(1e-2)
+            time.sleep(1)
 
     def update_from_device(self, device_id, button_id, button_state):
         pass
