@@ -191,7 +191,7 @@ class SerialDevice(Thread):
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logger.info("sending to the arduino {}}: {}".format(self.device_id, msg))
+            logger.info("sending to the arduino {}: {}".format(self.device_id, msg))
             self.serial.write(msg.encode())
             time.sleep(0.015)
 
