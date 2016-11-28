@@ -34,7 +34,9 @@ class SwagEnigma(Enigma):
         for i in range(8):
             if self.state.led_stripes[i][31] == "noir":
                 self.state.set_all_led_strip("vert")
+            self.state.swag_button_light[i] = False
 
+        self.state.swag_button_light[self.different_strip_number] = True
         self.state.set_led_strip("rouge", self.different_strip_number)
         self.state.notify_slaves()
 
@@ -45,6 +47,7 @@ class SwagEnigma(Enigma):
         button_ok = button_state == BUTTON_DOWN
         if right_button and right_device and button_ok:
             self.state.set_led_strip("vert", self.different_strip_number)
+            self.state.set_all_swag_buttons(True)
             self.is_solved = True
             self.state.notify_slaves()
 
