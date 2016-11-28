@@ -26,8 +26,6 @@ class MasterNetwork(Thread):
         self._running = True
         logger.debug("new master network")
 
-        self.arduinos_ids = list(range(17))
-
         self.configure_socket_from_slaves()
         self.configure_socket_to_slaves()
 
@@ -72,7 +70,7 @@ class MasterNetwork(Thread):
         We have two sockets, one for arduinos messages
         and one for slaves statuses (connections, error...)
         """
-        sockets = dict(self.poller.poll(20))
+        sockets = dict(self.poller.poll(5))
         if not sockets:
             return
 
@@ -88,8 +86,10 @@ class MasterNetwork(Thread):
             # button from arduino
             try:
                 device_id, message_string = msg
-            except:
-                return  # bof bof bod
+            except Exception as e:
+                logger.error("Unknown message from arduino : {}".format(msg))
+                logger.exception(e)
+                return
             self.arduino_messages.append((device_id, message_string))
 
     def send_command(self):
@@ -99,4 +99,4 @@ class MasterNetwork(Thread):
             message = [s.encode() for s in msg]
             self.socket_to_slaves.send_multipart(message)
             logger.info("sending to arduinos : {}".format(message))
-            time.sleep(0.016)
+            time.sleep(5e-3)
