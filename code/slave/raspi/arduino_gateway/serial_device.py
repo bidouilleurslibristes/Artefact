@@ -193,7 +193,7 @@ class SerialDevice(Thread):
                 msg += "\n"
             logger.info("sending to the arduino: {}".format(msg))
             self.serial.write(msg.encode())
-            time.sleep(0.005)
+            time.sleep(0.05)
 
     def __repr__(self):
         text_connected = "connected to {}".format(self.device_id)
