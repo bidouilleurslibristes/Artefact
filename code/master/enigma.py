@@ -2,6 +2,7 @@
 
 
 import signal
+import threading
 import time
 import random
 
@@ -21,6 +22,59 @@ class Enigma():
     def update_from_devices(self, device_id, button_id, button_state):
         """Update the state game after receiving a button push."""
         raise NotImplementedError
+
+
+class SimpleEnigma(Enigma):
+    """A simple enigma."""
+    def __init__(self, state):
+        """Init."""
+        super(SimpleEnigma, self).__init__(state)
+
+        self.state.set_all_swag_buttons(True)
+        for i in range(8):
+            self.state.set_all_led_strip("orange")
+        self.state.notify_slaves()
+
+    def update_from_device(self, device_id, button_id, button_state):
+        """update the game without using the arguments."""
+        if self.is_solved:
+            self.state.set_all_swag_buttons(True)
+            self.state.set_all_led_strip("blanc")
+        else:
+            self.state.set_all_swag_buttons(False)
+            self.state.set_all_led_strip("noir")
+        self.state.notify_slaves()
+        self.is_solved != self.is_solved
+
+
+class Waiting(Enigma):
+    def __init__(self, state):
+        super(Waiting, self).__init__(state)
+
+        self.anim = threading.Thread(target=self.affiche)
+        self.anim.start()
+
+    def affiche(self):
+        i = 0
+        button_on_index = 0
+        led_on_index = 0
+        nb_iteration_to_change = 10
+        while True:
+            self.state.set_all_led_strip("noir")
+            self.state.set_all_swag_buttons(False)
+
+            led_on_index = (i % (8 * nb_iteration_to_change)) // nb_iteration_to_change
+            button_on_index = (i % (8 * nb_iteration_to_change)) // nb_iteration_to_change
+
+            self.state.swag_button_light[button_on_index] = True
+            for colors in self.state.led_stripes:
+                colors[led_on_index] = "blanc"
+            self.state.notify_slaves()
+            i += 1
+            time.sleep(1e-2)
+
+    def update_from_device(self, device_id, button_id, button_state):
+        pass
 
 
 class SwagEnigma(Enigma):
@@ -184,7 +238,6 @@ class SimonEnigma(Enigma):
         self.current += 1
         if self.sequence_size == self.current:
             self.win()
-
 
     def error(self):
         self.loose = True

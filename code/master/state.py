@@ -102,11 +102,11 @@ class State():
 
     def set_led_strip(self, color, number):
         """Set a led strip to a color."""
-        self.led_stripes[number] = [color for i in range(32)]
+        self.led_stripes[number] = [color for _ in range(32)]
 
     def set_all_swag_buttons(self, status):
         """Set all swag buttons to the same status (True or False)."""
-        self.swag_button_light = [status for i in range(len(self.swag_button_light))]
+        self.swag_button_light = [status for _ in range(len(self.swag_button_light))]
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""

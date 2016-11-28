@@ -2,7 +2,7 @@ import logging
 import time
 from collections import deque
 from network import MasterNetwork
-from enigma import SimonEnigma, SwagEnigma
+from enigma import SimonEnigma, SwagEnigma, SimpleEnigma
 from state import State
 
 from raven.handlers.logging import SentryHandler
@@ -36,8 +36,10 @@ s = State(messages_to_slaves)
 
 difficulty = 3
 #se = SimonEnigma(s, 4, difficulty)
-se = SwagEnigma(s)
+#se = SwagEnigma(s)
+se = SimpleEnigma(s)
 ses = [se]
+#w = Waiting(s)
 
 
 def main():
