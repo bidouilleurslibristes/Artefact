@@ -20,6 +20,7 @@ handler = SentryHandler(
     'https://5351cd7e946648c2a537ed641f5b4663:56cb93aa44df4e0a92e4fec93fc9ccd8@sentry.io/103075',
     level=logging.ERROR
 )
+
 logging.basicConfig(format=FORMAT)
 setup_logging(handler)
 logger.setLevel(logging.INFO)
@@ -39,8 +40,6 @@ ses = [se]
 
 
 def main():
-    #print("messages from arduino : ", arduino_messages)
-    #print("messages from slaves : ", status_messages)
     global difficulty
 
     while arduino_messages:
