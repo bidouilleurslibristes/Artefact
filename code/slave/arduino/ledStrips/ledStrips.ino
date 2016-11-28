@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 1000000
+#define TIMEOUT 20000
 
 
 // Functions definitions :
@@ -175,7 +175,7 @@ void setLedStripColor(String message){
     int index = message[i] - '0';
     if(index < 0 || index > 8){
       Serial.println("bad color index ");
-      
+
       Serial.print("i : ") ; Serial.print(i) ;
       Serial.print(" -- charAt i : ") ;
       Serial.print(message[i]);
@@ -202,7 +202,7 @@ void setLedStripColor(String message){
         _b.setPixelColor(i-2, color);
         break;
     }*/
-    
+
     strips[strip_id].setPixelColor(i-2, color);
   }
 

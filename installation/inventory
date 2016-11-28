@@ -1,7 +1,7 @@
 [slaves]
 slave1
 #slave2.local
-#slave3.local
+slave3
 slave4
 #slave5.local
 #slave6.local
