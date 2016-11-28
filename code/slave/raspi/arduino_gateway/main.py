@@ -15,7 +15,7 @@ from raven.conf import setup_logging
 
 
 messages_from_devices = deque()
-messages_to_devices = defaultdict(lambda: deque(maxlen=100))
+messages_to_devices = defaultdict(lambda: deque(maxlen=1000))
 messages_exceptions = deque()
 connected_devices = set([])
 
