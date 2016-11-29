@@ -72,7 +72,7 @@ def main():
         broken_device = messages_exceptions.pop()
         print("cassé", str(broken_device))
         print(messages_from_devices)
-        connected_devices.remove(broken_device.port)
+        connected_devices.pop(broken_device.port)
 
     messages_from_devices.append(
         [HOSTNAME, "connected devices", str(connected_devices)]

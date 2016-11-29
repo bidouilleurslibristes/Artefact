@@ -23,7 +23,7 @@ handler = SentryHandler(
 
 logging.basicConfig(format=FORMAT)
 setup_logging(handler)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.CRITICAL)
 
 messages_to_slaves = deque()
 arduino_messages = deque()
