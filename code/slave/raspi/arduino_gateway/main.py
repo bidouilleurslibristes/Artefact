@@ -17,7 +17,7 @@ from raven.conf import setup_logging
 messages_from_devices = deque()
 messages_to_devices = defaultdict(lambda: deque(maxlen=1000))
 messages_exceptions = deque()
-connected_devices = set([])
+connected_devices = {}
 
 HOSTNAME = socket.gethostname()
 
@@ -59,7 +59,7 @@ def _main():
             messages_exceptions
         )
         serial_device.start()
-        connected_devices.add(port)
+        connected_devices[port] = serial_device
 
 
 def main():

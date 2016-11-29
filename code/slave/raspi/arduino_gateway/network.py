@@ -1,5 +1,7 @@
 """Communication stuff between master and slave raspi.
 
+Slave side of the channel.
+
 We use zmq for the communication.
 """
 

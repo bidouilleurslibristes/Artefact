@@ -1,3 +1,8 @@
+"""Communication between the master and the slaves.
+
+Part of the master.
+"""
+
 import logging
 import time
 from threading import Thread
