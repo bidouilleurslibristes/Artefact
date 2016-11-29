@@ -7,7 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 20000
+#define TIMEOUT 10000
 
 
 // Functions definitions :

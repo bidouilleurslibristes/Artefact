@@ -7,8 +7,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 30000
-#define LED_STRIP_IN 3
+#define TIMEOUT 10000
 
 
 // Functions definitions :
@@ -55,7 +54,6 @@ int button1_pressed = 0;
 
 BOOL connected = FALSE;
 
-char is_led_strip = TRUE;
 char ledPin = LED_BUILTIN;
 
 void setupButtons(){
@@ -71,8 +69,6 @@ void setSwagButtonLed(String message);
 
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_STRIP_IN, INPUT_PULLUP);
-  is_led_strip = digitalRead(LED_STRIP_IN) == LOW;
 
   // Board LED
   pinMode(ledPin, OUTPUT);
@@ -160,9 +156,9 @@ void parseMessage(String message){
   char firstChar = message.charAt(0);
   message.remove(0, 1);
 
-  if(firstChar == '2' && !is_led_strip){
+  if(firstChar == '2'){
     setLedButtonsColor(message);
-  } else if(firstChar == '3' && !is_led_strip){
+  } else if(firstChar == '3'){
     setSwagButtonLed(message);
   }
 }
@@ -189,7 +185,7 @@ void setLedButtonsColor(String message){
 void setSwagButtonLed(String message){
   if (message[0] == '0') {
     digitalWrite(swagLedPin, LOW);
-  } else {
+  } else if (message[0] == '1') {
     digitalWrite(swagLedPin, HIGH);
   }
 }

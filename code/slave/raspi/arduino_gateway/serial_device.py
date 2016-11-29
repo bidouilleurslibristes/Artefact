@@ -13,6 +13,8 @@ from serial.serialutil import SerialException
 from serial.tools import list_ports
 
 
+HEARTBEAT_INTERVAL = 4
+
 logger = logging.getLogger('root')
 
 
@@ -75,7 +77,7 @@ class SerialDevice(Thread):
             self.read_from_device()
             self.send_to_device()
 
-            if (time.time() - self.last_heartbeat) > 1:
+            if (time.time() - self.last_heartbeat) > HEARTBEAT_INTERVAL:
                 self.heartbeat()
                 self.last_heartbeat = time.time()
             time.sleep(0.01)
@@ -191,9 +193,9 @@ class SerialDevice(Thread):
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logger.info("sending to the arduino {}: {}".format(self.device_id, msg))
+            logger.warning("sending to the arduino {}: {}".format(self.device_id, msg))
             self.serial.write(msg.encode())
-            time.sleep(0.015)
+            time.sleep(15e-3)
 
     def __repr__(self):
         text_connected = "connected to {}".format(self.device_id)

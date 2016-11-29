@@ -34,7 +34,7 @@ handler = SentryHandler(
 
 logging.basicConfig(format=FORMAT)
 setup_logging(handler)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 master_adress = sys.argv[1]
 nc = NetworkCommunication(
