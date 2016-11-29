@@ -19,7 +19,9 @@ messages_to_devices = defaultdict(lambda: deque(maxlen=1000))
 messages_exceptions = deque()
 connected_devices = {}
 
+#HOSTNAME = "matthieu-slave"  #socket.gethostname()
 HOSTNAME = socket.gethostname()
+
 
 logger = logging.getLogger('root')
 FORMAT = (
