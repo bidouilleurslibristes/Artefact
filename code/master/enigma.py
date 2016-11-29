@@ -11,6 +11,18 @@ BUTTON_DOWN = "DOWN"
 BUTTON_UP = "UP"
 
 
+MAP_ARDUINO_PANEL = {
+    "15": "0",
+    "11": "1",
+    "13": "3",
+    "1": "2",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7"
+}
+
+
 class Enigma():
     """Enigma class."""
 
@@ -222,7 +234,9 @@ class SimonEnigma(Enigma):
             self.sequencePositions.append(random.randint(0, 7))
 
     def update_from_devices(self, device_id, button_id, button_state):
-        device_id = int(device_id)
+        #print("arduino id: {} -- button-id: {}".format(device_id, button_id))
+        #print("sequence color : {} -- sequence pos : {}".format(self.sequenceColors[self.current], self.sequencePositions[self.current]))
+        device_id = int(MAP_ARDUINO_PANEL[device_id])
         button_id = int(button_id)
         if button_state == "UP":
             return
@@ -230,7 +244,10 @@ class SimonEnigma(Enigma):
             self.error()
             return
 
-        color = self.colors[button_id]
+        try: 
+            color = self.colors[button_id]
+        except:
+            import ipdb; ipdb.set_trace()
         if color != self.sequenceColors[self.current]:
             self.error()
             return
