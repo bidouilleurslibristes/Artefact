@@ -37,6 +37,8 @@ class MasterNetwork(Thread):
         self.messages_to_slaves = messages_to_slaves
         self.arduino_messages = messages_from_arduinos
         self.status_messages = messages_from_slaves
+        time.sleep(2)
+        self.socket_to_slaves.send_multipart([b"100", b"caca"])
 
     def configure_socket_from_slaves(self):
         """Create ZMQ socket listening to the master."""
@@ -103,6 +105,8 @@ class MasterNetwork(Thread):
             logger.critical("message len before: {}".format(len(self.messages_to_slaves)))
             msg = self.messages_to_slaves.pop()
             message = [s.encode() for s in msg]
+            for _ in range(10):
+                self.socket_to_slaves.send_multipart([b"100", b"0"])
             self.socket_to_slaves.send_multipart(message)
             logger.critical("sending to arduinos : {}".format(message))
             time.sleep(5e-3)
