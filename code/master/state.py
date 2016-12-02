@@ -111,8 +111,8 @@ class State():
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
         self.notify_led_strip()
-        self.notify_led_buttons()
         self.notify_swag_buttons()
+        self.notify_led_buttons()
 
     def notify_led_strip(self):
         """Build the messages to set the led strips colors."""
