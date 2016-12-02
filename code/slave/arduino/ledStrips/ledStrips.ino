@@ -205,10 +205,7 @@ void setLedStripColor(String message){
     strips[strip_id].setPixelColor(i-2, color);
   }
 
-  for(int i=0; i<8; i++){
-    //Serial.print("Show Strip : "); Serial.println(i);
-    strips[i].show();
-  }
+  strips[strip_id].show();
 }
 
 
