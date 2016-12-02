@@ -28,7 +28,7 @@ class State():
     this is why it needs the "message_to_slaves" box.
     """
 
-    def __init__(self, message_to_slaves):
+    def __init__(self):
         """Empty state."""
         self.led_stripes = [
             ["noir" for i in range(32)],  # arduino 8
@@ -85,8 +85,6 @@ class State():
             False,  # arduino 7
         ]
 
-        self.message_to_slaves = message_to_slaves
-
     def set_all_led_strip(self, color):
         """Set all led strips to a given color."""
         self.led_stripes = [
@@ -110,9 +108,11 @@ class State():
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
+        self.message_to_slaves = []
         self.notify_led_strip()
         self.notify_swag_buttons()
         self.notify_led_buttons()
+        return self.message_to_slaves
 
     def notify_led_strip(self):
         """Build the messages to set the led strips colors."""

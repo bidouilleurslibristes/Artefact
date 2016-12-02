@@ -6,6 +6,7 @@ Part of the master.
 import logging
 import time
 from threading import Thread
+from collections import deque
 
 import zmq
 
@@ -16,13 +17,8 @@ logger = logging.getLogger('root')
 class MasterNetwork(Thread):
     """Network communication for the master."""
 
-    def __init__(self, messages_to_slaves, messages_from_arduinos, messages_from_slaves):
-        """Constructor for the class.
-
-        Arguments:
-         * inbox: messages from the Master, used for slaves and / or devices
-         * outbox: messages to send to the Master
-        """
+    def __init__(self):
+        """Constructor for the class."""
         Thread.__init__(self)
 
         self.ctx = zmq.Context()
@@ -34,11 +30,11 @@ class MasterNetwork(Thread):
         self.configure_socket_from_slaves()
         self.configure_socket_to_slaves()
 
-        self.messages_to_slaves = messages_to_slaves
-        self.arduino_messages = messages_from_arduinos
-        self.status_messages = messages_from_slaves
+        self.messages_to_slaves = deque([])
+        self.arduino_messages = deque([])
+        self.status_messages = deque([])
         time.sleep(2)
-        self.socket_to_slaves.send_multipart([b"100", b"caca"])
+        self.socket_to_slaves.send_multipart([b"100", b"init"])
 
     def configure_socket_from_slaves(self):
         """Create ZMQ socket listening to the master."""
@@ -109,5 +105,4 @@ class MasterNetwork(Thread):
                 self.socket_to_slaves.send_multipart([b"100", b"0"])
             self.socket_to_slaves.send_multipart(message)
             logger.critical("sending to arduinos : {}".format(message))
-            time.sleep(5e-3)
             logger.critical("message len after: {}".format(len(self.messages_to_slaves)))
