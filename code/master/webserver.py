@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import threading
+import json
 
 app = Flask(__name__)
 _thread = None
@@ -53,7 +54,9 @@ def send_data():
 @app.route('/update_state', methods=["POST"])
 def update_state():
     panel_id, button_id = request.form["button"].split("--")
-    print("pushed : {} in panel {}".format(button_id, panel_id))
+    pressed = json.loads(request.form["pressed"])
+    pressed_text = "pressed" if pressed else "released"
+    print("{} : {} in panel {}".format(pressed_text, button_id, panel_id))
     return "ok"
 
 

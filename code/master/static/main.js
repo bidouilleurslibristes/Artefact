@@ -12,6 +12,7 @@ var update_data = function(){
   });
 }
 
+var audio = new Audio('/static/click.mp3');
 
 
 var main = new Vue({
@@ -21,10 +22,17 @@ var main = new Vue({
     button_colors: []
   },
   methods: {
-    select: function(event) {
+    button_pressed: function(event) {
       targetId = event.currentTarget.id;
-      console.log(targetId); // returns 'foo'
-      $.post("/update_state", {'button': targetId} );
+      pressed = event.type=='mousedown';
+      console.log(targetId, pressed); // returns 'foo'
+      $.post(
+        "/update_state",
+        {'button': targetId, 'pressed': pressed},
+        function(data){
+          audio.play();
+        }
+      );
     }
   }
 })

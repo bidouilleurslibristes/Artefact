@@ -21,7 +21,8 @@
         :id="'panel-'+panel_index+'--button-'+button_id"
         class="no-border"
         :style="{ background: color }"
-        v-on:click="select($event)"
+        v-on:mousedown="button_pressed($event)"
+        v-on:mouseup="button_pressed($event)"
       >
         {{ button_id }}
       </button>
