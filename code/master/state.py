@@ -120,7 +120,7 @@ class State():
         animation = "A"
 
         for index, colors in enumerate(self.led_stripes):
-            colors_formatted = [COLORS[c] for c in colors]
+            colors_formatted = [self.color_to_index(c) for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}{}{}".format(commande, animation, index, string_color)
             self.message_to_slaves.append((str(ARDUINO_LED_STRIPS_ID), res))
@@ -130,7 +130,7 @@ class State():
         commande = "2"
         for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
             colors = self.led_buttons[index]
-            colors_formatted = [COLORS[c] for c in colors]
+            colors_formatted = [self.color_to_index(c) for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}".format(commande, string_color)
             self.message_to_slaves.append((str(arduino_id), res))
@@ -143,6 +143,10 @@ class State():
             on_off_formatted = int(on_off)
             res = "{}{}".format(commande, on_off_formatted)
             self.message_to_slaves.append((str(arduino_id), res))
+
+    def color_to_index(self, color):
+        """Format the colors in the format that arduino can understand."""
+        return COLORS[color]
 
     def __repr__(self):
         res = ""

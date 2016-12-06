@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Artefact simulation</title>
+
+    <link href="/static/main.css" rel="stylesheet" media="screen">
+    <link href="/static/bootstrap-3.3.7/css/bootstrap.css" rel="stylesheet" media="screen">
+
+
+  </head>
+  <body>
+    <div class="container-fluid" id="wrap">
+      <div class="container">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+
+    <footer id="footer">
+      <div class="container text-center">
+        <p>Réalisé par <a href="http://bidouilleurslibristes.org/">l'Association des Bidouilleurs Libristes</a></p>
+        <p><a href="https://github.com/yoann-dufresne/ZooMachine-3">Cliquer ici pour accéder au code.</a></p>
+      </div>
+    </footer>
+
+    <script src="/static/jquery/jquery-latest.js"></script>
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.js"></script>
+    <script src="/static/vue.js"></script>
+    <script src="/static/main.js"></script>
+  </body>
+</html>

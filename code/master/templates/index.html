@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Artefact simulator</h1>
+
+{%raw%}
+<div id="app">
+  <div id="panels" class="col-sm-12 center-block debug">
+    <div class="col-sm-2"></div>
+
+    <div
+      v-for="(colors, panel_index) in button_colors"
+      class="column-container col-sm-1"
+      :id="'panel-'+panel_index"
+    >
+
+      <p class="text-center">Panel {{panel_index}}</p>
+
+      <button
+        v-for="(color, button_id) in colors"
+        :id="'panel-'+panel_index+'--button-'+button_id"
+        class="no-border"
+        :style="{ background: color }"
+        v-on:click="select($event)"
+      >
+        {{ button_id }}
+      </button>
+    </div>
+  </div>
+
+  <div id="led-strips" class="col-sm-12 center-block debug">
+    <div class="col-sm-2"></div>
+
+    <div
+      v-for="(colors, led_strip_index) in led_strips_colors"
+      class="column-container col-sm-1 strip-ID"
+      :id="'led-strip'+led_strip_index"
+    >
+
+      <p class="text-center">Led strip {{ led_strip_index }}</p>
+
+      <div
+        v-for="(color, index) in colors"
+        v-bind:id="'led-'+index"
+        class="led debug center-block"
+        :style="{ background: color }"
+      >
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+{%endraw%}
+
+
+{#
+<div id="test center-block debug col-sm-12">
+
+  <div id="panels" class="col-sm-12 center-block">
+    {%for panel in range(8)%}
+    <div class="column-container col-sm-1 panel-{{panel}}">
+      <p class="text-center">Panel {{panel}}</p>
+      {% for button in range(8) %}
+      <button id='button-{{panel}}-{{button}}' class="no-border">{{ button }}</button>
+      {%endfor%}
+    </div>
+    {%endfor%}
+  </div>
+
+  <div id="stripes col-sm-12">
+    {%for strip in range(8)%}
+    <div class="column-container col-sm-1 strip-{{strip}}">
+      <p class="text-center">Led strip {{strip}}</p>
+      {%for led in range(32)%}
+      <div class="led debug center-block" id="led-{{strip}}-{{led}}" style='background: red'></div>
+      {%endfor%}
+    </div>
+    {%endfor%}
+  </div>
+
+</div>
+
+#}
+
+{% endblock %}

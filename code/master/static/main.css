@@ -1,0 +1,49 @@
+ .no-border{
+    border:0px solid transparent; /* this was 1px earlier */
+    margin: 2px;
+ }
+
+html,body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -80px;
+  /* Pad bottom by footer height */
+  padding: 0 0 80px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+  background-color: #f5f5f5;
+  margin-top: 20px;
+}
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.led {
+  width:  10px;
+  height: 10px;
+
+}
+
+.debug{
+  border: 1px solid #ccc;
+}
+
+.new-line{
+  break-after: always;
+  display: block;
+}
+
+#panels {
+  margin-bottom: 10px;
+}
