@@ -39,11 +39,10 @@ html,body {
   border: 1px solid #ccc;
 }
 
-.new-line{
-  break-after: always;
-  display: block;
+#panels {
+  margin-bottom: 30px;
 }
 
-#panels {
-  margin-bottom: 10px;
+#led-strips {
+  margin-top: 30px;
 }
