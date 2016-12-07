@@ -25,3 +25,7 @@ class Device(AbstractDevice):
     def send_state(self):
         """Send the state to the hardware."""
         self.webserver.state = deepcopy(self.state)
+
+    def set_button_trigger(self, callback_update_button):
+        """Redefined."""
+        self.webserver.button_trigger = callback_update_button

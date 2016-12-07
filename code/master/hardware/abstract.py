@@ -22,3 +22,7 @@ class AbstractDevice:
         """Cache the swag button led state to a given value."""
         print("set swag button of panel {} to {}".format(panel_id, value))
         self.state.swag_button_light[panel_id] = value
+
+    def set_button_trigger(self, callback_update_button):
+        """Trigger the state update after a change in button."""
+        raise NotImplementedError

@@ -56,34 +56,4 @@
 </div>
 {%endraw%}
 
-
-{#
-<div id="test center-block debug col-sm-12">
-
-  <div id="panels" class="col-sm-12 center-block">
-    {%for panel in range(8)%}
-    <div class="column-container col-sm-1 panel-{{panel}}">
-      <p class="text-center">Panel {{panel}}</p>
-      {% for button in range(8) %}
-      <button id='button-{{panel}}-{{button}}' class="no-border">{{ button }}</button>
-      {%endfor%}
-    </div>
-    {%endfor%}
-  </div>
-
-  <div id="stripes col-sm-12">
-    {%for strip in range(8)%}
-    <div class="column-container col-sm-1 strip-{{strip}}">
-      <p class="text-center">Led strip {{strip}}</p>
-      {%for led in range(32)%}
-      <div class="led debug center-block" id="led-{{strip}}-{{led}}" style='background: red'></div>
-      {%endfor%}
-    </div>
-    {%endfor%}
-  </div>
-
-</div>
-
-#}
-
 {% endblock %}

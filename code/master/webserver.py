@@ -5,6 +5,7 @@ import json
 app = Flask(__name__)
 _thread = None
 state = None
+button_trigger = None
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
@@ -55,8 +56,11 @@ def send_data():
 def update_state():
     panel_id, button_id = request.form["button"].split("--")
     pressed = json.loads(request.form["pressed"])
+
     pressed_text = "pressed" if pressed else "released"
     print("{} : {} in panel {}".format(pressed_text, button_id, panel_id))
+    if button_trigger:
+        button_trigger(panel_id, button_id, pressed)
     return "ok"
 
 
