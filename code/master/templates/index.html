@@ -16,6 +16,18 @@
 
       <p class="text-center">Panel {{panel_index}}</p>
 
+      <!-- button swag -->
+      <button
+        :id="'panel-'+panel_index+'--swag-button'"
+        class="no-border"
+        :style="{ background: swag_on[panel_index] }"
+        v-on:mousedown="button_pressed($event)"
+        v-on:mouseup="button_pressed($event)"
+      >
+        swag button
+      </button>
+
+      <!-- buttons with led color -->
       <button
         v-for="(color, button_id) in colors"
         :id="'panel-'+panel_index+'--button-'+button_id"
@@ -40,6 +52,7 @@
 
       <p class="text-center">Led strip {{ led_strip_index }}</p>
 
+      <!-- led strips -->
       <div
         v-for="(color, index) in colors"
         v-bind:id="'led-'+index"

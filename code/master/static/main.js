@@ -5,6 +5,7 @@ var update_data = function(){
       success: function (data) {
           main.led_strips_colors = data.led_strips_colors;
           main.button_colors = data.button_colors;
+          main.swag_on = data.swag;
       },
       error: function (error) {
           alert(JSON.stringify(error));

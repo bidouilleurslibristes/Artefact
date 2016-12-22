@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+
 import threading
 import json
 
@@ -8,9 +9,11 @@ state = None
 button_trigger = None
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+BLACK = [80, 80, 80]
+WHITE = [230, 230, 230]
 
 COLORS = [
-    [80, 80, 80],
+    BLACK,
     [150, 1, 1],
     [1, 150, 2],
     [2, 2, 150],
@@ -18,7 +21,7 @@ COLORS = [
     [150, 00, 170],
     [00, 170, 150],
     [200, 150, 00],
-    [230, 230, 230]
+    WHITE,
 ]
 
 
@@ -47,7 +50,9 @@ def send_data():
     context = {
         "led_strips_colors": strips,
         "button_colors": led_buttons,
-        "swag": state.swag_button_light,
+        "swag": 
+            ["rgb({},{},{})".format(r, g, b) for r, g, b in
+                [BLACK if swag_on else WHITE for swag_on in state.swag_button_light]],
     }
     return jsonify(context)
 
