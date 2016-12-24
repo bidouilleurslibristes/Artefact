@@ -1,13 +1,15 @@
-from flask import Flask, jsonify, render_template, request
-
-import threading
 import json
+import threading
+
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 _thread = None
 state = None
 button_trigger = None
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+SWAG_BUTTON_ID = 8
 
 BLACK = [80, 80, 80]
 WHITE = [230, 230, 230]
@@ -64,8 +66,15 @@ def update_state():
 
     pressed_text = "pressed" if pressed else "released"
     print("{} : {} in panel {}".format(pressed_text, button_id, panel_id))
+
+    if "button" in button_id:
+        if "swag" in button_id:
+            button_id = SWAG_BUTTON_ID
+        else:
+            button_id = button_id[7]
+
     if button_trigger:
-        button_trigger(panel_id, button_id, pressed)
+        button_trigger(panel_id[6], button_id, pressed)
     return "ok"
 
 

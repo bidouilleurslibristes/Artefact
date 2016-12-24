@@ -18,6 +18,10 @@ ARDUINOS_CONNECTED_TO_PANELS = [
 ]
 ARDUINO_LED_STRIPS_ID = 8  # we use only one arduino for the led strips.
 
+SWAG_BUTTON_ID = 8
+BUTTON_DOWN = ["DOWN", False]
+BUTTON_UP = ["UP", True]
+
 
 class State():
     """Class to store the game state.
@@ -84,27 +88,6 @@ class State():
             False,
             False,  # arduino 7
         ]
-
-    def set_all_led_strip(self, color):
-        """Set all led strips to a given color."""
-        self.led_stripes = [
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-            [color for i in range(32)],
-        ]
-
-    def set_led_strip(self, color, number):
-        """Set a led strip to a color."""
-        self.led_stripes[number] = [color for _ in range(32)]
-
-    def set_all_swag_buttons(self, status):
-        """Set all swag buttons to the same status (True or False)."""
-        self.swag_button_light = [status for _ in range(len(self.swag_button_light))]
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
