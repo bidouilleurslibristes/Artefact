@@ -3,7 +3,7 @@
 from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
 
-from enigma import SimonEnigma
+from enigma import SimonEnigma, SwagEnigma
 
 
 def main(real=False):
@@ -13,7 +13,7 @@ def main(real=False):
     else:
         device = DebugDevice()
 
-    se = SimonEnigma(device, 4, 3)
+    se = SwagEnigma(device)  # SimonEnigma(device, 4, 3)
 
     if not real:
         device.webserver.button_trigger = se.update_from_devices
@@ -21,6 +21,6 @@ def main(real=False):
 
 
 if __name__ == "__main__":
-    print("=========================")
-    print("====== test =============")
+    print("===============================================")
+    print("====== launching simulated device =============")
     main(real=False)

@@ -8,6 +8,8 @@ class AbstractDevice:
         """Initialisation."""
         self.state = State()
         print("device init")
+        self.SWAG_BUTTON_ID = 8
+        self.BUTTON_DOWN_CODE = "DOWN"
 
     def send_state(self):
         """Send the state to the hardware."""

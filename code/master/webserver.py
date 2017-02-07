@@ -52,7 +52,7 @@ def send_data():
     context = {
         "led_strips_colors": strips,
         "button_colors": led_buttons,
-        "swag": 
+        "swag":
             ["rgb({},{},{})".format(r, g, b) for r, g, b in
                 [BLACK if swag_on else WHITE for swag_on in state.swag_button_light]],
     }

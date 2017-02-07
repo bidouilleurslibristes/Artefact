@@ -48,7 +48,7 @@ class SwagEnigma(Enigma):
 
         self.different_strip_number = random.randint(0, 7)
 
-        self.device.set_all_led_strip("vert")
+        self.device.set_all_led_strips("vert")
         self.device.set_all_swag_buttons(False)
         self.device.set_swag_button(self.different_strip_number, True)
         self.device.set_all_leds_in_strip(self.different_strip_number, "rouge")
@@ -56,16 +56,19 @@ class SwagEnigma(Enigma):
         self.device.send_state()
 
     def update_from_devices(self, device_id, button_id, button_device):
-        """Update the device game after receiving a button push."""                
+        """Update the device game after receiving a button push."""
         right_device = (int(device_id) == int(self.different_strip_number))
-        right_button = (int(button_id) == int(device.SWAG_BUTTON_ID))
-        button_state_ok = (button_device in device.BUTTON_DOWN)
+        right_button = (int(button_id) == int(self.device.SWAG_BUTTON_ID))
+        button_state_ok = (button_device in self.device.BUTTON_DOWN_CODE)
 
         if right_button and right_device and button_state_ok:
             self.device.set_all_leds_in_strip(self.different_strip_number, "vert")
             self.device.set_all_swag_buttons(True)
             self.is_solved = True
             self.device.send_state()
+
+
+time.sleep = lambda x: None
 
 
 class SimonEnigma(Enigma):
