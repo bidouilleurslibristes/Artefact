@@ -30,7 +30,7 @@ Résolution : Appuyer sur les petits boutons colorés en rouge et correpondants 
 ## Fichier config
 
 Exemple :  
-buttons 5 xx..xx.x xxxx...x  
+little 5 xx..xx.x xxxx...x  
 Explication : Énigme petits boutons. Les parties 1,2,5,6,8 du bandeau 5 sont allumées en bleu (les premiers x). Les boutons n°5 des panneaux 1,2,3,4,8 sont allumés en bleu. Les autres NE doivent PAS être allumés en bleu.
 
 
@@ -39,10 +39,44 @@ Explication : Énigme petits boutons. Les parties 1,2,5,6,8 du bandeau 5 sont al
 
 # Séquence de couleurs
 
+## Description  
+
 Visuel : Un morceau de bandeau est divisé en sections de 2 leds de mêmes couleurs.
 Résolution : Aller sur la console correspondant au bandeau puis appuyer sur les boutons correspondant aux couleurs en allant du haut vers le bas.
 
+## Fichier config
+
+sequence 3 brrjtv.....  
+Explication : Séquence de couleurs sur le bandeau 3. Les couleurs vont toujours par deux. Ici on a donc deux leds bleus puis quatre leds rouges, deux jaunes, deux turquoises et deux vertes.
+
+
+
+
 # Masques de bandeau
 
+## Description
+
 Visuel : Un bandeau est éteint complétement. Le bouton swag correspondant clignote
-Résolution : Appuyer sur le bouton permet d'afficher.
+Résolution : Appuyer sur le bouton permet d'afficher le vrai contenu du bandeau.
+
+## Fichier config
+
+mask 4  
+Explication : Éteint le bandeau 4 a moins de maintenir le bouton swag
+
+
+
+
+# Allumage de boutons
+
+## Description
+
+Visuel : La liste des boutons d'un panneau est allumée
+Résolution : Résolu
+
+## Fichier config
+
+buttons 1 Tbb.tv...r
+Explication : Allume sur le panneau 1 le bouton swag et les boutons 1,2,4,5,8 dans les couleurs correspondant aux initiales.
+
+
