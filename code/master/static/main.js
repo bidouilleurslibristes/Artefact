@@ -26,12 +26,15 @@ var main = new Vue({
     button_pressed: function(event) {
       targetId = event.currentTarget.id;
       pressed = event.type=='mousedown';
+      audio.pause();
+      audio.currentTime = 0;
+      audio.play();
       console.log(targetId, pressed); // returns 'foo'
       $.post(
         "/update_state",
         {'button': targetId, 'pressed': pressed},
         function(data){
-          audio.play();
+          console.log("Validate data sent");
         }
       );
     }
@@ -39,4 +42,4 @@ var main = new Vue({
 })
 
 
-setInterval(update_data, 100);
+setInterval(update_data, 1000);
