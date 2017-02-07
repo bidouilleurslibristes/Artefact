@@ -1,151 +1,83 @@
-import random
-import time
+BUTTON_PRESSED = "DOWN"
 
 
-class Enigma():
-    """Enigma abstract class."""
+class Button():
+    def __init__(self, panel_id, button_id, status=None):
+        self.panel = panel_id
+        self.button = button_id
+        self.status = status
 
-    def __init__(self, device):
-        """Initialisation."""
-        self.device = device
-        self.is_solved = False
+    def __hash__(self):
+        return self.panel*9 + self.button
 
-    def update_from_devices(self, device_id, button_id, device):
-        """Update the device game after receiving a button push."""
+    def __eq__(self, other):
+        return (self.panel == other.panel) and (self.button == other.button)
+
+    def __neq__(self, other):
+        return not(self == other)
+
+
+class Enigma:
+    def __init__(self):
+        self.sub_enigmas = []
+        self.buttons_mapping = {}
+
+    def add_sub_enigma(self, sub_enigma):
+        self.sub_enigmas.append(sub_enigma)
+        for button in sub_enigma.buttons_of_interest():
+            self.buttons_mapping[button] = sub_enigma
+
+    def is_solved(self):
+        return all((se.is_solved() for se in self.sub_enigmas))
+
+
+class SubEnigma:
+    def __init__(self):
+        pass
+
+    def is_solved(self):
         raise NotImplementedError
 
+    def get_led_status(self):
+        """Renvoie un iterable de 32 couleurs, pouvant être None si l'on ne considère pas la led."""
+        raise NotImplementedError
 
-class SimpleEnigma(Enigma):
-    """A simple enigma."""
+    def button_trigger(self, button):
+        """
+        button : un dictionnaire avec panel_id, button_id, status
+        """
+        raise NotImplementedError
 
-    def __init__(self, device):
-        """Init."""
-        super(SimpleEnigma, self).__init__(device)
+    def buttons_of_interest(self):
+        raise NotImplementedError
 
-        self.device.set_all_swag_buttons(True)
-        for i in range(8):
-            self.device.set_all_led_strip("orange")
-        self.device.send_state()
-
-    def update_from_devices(self, device_id, button_id, device):
-        """update the game without using the arguments."""
-        if self.is_solved:
-            self.device.set_all_swag_buttons(True)
-            self.device.set_all_led_strip("blanc")
-        else:
-            self.device.set_all_swag_buttons(False)
-            self.device.set_all_led_strip("noir")
-        self.device.send_state()
-        self.is_solved != self.is_solved
+    # todo : init buttons
 
 
-class SwagEnigma(Enigma):
-    """A swag enigma..."""
-
-    def __init__(self, device):
-        """Initialize a swag enigma."""
-        super(SwagEnigma, self).__init__(device)
-
-        self.different_strip_number = random.randint(0, 7)
-
-        self.device.set_all_led_strips("vert")
-        self.device.set_all_swag_buttons(False)
-        self.device.set_swag_button(self.different_strip_number, True)
-        self.device.set_all_leds_in_strip(self.different_strip_number, "rouge")
-
-        self.device.send_state()
-
-    def update_from_devices(self, device_id, button_id, button_device):
-        """Update the device game after receiving a button push."""
-        right_device = (int(device_id) == int(self.different_strip_number))
-        right_button = (int(button_id) == int(self.device.SWAG_BUTTON_ID))
-        button_state_ok = (button_device in self.device.BUTTON_DOWN_CODE)
-
-        if right_button and right_device and button_state_ok:
-            self.device.set_all_leds_in_strip(self.different_strip_number, "vert")
-            self.device.set_all_swag_buttons(True)
-            self.is_solved = True
-            self.device.send_state()
-
-
-time.sleep = lambda x: None
-
-
-class SimonEnigma(Enigma):
-    def __init__(self, state, color_number, sequence_size):
-        super(SimonEnigma, self).__init__(state)
+class SwagEnigma(SubEnigma):
+    def __init__(self, interest_id, led_strip_status):
+        """
+        interest_id : the id of the panel / strip to listen to (the red strip, and the ID of the panel to press)
+        led_strip_status: iterable of 8 booleans with the leds to consider
+        """
+        self.interest_id = interest_id
+        self.led_strip_status = led_strip_status
         self.solved = False
-        self.loose = False
-        self.current = 0
-        self.colors = ["rouge", "vert", "bleu", "jaune"]
-        self.color_number = color_number
-        self.sequence_size = sequence_size
-        # init buttons
-        for panel_id in range(8):
-            for color_index, color in enumerate(self.colors):
-                self.device.set_one_led_in_panel(panel_id, color_index, color)
 
-        self.init_sequence()
-        self.show_sequence()
+    def is_solved(self):
+        return self.solved
 
-    def show_sequence(self):
-        for i in range(self.sequence_size):
-            # Mettre tous les bandeaux à noir
-            self.device.set_all_led_strips("noir")
-            # Mettre le bon bandeau à la bonne couleur
-            self.device.set_all_leds_in_strip(self.sequencePositions[i], self.sequenceColors[i])
-            # Force l'affichage sur les leds
-            self.device.send_state()
-            time.sleep(1)
-            # Remet au noir
-            self.device.set_all_led_strips("noir")
-            self.device.send_state()
-            time.sleep(1)
+    def get_led_status(self):
+        status = []
+        for led_status in self.led_strip_status:
+            color = "red" if led_status else None
+            for _ in range(4):
+                status.append(color)
+        return status
 
-    def init_sequence(self):
-        self.sequenceColors = []
-        self.sequencePositions = []
+    def button_trigger(self, button):
+        if button.status == BUTTON_PRESSED:
+            self.solved = True
 
-        for i in range(self.sequence_size):
-            self.sequenceColors.append(random.choice(self.colors[:self.color_number]))
-            self.sequencePositions.append(random.randint(0, 7))
-
-    def update_from_devices(self, device_id, button_id, button_state):
-        ## ATTENTION : utiliser MAP_ARDUINO_PANEL quelque part pour utiliser le matériel réel
-        device_id = int(device_id)
-        button_id = int(button_id)
-        print("device_id: {} -- button_id: {} -- button_state: {}".format(device_id, button_id, button_state))
-        if button_state == "UP":
-            return
-        if device_id != self.sequencePositions[self.current]:
-            self.error()
-            return
-
-        color = self.colors[button_id]
-        if color != self.sequenceColors[self.current]:
-            self.error()
-            return
-
-        self.current += 1
-        if self.sequence_size == self.current:
-            self.win()
-
-    def error(self):
-        self.loose = True
-        print("ON ERROR")
-        self.device.set_all_led_strips("rouge")
-        self.device.send_state()
-        time.sleep(2)
-
-    def win(self):
-        print("WIN")
-        self.solved = True
-        self.device.set_all_led_strips  ("vert")
-        self.device.send_state()
-        time.sleep(2)
-
-    def reinit(self):
-        self.current = 0
-        self.loose = False
-        self.solved = False
-        self.show_sequence()
+    def buttons_of_interest(self):
+        return [Button(self.panel_id, self.panel_id)]
