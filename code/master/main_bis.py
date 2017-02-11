@@ -3,7 +3,7 @@
 from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
 
-from enigma import SwagEnigma
+from enigma import SwagEnigma, Enigma
 
 
 def main(real=False):
@@ -13,11 +13,14 @@ def main(real=False):
     else:
         device = DebugDevice()
 
-    se = SwagEnigma(1, [True]*8)  # SimonEnigma(device, 4, 3)
-    import ipdb; ipdb.set_trace()
+    message = "swag 3 xxx..x.."
+    se = SwagEnigma(message)  # SimonEnigma(device, 4, 3)
+
+    e = Enigma()
+    e.add_sub_enigma(se)
 
     if not real:
-        device.webserver.button_trigger = se.update_from_devices
+        device.webserver.button_trigger = e.button_triggered
         device.webserver._thread.join()
 
 

@@ -3,6 +3,8 @@ import threading
 
 from flask import Flask, jsonify, render_template, request
 
+from hardware.button import Button
+
 app = Flask(__name__)
 _thread = None
 state = None
@@ -74,7 +76,7 @@ def update_state():
             button_id = button_id[7]
 
     if button_trigger:
-        button_trigger(panel_id[6], button_id, pressed)
+        button_trigger(Button(panel_id[6], button_id, pressed))
     return "ok"
 
 

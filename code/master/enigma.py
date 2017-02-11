@@ -1,20 +1,4 @@
-BUTTON_PRESSED = "DOWN"
-
-
-class Button():
-    def __init__(self, panel_id, button_id, status=None):
-        self.panel = panel_id
-        self.button = button_id
-        self.status = status
-
-    def __hash__(self):
-        return self.panel*9 + self.button
-
-    def __eq__(self, other):
-        return (self.panel == other.panel) and (self.button == other.button)
-
-    def __neq__(self, other):
-        return not(self == other)
+from hardware.button import Button, BUTTON_PRESSED
 
 
 class Enigma:
@@ -29,6 +13,15 @@ class Enigma:
 
     def is_solved(self):
         return all((se.is_solved() for se in self.sub_enigmas))
+
+
+    def button_triggered(self, button):
+        if button in self.buttons_mapping:
+            print("BRAVOOOOOOOO")
+            enigma = self.buttons_mapping[button]
+            enigma.button_trigger(button)
+        else :
+            print("NUUULLLLLLLLLL mauvais button", button)
 
 
 class SubEnigma:
@@ -52,17 +45,25 @@ class SubEnigma:
         raise NotImplementedError
 
     # todo : init buttons
+    def __repr__(self):
+        return "SubEnigma ({}) : {}".format(self.name, self.led_strip_status)
 
 
 class SwagEnigma(SubEnigma):
-    def __init__(self, interest_id, led_strip_status):
+    def __init__(self, message):
         """
         interest_id : the id of the panel / strip to listen to (the red strip, and the ID of the panel to press)
         led_strip_status: iterable of 8 booleans with the leds to consider
         """
-        self.interest_id = interest_id
+        self.name = "Swag Enigma"
+        _, interest_id, led_strip_status = message.strip().split()
+        led_strip_status = [c == "x" for c in led_strip_status]
+
+        self.interest_id = int(interest_id)
+        self.panel_id = interest_id
         self.led_strip_status = led_strip_status
         self.solved = False
+
 
     def is_solved(self):
         return self.solved
