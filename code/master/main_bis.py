@@ -13,11 +13,14 @@ def main(real=False):
     else:
         device = DebugDevice()
 
+    # Test création d'une énigme simple
     message = "swag 3 xxx..x.."
     se = SwagEnigma(message)  # SimonEnigma(device, 4, 3)
-
     e = Enigma()
     e.add_sub_enigma(se)
+
+    # Update hardware
+    # TODO
 
     if not real:
         device.webserver.button_trigger = e.button_triggered

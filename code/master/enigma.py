@@ -1,4 +1,5 @@
 from hardware.button import Button, BUTTON_PRESSED
+from state import State
 
 
 class Enigma:
@@ -22,6 +23,34 @@ class Enigma:
             enigma.button_trigger(button)
         else :
             print("NUUULLLLLLLLLL mauvais button", button)
+
+    def get_state (self):
+        st = State()
+        st.led_stripes = [
+            ["vert" for i in range(32)],  # arduino 8
+            ["vert" for i in range(32)],  # arduino 9
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],  # arduino 15
+        ]
+
+        # Valable uniquement car les status ne s'appliquent qu'à un bandeau à chaque fois
+        for sub in self.sub_enigmas:
+            # Récupère le status du bandeau pour la sous énigme
+            sub_status = sub.get_led_status()
+
+            # Met à jour le bandeau dans l'objet status
+            for i in range(32):
+                if sub[i] != None:
+                    st.led_stripes[sub.interest_id] = sub[i]
+
+        # TODO : Faire la même chose avec les boutons.
+
+        return st
+
 
 
 class SubEnigma:
@@ -82,3 +111,6 @@ class SwagEnigma(SubEnigma):
 
     def buttons_of_interest(self):
         return [Button(self.panel_id, self.panel_id)]
+
+
+
