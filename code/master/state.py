@@ -1,5 +1,5 @@
 """Modelisation for the game."""
-
+from hardware.button import Button
 
 COLORS = {
     "noir": 0,
@@ -34,6 +34,20 @@ class State():
 
     def __init__(self):
         """Empty state."""
+        self.init_led_strips()
+        self.init_buttons()
+
+        self.swag_button_id = 8
+
+    def init_buttons(self):
+        self.buttons = []
+        for panel_id in range(8):
+            tmp = []
+            for button_id in range(9):
+                tmp.append(Button(panel_id, button_id))
+            self.buttons.append(tmp)
+
+    def init_led_strips(self):
         self.led_stripes = [
             ["noir" for i in range(32)],  # arduino 8
             ["noir" for i in range(32)],  # arduino 9
@@ -45,49 +59,8 @@ class State():
             ["noir" for i in range(32)],  # arduino 15
         ]
 
-        self.led_buttons = [
-            ["noir" for i in range(8)],  # arduino 0
-            ["noir" for i in range(8)],  # arduino 1
-            ["noir" for i in range(8)],
-            ["noir" for i in range(8)],
-            ["noir" for i in range(8)],
-            ["noir" for i in range(8)],
-            ["noir" for i in range(8)],
-            ["noir" for i in range(8)],  # arduino 7
-        ]
-
-        self.pushed_buttons = [
-            [False for _ in range(8)],  # arduino 0
-            [False for _ in range(8)],
-            [False for _ in range(8)],
-            [False for _ in range(8)],
-            [False for _ in range(8)],
-            [False for _ in range(8)],
-            [False for _ in range(8)],
-            [False for _ in range(8)],  # arduino 7
-        ]
-
-        self.swag_button_pushed = [
-            False,  # arduino 0
-            False,
-            False,
-            False,
-            False,
-            False,
-            False,
-            False,  # arduino 7
-        ]
-
-        self.swag_button_light = [
-            False,  # arduino 0
-            False,
-            False,
-            False,
-            False,
-            False,
-            False,
-            False,  # arduino 7
-        ]
+    def swag_button_states(self):
+        return [panel[self.swag_button_id] for panel in self.buttons]
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
@@ -97,35 +70,6 @@ class State():
         self.notify_led_buttons()
         return self.message_to_slaves
 
-    def notify_led_strip(self):
-        """Build the messages to set the led strips colors."""
-        commande = "1"
-        animation = "A"
-
-        for index, colors in enumerate(self.led_stripes):
-            colors_formatted = [self.color_to_index(c) for c in colors]
-            string_color = "".join(map(str, colors_formatted))
-            res = "{}{}{}{}".format(commande, animation, index, string_color)
-            self.message_to_slaves.append((str(ARDUINO_LED_STRIPS_ID), res))
-
-    def notify_led_buttons(self):
-        """Build the messages to set the buttons colors."""
-        commande = "2"
-        for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
-            colors = self.led_buttons[index]
-            colors_formatted = [self.color_to_index(c) for c in colors]
-            string_color = "".join(map(str, colors_formatted))
-            res = "{}{}".format(commande, string_color)
-            self.message_to_slaves.append((str(arduino_id), res))
-
-    def notify_swag_buttons(self):
-        """Build the message to set the swag buttons colors."""
-        commande = "3"
-        for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
-            on_off = self.swag_button_light[index]
-            on_off_formatted = int(on_off)
-            res = "{}{}".format(commande, on_off_formatted)
-            self.message_to_slaves.append((str(arduino_id), res))
 
     def color_to_index(self, color):
         """Format the colors in the format that arduino can understand."""
@@ -143,3 +87,24 @@ class State():
             res += "{} - ".format(light)
 
         return res
+
+    def set_one_led_in_strip(self, strip_id, led_id, color):
+        """Cache the color of a given led in a given panel to a given color."""
+        self.led_stripes[strip_id][led_id] = color
+
+    def set_all_leds_in_strip(self, strip_id, color):
+        self.led_stripes[strip_id] = [color for _ in self.state.led_stripes[strip_id]]
+
+    def set_swag_button(self, panel_id, value):
+        """Cache the swag button led state to a given value."""
+        self.buttons[panel_id][self.SWAG_BUTTON_ID].state = value
+    def set_all_led_strips(self, color):
+        """Set all led strips to a given color."""
+        for strip_id in range(8):
+            self.set_all_leds_in_strip(strip_id, color)
+
+    def set_all_swag_buttons(self, status):
+        """Set all swag buttons to the same status (True or False)."""
+        for panel_id in range(8):
+            self.set_swag_button(panel_id, status)
+

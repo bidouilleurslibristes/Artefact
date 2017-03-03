@@ -1,4 +1,4 @@
-from hardware.button import Button, BUTTON_PRESSED
+from hardware.button import Button, BUTTON_DOWN
 from state import State
 
 
@@ -15,27 +15,22 @@ class Enigma:
     def is_solved(self):
         return all((se.is_solved() for se in self.sub_enigmas))
 
-
     def button_triggered(self, button):
         if button in self.buttons_mapping:
             print("BRAVOOOOOOOO")
             enigma = self.buttons_mapping[button]
             enigma.button_trigger(button)
-        else :
+        else:
             print("NUUULLLLLLLLLL mauvais button", button)
 
-    def get_state (self):
+    def get_state(self):
         st = State()
-        st.led_stripes = [
-            ["vert" for i in range(32)],  # arduino 8
-            ["vert" for i in range(32)],  # arduino 9
-            ["vert" for i in range(32)],
-            ["vert" for i in range(32)],
-            ["vert" for i in range(32)],
-            ["vert" for i in range(32)],
-            ["vert" for i in range(32)],
-            ["vert" for i in range(32)],  # arduino 15
-        ]
+
+        # état initial de tous les bandeaux de leds
+        st.init_led_strips()
+
+        # état initial de tous les boutons de tous les panneaux
+        st.init_buttons()
 
         # Valable uniquement car les status ne s'appliquent qu'à un bandeau à chaque fois
         for sub in self.sub_enigmas:
@@ -44,13 +39,13 @@ class Enigma:
 
             # Met à jour le bandeau dans l'objet status
             for i in range(32):
-                if sub[i] != None:
-                    st.led_stripes[sub.interest_id] = sub[i]
+                if not sub_status[i] is None:
+                    st.led_stripes[sub.interest_id] = sub_status[i]
 
-        # TODO : Faire la même chose avec les boutons.
+            for button in sub.buttons_of_interest():
+                st.led_buttons[button.panel][button.button] = button.state
 
         return st
-
 
 
 class SubEnigma:
@@ -93,7 +88,6 @@ class SwagEnigma(SubEnigma):
         self.led_strip_status = led_strip_status
         self.solved = False
 
-
     def is_solved(self):
         return self.solved
 
@@ -106,11 +100,10 @@ class SwagEnigma(SubEnigma):
         return status
 
     def button_trigger(self, button):
-        if button.status == BUTTON_PRESSED:
+        if button.status == BUTTON_DOWN:
             self.solved = True
 
     def buttons_of_interest(self):
         return [Button(self.panel_id, self.panel_id)]
-
 
 

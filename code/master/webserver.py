@@ -8,7 +8,6 @@ from hardware.button import Button
 app = Flask(__name__)
 _thread = None
 state = None
-button_trigger = None
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 SWAG_BUTTON_ID = 8
@@ -48,15 +47,14 @@ def send_data():
         strips.append(format_colors(strip_colors))
 
     led_buttons = []
-    for button_colors in state.led_buttons:
-        led_buttons.append(format_colors(button_colors))
+    for panel in state.buttons:
+        for button in panel:
+            led_buttons.append(format_colors(button.state))
 
     context = {
         "led_strips_colors": strips,
         "button_colors": led_buttons,
-        "swag":
-            ["rgb({},{},{})".format(r, g, b) for r, g, b in
-                [BLACK if swag_on else WHITE for swag_on in state.swag_button_light]],
+        "swag": [sb.state for sb in state.swag_button_states()],
     }
     return jsonify(context)
 

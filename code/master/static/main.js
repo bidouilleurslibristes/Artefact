@@ -41,5 +41,5 @@ var main = new Vue({
   }
 })
 
-
-setInterval(update_data, 1000);
+setTimeout(update_data, 0);
+setInterval(update_data, 100000);

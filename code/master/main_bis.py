@@ -18,12 +18,12 @@ def main(real=False):
     se = SwagEnigma(message)  # SimonEnigma(device, 4, 3)
     e = Enigma()
     e.add_sub_enigma(se)
+    device.set_enigma(e)
 
     # Update hardware
     # TODO
 
     if not real:
-        device.webserver.button_trigger = e.button_triggered
         device.webserver._thread.join()
 
 
