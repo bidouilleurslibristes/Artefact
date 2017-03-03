@@ -49,18 +49,29 @@ class State():
 
     def init_led_strips(self):
         self.led_stripes = [
-            ["noir" for i in range(32)],  # arduino 8
-            ["noir" for i in range(32)],  # arduino 9
-            ["noir" for i in range(32)],
-            ["noir" for i in range(32)],
-            ["noir" for i in range(32)],
-            ["noir" for i in range(32)],
-            ["noir" for i in range(32)],
-            ["noir" for i in range(32)],  # arduino 15
+            ["vert" for i in range(32)],  # arduino 8
+            ["vert" for i in range(32)],  # arduino 9
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],
+            ["vert" for i in range(32)],  # arduino 15
         ]
 
     def swag_button_states(self):
         return [panel[self.swag_button_id] for panel in self.buttons]
+
+    def normal_button_states(self):
+        res = []
+        for panel in self.buttons:
+            tmp = []
+            for button_id, button in enumerate(panel):
+                if button_id != self.swag_button_id:
+                    tmp.append(button)
+            res.append(tmp)
+        return res
+        # return [panel[:-1] for panel in self.buttons]
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
@@ -69,7 +80,6 @@ class State():
         self.notify_swag_buttons()
         self.notify_led_buttons()
         return self.message_to_slaves
-
 
     def color_to_index(self, color):
         """Format the colors in the format that arduino can understand."""
@@ -98,6 +108,7 @@ class State():
     def set_swag_button(self, panel_id, value):
         """Cache the swag button led state to a given value."""
         self.buttons[panel_id][self.SWAG_BUTTON_ID].state = value
+
     def set_all_led_strips(self, color):
         """Set all led strips to a given color."""
         for strip_id in range(8):

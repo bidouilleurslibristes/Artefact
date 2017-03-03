@@ -1,9 +1,11 @@
-BUTTON_DOWN = "DOWN"
-BUTTON_UP = "UP"
-DEFAULT_STATE = "noir"
 
 
 class Button():
+
+    BUTTON_DOWN = "DOWN"
+    BUTTON_UP = "UP"
+    DEFAULT_STATE = "noir"
+
     def __init__(self, panel_id, button_id, status=BUTTON_UP, state=DEFAULT_STATE):
         """
          panel_id : id du panneau

@@ -20,9 +20,6 @@ def main(real=False):
     e.add_sub_enigma(se)
     device.set_enigma(e)
 
-    # Update hardware
-    # TODO
-
     if not real:
         device.webserver._thread.join()
 

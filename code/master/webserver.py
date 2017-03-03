@@ -9,6 +9,7 @@ app = Flask(__name__)
 _thread = None
 state = None
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+hardware = None
 
 SWAG_BUTTON_ID = 8
 
@@ -28,10 +29,14 @@ COLORS = [
 ]
 
 
+def format_color(r, g, b):
+    return "rgb({},{},{})".format(r, g, b)
+
+
 def format_colors(colors):
     color_indexes = list(map(state.color_to_index, colors))
     rgb_tuples_colors = list(map(lambda c: COLORS[c], color_indexes))
-    rgb_colors = ["rgb({},{},{})".format(r, g, b) for r, g, b in rgb_tuples_colors]
+    rgb_colors = [format_color(r, g, b) for r, g, b in rgb_tuples_colors]
     return rgb_colors
 
 
@@ -47,14 +52,14 @@ def send_data():
         strips.append(format_colors(strip_colors))
 
     led_buttons = []
-    for panel in state.buttons:
-        for button in panel:
-            led_buttons.append(format_colors(button.state))
+    for panel in state.normal_button_states():
+        led_buttons.append(format_colors([button.state for button in panel]))
 
+    tmp_swag = [WHITE if sb.state == "blanc" else BLACK for sb in state.swag_button_states()]
     context = {
         "led_strips_colors": strips,
         "button_colors": led_buttons,
-        "swag": [sb.state for sb in state.swag_button_states()],
+        "swag": [format_color(r, g, b) for (r, g, b) in tmp_swag],
     }
     return jsonify(context)
 
@@ -65,6 +70,7 @@ def update_state():
     pressed = json.loads(request.form["pressed"])
 
     pressed_text = "pressed" if pressed else "released"
+    status = Button.BUTTON_DOWN if pressed else Button.BUTTON_UP
     print("{} : {} in panel {}".format(pressed_text, button_id, panel_id))
 
     if "button" in button_id:
@@ -73,8 +79,7 @@ def update_state():
         else:
             button_id = button_id[7]
 
-    if button_trigger:
-        button_trigger(Button(panel_id[6], button_id, pressed))
+    hardware.enigma.button_triggered(Button(panel_id[6], button_id, status))
     return "ok"
 
 

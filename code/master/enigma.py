@@ -1,5 +1,7 @@
-from hardware.button import Button, BUTTON_DOWN
+from hardware.button import Button
 from state import State
+
+SWAG_BUTTON_ID = 8
 
 
 class Enigma:
@@ -40,10 +42,10 @@ class Enigma:
             # Met à jour le bandeau dans l'objet status
             for i in range(32):
                 if not sub_status[i] is None:
-                    st.led_stripes[sub.interest_id] = sub_status[i]
+                    st.led_stripes[sub.interest_id][i] = sub_status[i]
 
             for button in sub.buttons_of_interest():
-                st.led_buttons[button.panel][button.button] = button.state
+                st.buttons[button.panel][button.button].state = button.state
 
         return st
 
@@ -88,22 +90,24 @@ class SwagEnigma(SubEnigma):
         self.led_strip_status = led_strip_status
         self.solved = False
 
+        self.button = Button(self.panel_id, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc")
+
     def is_solved(self):
         return self.solved
 
     def get_led_status(self):
         status = []
         for led_status in self.led_strip_status:
-            color = "red" if led_status else None
+            color = "rouge" if led_status else None
             for _ in range(4):
                 status.append(color)
         return status
 
     def button_trigger(self, button):
-        if button.status == BUTTON_DOWN:
+        if button.status == Button.BUTTON_DOWN:
             self.solved = True
 
     def buttons_of_interest(self):
-        return [Button(self.panel_id, self.panel_id)]
+        return [self.button]
 
 

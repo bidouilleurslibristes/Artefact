@@ -18,10 +18,7 @@ class AbstractDevice:
 
     def set_enigma(self, enigma):
         self.enigma = enigma
-
-    def set_button_trigger(self, callback_update_button):
-        """Trigger the state update after a change in button."""
-        raise NotImplementedError
+        self.send_state()
 
     def set_one_led_in_panel(self, panel_id, led_id, color):
         self.state.buttons[panel_id][led_id].state = color
