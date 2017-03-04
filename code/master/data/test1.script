@@ -1,16 +1,18 @@
 # swag 1
 swag 3 xxxxxxxx
+swag 1 xxxxx...
 
 # swag 2
 swag 0 xxxxxxxx
 
 # swag 3
 swag 6 xxxxxxxx
-buttons 0 ........T
-buttons 1 ........T
-buttons 2 ........T
-buttons 3 ........T
-buttons 4 ........T
-buttons 5 ........T
-buttons 7 ........T
+buttons 0 rb......T
+buttons 1 lb......T
+buttons 2 vb......T
+buttons 3 jb......T
+buttons 4 tb......T
+buttons 5 ob......T
+buttons 6 bb.......
+buttons 7 mb......T
 

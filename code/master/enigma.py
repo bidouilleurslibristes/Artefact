@@ -32,17 +32,18 @@ class Enigma:
         st.init_buttons()
 
         # Valable uniquement car les status ne s'appliquent qu'à un bandeau à chaque fois
-        for sub in self.sub_enigmas:
-            # Récupère le status du bandeau pour la sous énigme
-            sub_status = sub.get_led_status()
+        if not self.is_solved():
+            for sub in self.sub_enigmas:
+                # Récupère le status du bandeau pour la sous énigme
+                sub_status = sub.get_led_status()
 
-            # Met à jour le bandeau dans l'objet status
-            for i in range(32):
-                if not sub_status[i] is None:
-                    st.led_stripes[sub.interest_id][i] = sub_status[i]
+                # Met à jour le bandeau dans l'objet status
+                for i in range(32):
+                    if not sub_status[i] is None:
+                        st.led_stripes[sub.interest_id][i] = sub_status[i]
 
-            for button in sub.buttons_of_interest():
-                st.buttons[button.panel][button.button].state = button.state
+                for button in sub.buttons_of_interest():
+                    st.buttons[button.panel][button.button].state = button.state
 
         return st
 
@@ -95,7 +96,7 @@ class SwagEnigma(SubEnigma):
     def get_led_status(self):
         status = []
         for led_status in self.led_strip_status:
-            color = "rouge" if not self.solved else None
+            color = "rouge" if (not self.solved) and led_status else None
             for _ in range(4):
                 status.append(color)
         return status
@@ -109,14 +110,28 @@ class SwagEnigma(SubEnigma):
 
 
 class ButtonEnigma(SubEnigma):
+
     def __init__(self, message):
         self.name = "Button"
         _, panel_id, button_statuses = message.strip().split()
         self.panel_id = panel_id
         self.buttons = []
+
+        self.colors = {
+            "r" : "rouge",
+            "l" : "bleu",
+            "j" : "jaune",
+            "m" : "mauve",
+            "o" : "orange",
+            "v" : "vert",
+            "t" : "turquoise",
+            "b" : "blanc",
+            "n" : "noir"
+        }
+
         for index, char in enumerate(button_statuses[:-1]):
             if char != ".":
-                raise NotImplementedError
+                self.buttons.append(Button(self.panel_id, index, Button.BUTTON_UP, self.colors[char]))
 
         if button_statuses[-1] == "T":
             self.buttons.append(Button(self.panel_id, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc"))
