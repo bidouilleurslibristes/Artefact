@@ -19,11 +19,8 @@ class Enigma:
 
     def button_triggered(self, button):
         if button in self.buttons_mapping:
-            print("BRAVOOOOOOOO")
             enigma = self.buttons_mapping[button]
             enigma.button_trigger(button)
-        else:
-            print("NUUULLLLLLLLLL mauvais button", button)
 
     def get_state(self):
         st = State()
@@ -98,7 +95,7 @@ class SwagEnigma(SubEnigma):
     def get_led_status(self):
         status = []
         for led_status in self.led_strip_status:
-            color = "rouge" if led_status else None
+            color = "rouge" if not self.solved else None
             for _ in range(4):
                 status.append(color)
         return status
@@ -111,3 +108,27 @@ class SwagEnigma(SubEnigma):
         return [self.button]
 
 
+class ButtonEnigma(SubEnigma):
+    def __init__(self, message):
+        self.name = "Button"
+        _, panel_id, button_statuses = message.strip().split()
+        self.panel_id = panel_id
+        self.buttons = []
+        for index, char in enumerate(button_statuses[:-1]):
+            if char != ".":
+                raise NotImplementedError
+
+        if button_statuses[-1] == "T":
+            self.buttons.append(Button(self.panel_id, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc"))
+
+    def is_solved(self):
+        return True
+
+    def get_led_status(self):
+        return [None] * 32
+
+    def button_trigger(self, button):
+        pass
+
+    def buttons_of_interest(self):
+        return self.buttons

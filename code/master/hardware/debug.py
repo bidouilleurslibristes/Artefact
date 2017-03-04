@@ -8,6 +8,7 @@ from copy import deepcopy
 from hardware.abstract import AbstractDevice
 
 import webserver
+import time
 
 
 class Device(AbstractDevice):
@@ -17,7 +18,6 @@ class Device(AbstractDevice):
         """Initialisation."""
         super(Device, self).__init__()
 
-        print("device init")
         self.webserver = webserver
         self.webserver.run_threaded()
         self.webserver.hardware = self
@@ -26,3 +26,7 @@ class Device(AbstractDevice):
         """Send the state to the hardware."""
         if self.enigma:
             self.webserver.state = deepcopy(self.enigma.get_state())
+
+    def wait_for_event(self):
+        time.sleep(0.1)
+        self.send_state()

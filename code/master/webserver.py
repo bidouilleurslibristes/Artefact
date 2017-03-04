@@ -29,6 +29,10 @@ COLORS = [
 ]
 
 
+def shutdown_server():
+    pass
+
+
 def format_color(r, g, b):
     return "rgb({},{},{})".format(r, g, b)
 
