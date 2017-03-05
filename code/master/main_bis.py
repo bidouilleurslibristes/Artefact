@@ -57,8 +57,11 @@ def game_loop (device, enigmas):
         dup = deepcopy(enigma)
         device.set_enigma(dup)
         while not device.solve_enigma():
-            device.enigma.set_wrong()
+            # On error set colors
+            device.send_state()
             time.sleep(3)
+
+            # Reinit the current enigma
             dup = deepcopy(enigma)
             device.set_enigma(dup)
         time.sleep(3)

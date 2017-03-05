@@ -28,4 +28,4 @@ class Button():
         return not(self == other)
 
     def __repr__(self):
-        return "Button object - panel: {} button: {} status: {}".format(self.panel, self.button, self.status)
+        return "Button object - panel: {} button: {} status: {} color: {}".format(self.panel, self.button, self.status, self.state)

@@ -103,7 +103,7 @@ class State():
         self.led_stripes[strip_id][led_id] = color
 
     def set_all_leds_in_strip(self, strip_id, color):
-        self.led_stripes[strip_id] = [color for _ in self.state.led_stripes[strip_id]]
+        self.led_stripes[strip_id] = [color for _ in self.led_stripes[strip_id]]
 
     def set_swag_button(self, panel_id, value):
         """Cache the swag button led state to a given value."""

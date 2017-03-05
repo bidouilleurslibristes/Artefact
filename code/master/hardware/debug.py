@@ -25,7 +25,7 @@ class Device(AbstractDevice):
     def send_state(self):
         """Send the state to the hardware."""
         if self.enigma:
-            self.webserver.state = deepcopy(self.enigma.get_state())
+            self.webserver.state = self.enigma.get_state()
 
     def wait_for_event(self):
         time.sleep(0.1)

@@ -36,7 +36,9 @@ class Enigma:
         st.init_buttons()
 
         # Valable uniquement car les status ne s'appliquent qu'à un bandeau à chaque fois
-        if not self.is_solved():
+        if self.on_error:
+            st.set_all_led_strips("rouge")
+        elif not self.is_solved():
             for sub in self.sub_enigmas:
                 # Récupère le status du bandeau pour la sous énigme
                 sub_status = sub.get_led_status()
