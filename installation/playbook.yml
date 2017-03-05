@@ -58,26 +58,39 @@
 
     - name: Copy slave systemd init script
       copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
-      when: '"master" not in inventory_hostname'
+      tags:
+        - boot-config
+        - local
+
+    - name: Settup systemd script (slave)
+      systemd: state=started name=init_zoomachine3.service enabled=True daemon_reload=yes
+      tags:
+        - boot-config
+        - local
+
+    - name: Restart service (slave)
+      systemd: state=restarted name=init_zoomachine3.service enabled=True daemon_reload=yes
       tags:
         - boot-config
         - local
 
     - name: Copy master systemd init script
-      copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
+      copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3_master.service owner=root group=root force=yes
       when: '"master" in inventory_hostname'
       tags:
         - boot-config
         - local
 
-    - name: Settup systemd script
-      systemd: state=started name=init_zoomachine3.service enabled=True
+    - name: Settup systemd script (server)
+      systemd: state=started name=init_zoomachine3_master.service enabled=True daemon_reload=yes
+      when: '"master" in inventory_hostname'
       tags:
         - boot-config
         - local
 
-    - name: Restart services
-      systemd: state=restarted name=init_zoomachine3.service enabled=True
+    - name: Restart service (server)
+      systemd: state=restarted name=init_zoomachine3_master.service enabled=True daemon_reload=yes
+      when: '"master" in inventory_hostname'
       tags:
         - boot-config
         - local
