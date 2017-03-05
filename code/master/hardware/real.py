@@ -9,6 +9,8 @@ from hardware.abstract import AbstractDevice
 from state import State
 from network import MasterNetwork
 
+import time
+
 
 class Device(AbstractDevice):
     """Interface to a device."""
@@ -28,6 +30,11 @@ class Device(AbstractDevice):
         print(messages)
         for message in messages:
             self.network.messages_to_slaves.append(message)
+
+    def wait_for_event(self):
+        time.sleep(0.1)
+        while self.network.arduino_messages:
+            msg = self.network.arduino_messages.popleft()
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""

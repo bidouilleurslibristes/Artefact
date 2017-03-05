@@ -99,7 +99,7 @@ class MasterNetwork(Thread):
         """Send a command to the slaves, with a channel and a message."""
         while self.messages_to_slaves:
             logger.critical("message len before: {}".format(len(self.messages_to_slaves)))
-            msg = self.messages_to_slaves.pop()
+            msg = self.messages_to_slaves.popleft()
             message = [s.encode() for s in msg]
             for _ in range(10):
                 self.socket_to_slaves.send_multipart([b"100", b"0"])
