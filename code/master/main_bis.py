@@ -6,6 +6,7 @@ from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
 
 from enigma import SwagEnigma, Enigma, ButtonEnigma
+from copy import deepcopy
 import time
 
 
@@ -37,7 +38,6 @@ class Game:
                     enigmas.append(self.parse_enigma(f))
         return enigmas
 
-
 def main(real=False):
     """main de test."""
     if real:
@@ -45,23 +45,23 @@ def main(real=False):
     else:
         device = DebugDevice()
 
-    # Test création d'une énigme simple
-    # message = "swag 3 xxx..x.."
-    # se = SwagEnigma(message)  # SimonEnigma(device, 4, 3)
-    # e = Enigma()
-    # e.add_sub_enigma(se)
-    # device.set_enigma(e)
-
     enigmas = Game.load_from_file(sys.argv[1])
-    for enigma in enigmas:
-        if enigma:  # a virer
-            device.set_enigma(enigma)
-            device.solve_enigma()
-            time.sleep(3)
+    game_loop(device, enigmas)
 
     if not real:
         # device.webserver.shutdown_server()
         device.webserver._thread.join()
+
+def game_loop (device, enigmas):
+    for enigma in enigmas:
+        dup = deepcopy(enigma)
+        device.set_enigma(dup)
+        while not device.solve_enigma():
+            device.enigma.set_wrong()
+            time.sleep(3)
+            dup = deepcopy(enigma)
+            device.set_enigma(dup)
+        time.sleep(3)
 
 
 if __name__ == "__main__":

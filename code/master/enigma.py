@@ -8,6 +8,7 @@ class Enigma:
     def __init__(self):
         self.sub_enigmas = []
         self.buttons_mapping = {}
+        self.on_error = False
 
     def add_sub_enigma(self, sub_enigma):
         self.sub_enigmas.append(sub_enigma)
@@ -20,7 +21,10 @@ class Enigma:
     def button_triggered(self, button):
         if button in self.buttons_mapping:
             enigma = self.buttons_mapping[button]
-            enigma.button_trigger(button)
+            self.on_error = not enigma.button_trigger(button)
+
+    def set_wrong(self):
+        self.buttons_mapping = []
 
     def get_state(self):
         st = State()
@@ -103,7 +107,12 @@ class SwagEnigma(SubEnigma):
 
     def button_trigger(self, button):
         if button.status == Button.BUTTON_DOWN:
-            self.solved = True
+            if self.solved:
+                return False
+            else:
+                self.solved = True
+                return True
+        return True
 
     def buttons_of_interest(self):
         return [self.button]
@@ -143,7 +152,7 @@ class ButtonEnigma(SubEnigma):
         return [None] * 32
 
     def button_trigger(self, button):
-        pass
+        return False
 
     def buttons_of_interest(self):
         return self.buttons

@@ -27,6 +27,9 @@ class AbstractDevice:
         """ Game loop for an enigma """
         while not self.enigma.is_solved():
             self.wait_for_event()
+            if self.enigma.on_error:
+                return False
+        return True
 
     def wait_for_event(self):
         """ waiting for game event """
