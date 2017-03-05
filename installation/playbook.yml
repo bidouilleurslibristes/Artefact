@@ -12,6 +12,9 @@
   tasks:
     - name: install python-apt
       command: apt-get -y install python-apt
+      tags:
+        - install
+        - internet
 
     - name: install ubuntu packages
       apt: pkg={{ item }} state=installed update_cache={{ update_cache }}
@@ -24,31 +27,60 @@
         - python-dev
         - python3-dev
         - libzmq-dev
+        - rsync
         # - libavbin-dev
         # - libavbin0
+      tags:
+        - install
+        - internet
 
     - name: Clone Zoomachine repository
       git: repo="{{zoomachine.git_url}}" dest="{{zoomachine.path}}" force=true
       become_user: pi
+      tags:
+        - deploy
+        - internet
+
+    - name: Clone Zoomachine repository (local)
+      synchronize: src="../../ZooMachine-3" dest="{{zoomachine.path}}"
+      become_user: pi
+      tags:
+        - deploy
+        - local
 
     - name: Install pip dependancies
       pip:
         requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} executable="/usr/bin/pip3"
       when: 1 == 2
+      tags:
+        - deploy
+        - internet
 
     - name: Copy slave systemd init script
       copy: src=init_zoomachine3_slave.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
       when: '"master" not in inventory_hostname'
+      tags:
+        - boot-config
+        - local
 
     - name: Copy master systemd init script
       copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3.service owner=root group=root force=yes
       when: '"master" in inventory_hostname'
+      tags:
+        - boot-config
+        - local
 
     - name: Settup systemd script
       systemd: state=started name=init_zoomachine3.service enabled=True
+      tags:
+        - boot-config
+        - local
 
     - name: Restart services
       systemd: state=restarted name=init_zoomachine3.service enabled=True
+      tags:
+        - boot-config
+        - local
 
     - name: restart machine
       shell: sleep 2 && shutdown -r now "Ansible updates triggered"
@@ -56,7 +88,13 @@
       poll: 0
       become: true
       ignore_errors: true
+      tags:
+        - local
+        - restart
 
     - name: waiting for server to come back
       local_action: wait_for host={{ inventory_hostname }} state=started delay=30 timeout=60
       become: false
+      tags:
+        - local
+        - restart
