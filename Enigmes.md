@@ -3,6 +3,17 @@ Ce fichier est dédié à la description des énigmes unitaires et composites pr
   
 Détail général : Chaque bandeau est composé de 32 leds. On considérera les leds par groupe de 4 pour les énigmes, ce qui laissera la possibilité d'avoir 8 sections indépendantes sur le bandeau
 
+Couleurs :
+r : rouge
+l : bleu
+v : vert
+j : jaune
+t : turquoise
+o : orange
+b : blanc
+m : mauve
+n : noir
+
 
 # Enigme bouton SWAG
 
@@ -76,7 +87,7 @@ Résolution : Résolu
 
 ## Fichier config
 
-buttons 1 Tbb.tv...r
+buttons 1 bb.tv...rT
 Explication : Allume sur le panneau 1 le bouton swag et les boutons 1,2,4,5,8 dans les couleurs correspondant aux initiales.
 
 

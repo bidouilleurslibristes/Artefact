@@ -16,10 +16,14 @@ J'ai la version `2.2.0.0`
 
     ansible-playbook --limit=slaves -i inventory playbook.yml
 
+### Problème slave4 ?
+
+Très long à démarer.  
+
 
 ## Installation du master
 
-    ansible-playbook --limit=master -i inventory playbook.yml
+    ansible-playbook --limit=masters -i inventory playbook.yml
 
 
 ## Mise à jour du code
