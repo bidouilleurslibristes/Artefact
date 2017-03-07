@@ -33,9 +33,12 @@ class Device(AbstractDevice):
     def wait_for_event(self):
         time.sleep(0.1)
         while self.network.arduino_messages:
-            panel_id, msg = self.network.arduino_messages.popleft()
+            arduino_id, msg = self.network.arduino_messages.popleft()
+            panel_id = ARDUINOS_CONNECTED_TO_PANELS.index(int(arduino_id))
             if not msg.startswith("button"):
                 continue
+
+            print(panel_id, arduino_id, msg)
 
             _, button_id, status = msg.strip().split("-")
             self.enigma.button_triggered(Button(panel_id, button_id, status))
@@ -78,7 +81,16 @@ class Device(AbstractDevice):
         tmp = []
         commande = "3"
         for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
-            on_off = [str(int(butt.state == "blanc")) for butt in self.state.swag_button_states()]
+            on_off = str(int(self.state.swag_button_states()[index].state == "blanc"))
             res = "{}{}".format(commande, on_off)
             tmp.append((str(arduino_id), res))
         return tmp
+
+
+
+
+
+
+
+
+

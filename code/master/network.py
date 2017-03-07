@@ -101,8 +101,6 @@ class MasterNetwork(Thread):
             logger.info("message len before: {}".format(len(self.messages_to_slaves)))
             msg = self.messages_to_slaves.popleft()
             message = [s.encode() for s in msg]
-            for _ in range(10):
-                self.socket_to_slaves.send_multipart([b"100", b"0"])
             self.socket_to_slaves.send_multipart(message)
             logger.info("sending to arduinos : {}".format(message))
             logger.info("message len after: {}".format(len(self.messages_to_slaves)))

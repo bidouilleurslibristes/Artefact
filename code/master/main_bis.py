@@ -79,6 +79,7 @@ def game_loop (device, enigmas):
             # Reinit the current enigma
             dup = deepcopy(enigma)
             device.set_enigma(dup)
+        device.send_state()
         time.sleep(3)
 
 
