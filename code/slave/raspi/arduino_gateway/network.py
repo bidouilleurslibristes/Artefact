@@ -94,7 +94,7 @@ class NetworkCommunication(Thread):
     def send_messages_to_master(self):
         """Send messages in the outbox to the master."""
         while self.messages_to_master:
-            msg = self.messages_to_master.pop()
+            msg = self.messages_to_master.popleft()
             msg = [s.encode() for s in msg]
             logger.debug("sending {} to master".format(msg))
             self.sock_out.send_multipart(msg)

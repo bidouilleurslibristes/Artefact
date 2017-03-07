@@ -98,6 +98,7 @@ class MasterNetwork(Thread):
     def send_command(self):
         """Send a command to the slaves, with a channel and a message."""
         while self.messages_to_slaves:
+            print("coucou")
             logger.critical("message len before: {}".format(len(self.messages_to_slaves)))
             msg = self.messages_to_slaves.popleft()
             message = [s.encode() for s in msg]

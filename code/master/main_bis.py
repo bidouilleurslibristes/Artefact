@@ -1,6 +1,7 @@
 """Main de test."""
 
 import sys
+import logging
 
 from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
@@ -8,6 +9,20 @@ from hardware.real import Device as RealDevice
 from enigma import SwagEnigma, Enigma, ButtonEnigma
 from copy import deepcopy
 import time
+
+
+logger = logging.getLogger('root')
+FORMAT = (
+    '[%(asctime)s :: %(levelname)s '
+    '%(filename)s:%(lineno)s - %(funcName)10s() ]'
+    ' :: %(message)s'
+)
+
+logging.basicConfig(format=FORMAT)
+#setup_logging(handler)
+logger.setLevel(logging.CRITICAL)
+
+
 
 
 class Game:
@@ -70,4 +85,4 @@ def game_loop (device, enigmas):
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=False)
+    main(real=True)

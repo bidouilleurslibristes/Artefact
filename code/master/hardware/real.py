@@ -6,7 +6,7 @@ These is used to control the physical hardware.
 from hardware.abstract import AbstractDevice
 
 
-from state import State
+from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID
 from network import MasterNetwork
 
 import time
@@ -20,6 +20,7 @@ class Device(AbstractDevice):
         super(Device, self).__init__()
 
         self.network = MasterNetwork()
+        self.network.start()
         self.state = State()
         self.send_state()
         print("device init")
@@ -27,14 +28,18 @@ class Device(AbstractDevice):
     def send_state(self):
         """Send the state to the hardware."""
         messages = self.notify_slaves()
-        print(messages)
         for message in messages:
             self.network.messages_to_slaves.append(message)
 
     def wait_for_event(self):
         time.sleep(0.1)
         while self.network.arduino_messages:
-            msg = self.network.arduino_messages.popleft()
+            panel_id, msg = self.network.arduino_messages.popleft()
+            if not msg.startswith("button"):
+                continue
+
+            _, button_id, status = msg.strip().split("-")
+            self.enigma.button_triggered(Button(panel_id, button_id, status))
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
@@ -42,7 +47,7 @@ class Device(AbstractDevice):
         messages_to_slaves.extend(self.build_led_strip_strings())
         messages_to_slaves.extend(self.build_swag_buttons_strings())
         messages_to_slaves.extend(self.build_led_buttons_strings())
-        return self.message_to_slaves
+        return messages_to_slaves
 
     def build_led_strip_strings(self):
         """Build the messages to set the led strips colors."""
@@ -50,8 +55,8 @@ class Device(AbstractDevice):
         animation = "A"
 
         tmp = []
-        for index, colors in enumerate(self.led_stripes):
-            colors_formatted = [self.color_to_index(c) for c in colors]
+        for index, colors in enumerate(self.state.led_stripes):
+            colors_formatted = [self.state.color_to_index(c) for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}{}{}".format(commande, animation, index, string_color)
             tmp.append((str(ARDUINO_LED_STRIPS_ID), res))
@@ -61,9 +66,9 @@ class Device(AbstractDevice):
         """Build the messages to set the buttons colors."""
         tmp = []
         commande = "2"
-        for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
-            colors = self.led_buttons[index]
-            colors_formatted = [self.color_to_index(c) for c in colors]
+        for panel_id, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
+            colors = [butt.state for butt in self.state.normal_button_states()[panel_id]]
+            colors_formatted = [self.state.color_to_index(c) for c in colors]
             string_color = "".join(map(str, colors_formatted))
             res = "{}{}".format(commande, string_color)
             tmp.append((str(arduino_id), res))
@@ -74,8 +79,7 @@ class Device(AbstractDevice):
         tmp = []
         commande = "3"
         for index, arduino_id in enumerate(ARDUINOS_CONNECTED_TO_PANELS):
-            on_off = self.swag_button_light[index]
-            on_off_formatted = int(on_off)
-            res = "{}{}".format(commande, on_off_formatted)
+            on_off = [str(int(butt.state == "blanc")) for butt in self.state.swag_button_states()]
+            res = "{}{}".format(commande, on_off)
             tmp.append((str(arduino_id), res))
         return tmp
