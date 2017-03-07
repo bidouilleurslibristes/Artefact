@@ -38,8 +38,6 @@ class Device(AbstractDevice):
             if not msg.startswith("button"):
                 continue
 
-            print(panel_id, arduino_id, msg)
-
             _, button_id, status = msg.strip().split("-")
             self.enigma.button_triggered(Button(panel_id, button_id, status))
 
