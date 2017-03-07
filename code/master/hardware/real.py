@@ -10,6 +10,7 @@ from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID
 from network import MasterNetwork
 
 import time
+from hardware.button import Button
 
 
 class Device(AbstractDevice):
@@ -21,12 +22,10 @@ class Device(AbstractDevice):
 
         self.network = MasterNetwork()
         self.network.start()
-        self.state = State()
-        self.send_state()
-        print("device init")
 
     def send_state(self):
         """Send the state to the hardware."""
+        self.state = self.enigma.get_state()
         messages = self.notify_slaves()
         for message in messages:
             self.network.messages_to_slaves.append(message)

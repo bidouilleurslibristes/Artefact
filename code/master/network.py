@@ -98,12 +98,11 @@ class MasterNetwork(Thread):
     def send_command(self):
         """Send a command to the slaves, with a channel and a message."""
         while self.messages_to_slaves:
-            print("coucou")
-            logger.critical("message len before: {}".format(len(self.messages_to_slaves)))
+            logger.info("message len before: {}".format(len(self.messages_to_slaves)))
             msg = self.messages_to_slaves.popleft()
             message = [s.encode() for s in msg]
             for _ in range(10):
                 self.socket_to_slaves.send_multipart([b"100", b"0"])
             self.socket_to_slaves.send_multipart(message)
-            logger.critical("sending to arduinos : {}".format(message))
-            logger.critical("message len after: {}".format(len(self.messages_to_slaves)))
+            logger.info("sending to arduinos : {}".format(message))
+            logger.info("message len after: {}".format(len(self.messages_to_slaves)))

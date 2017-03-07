@@ -93,8 +93,8 @@ class State():
 
         res += "\n\n"
         res += "Swag Buttons : \n"
-        for light in self.swag_button_light:
-            res += "{} - ".format(light)
+        for button in self.swag_button_states():
+            res += "{} - ".format(button.state)
 
         return res
 
