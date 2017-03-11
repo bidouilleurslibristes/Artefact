@@ -73,7 +73,7 @@ void setup() {
 
   // Board LED
   pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin, HIGH);
 
   // Init
   initStrips();
@@ -83,6 +83,10 @@ void setup() {
     strips[i].setPixelColor(6,255,255,255);
     strips[i].show();
   }
+
+  delay(1000);
+  digitalWrite(ledPin, LOW);
+  
   while (42) {
     main_loop();
   }
@@ -130,7 +134,7 @@ void connection () {
   Serial.flush();
 
   // turn the LED on when connected
-  digitalWrite(ledPin, HIGH);
+  //digitalWrite(ledPin, HIGH);
   last_ping = millis();
 }
 

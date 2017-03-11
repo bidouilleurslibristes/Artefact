@@ -5,8 +5,8 @@ import zmq
 import zmq.asyncio
 
 
-MASTER_ADDR = "127.0.0.1"
-
+MASTER_ADDR = sys.argv[1] if len(sys.argv) > 1 else "127.0.0.1"
+print("Listening to: " + MASTER_ADDR)
 
 def got_stdin_data(q):
     asyncio.async(q.put(sys.stdin.readline()))

@@ -86,7 +86,9 @@ class SerialDevice(Thread):
         """Try to connect and raise SerialDeviceException if there is a disconnection."""
         try:
             self._run()
-        except (SerialException, OSError):
+        except (SerialException, OSError) as e:
+            logger.error("Port {} : Serial / OS exception".format(self.port))
+            logger.exception(e)
             self.msg_error.append(self)
         except Exception as e:
             logger.error("Unknown exception")
@@ -128,7 +130,7 @@ class SerialDevice(Thread):
 
     def connect(self):
         """Connect to a device using SSCP."""
-        logger.debug("init connection")
+        logger.info("port {} : init connection".format(self.port))
         # Try to read a BONJOUR message and get the arduino unique id
         device_id = self._read_device_id()
         if not device_id:
@@ -136,7 +138,7 @@ class SerialDevice(Thread):
             return False
 
         # Send back the response for connection
-        logger.debug("device id: {}".format(device_id))
+        logger.info("device id: {}".format(device_id))
         self.serial.write(device_id.encode())
 
         connected = self._connection_verification()
@@ -146,7 +148,7 @@ class SerialDevice(Thread):
 
         self.connected = True
         self.device_id = device_id
-        logger.info(str(self))
+        logger.info("Connection successful" + str(self))
         return True
 
     def heartbeat(self):
@@ -158,14 +160,13 @@ class SerialDevice(Thread):
         heartbeat_text = "PING ?\n".encode()
         self.serial.write(heartbeat_text)
         text = self.serial.readline().decode("ascii").strip()
-        logger.debug("heartbeat from arduino: ".format(text))
         if not text and "PONG !" not in text:
             self._disconnect()
-            logger.info(str(self))
+            logger.error("No heartbeat from arduino {}".format(self.device_id))
             return False
 
         self.connected = True
-        logger.debug(str(self))
+        logger.debug("Successful heartbeat with arduino " + str(self.device_id))
         return True
 
     def read_from_device(self):
@@ -177,6 +178,7 @@ class SerialDevice(Thread):
         """
         while self.serial.inWaiting():
             message = self.serial.readline().decode("ascii").strip()
+            logger.info("read from device {}: {}".format(self.device_id, message))
             self.msg_in.append((self.device_id, message))
 
     def send_to_device(self):
@@ -193,7 +195,7 @@ class SerialDevice(Thread):
             msg = msg_out.pop()
             if not msg.endswith('\n'):
                 msg += "\n"
-            logger.warning("sending to the arduino {}: {}".format(self.device_id, msg))
+            logger.info("sending to the arduino {}: {}".format(self.device_id, msg))
             self.serial.write(msg.encode())
             time.sleep(15e-3)
 
