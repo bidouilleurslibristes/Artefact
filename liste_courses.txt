@@ -1,7 +1,6 @@
-Liste des courses
+﻿Liste des courses
 
- * fil électrique (50m)
  * dominos ou mieux (bornes automatique à levier)
  * ralonge USB 2m * 4
  * boite de dérivation (electrique jardin)
- * connectique pour les bandeau de led (dominos //  barette male encastrable)
+ * connectique pour les bandeau de led (dominos //  barette male encastrable / jack 3 points)
