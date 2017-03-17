@@ -87,17 +87,24 @@ class NetworkCommunication(Thread):
     def configure_socket_out(self):
         """Create ZMQ socket emitting to the master."""
         server_adress_out = "tcp://{}:5557".format(self.master_adress)
-
         self.sock_out = self.ctx.socket(zmq.PUB)
         self.sock_out.connect(server_adress_out)
+
+        server_adress_statuses_out = "tcp://{}:5558".format(self.master_adress)
+        self.sock_out_statuses = self.ctx.socket(zmq.PUB)
+        self.sock_out_statuses.connect(server_adress_statuses_out)
 
     def send_messages_to_master(self):
         """Send messages in the outbox to the master."""
         while self.messages_to_master:
             msg = self.messages_to_master.popleft()
             msg = [s.encode() for s in msg]
-            logger.debug("sending {} to master".format(msg))
-            self.sock_out.send_multipart(msg)
+            if b"status" in msg[0]:
+                logger.debug("sending status : {}".format(msg))
+                self.sock_out_statuses.send_multipart(msg)
+            else:
+                logger.debug("sending {} to master".format(msg))
+                self.sock_out.send_multipart(msg)
 
     def receive_messages_from_master(self):
         """Receive messages from the master and populate the inbox for the correct device."""

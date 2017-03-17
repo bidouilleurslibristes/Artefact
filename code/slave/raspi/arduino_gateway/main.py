@@ -19,7 +19,6 @@ messages_to_devices = defaultdict(lambda: deque(maxlen=1000))
 messages_exceptions = deque()
 connected_devices = {}
 
-#HOSTNAME = "matthieu-slave"  #socket.gethostname()
 HOSTNAME = socket.gethostname()
 
 
@@ -36,7 +35,7 @@ FORMAT = (
 
 logging.basicConfig(format=FORMAT)
 # setup_logging(handler)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.DEBUG)
 
 master_adress = sys.argv[1]
 nc = NetworkCommunication(
@@ -77,7 +76,7 @@ def main():
         connected_devices.pop(broken_device.port)
 
     messages_from_devices.append(
-        [HOSTNAME, "connected devices", str(connected_devices)]
+        ["status", HOSTNAME, "connected devices", str(connected_devices)]
     )
 
 if __name__ == '__main__':

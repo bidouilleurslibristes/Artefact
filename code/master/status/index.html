@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plop</title>
+  <script type="text/javascript" src="{{ app.router.static.url(filename='moment-with-locales.js') }}"></script>
+  <script type="text/javascript" src="{{ app.router.static.url(filename='jquery.js') }}"></script>
+  <script type="text/javascript" src="{{ app.router.static.url(filename='vue.js') }}"></script>
+  <script type="text/javascript" src="{{ app.router.static.url(filename='main.js') }}"></script>
+</head>
+<body>
+
+{%raw%}
+<div id="app">
+
+    <div>Statuses</div>
+    <ul>
+    <li
+      v-for="(status, slave_id) in statuses"
+      class="column-container col-sm-1"
+    >
+    {{ slave_id }} -- last message : {{ status.timestamp }}s ago -- {{ Object.keys(status.connected).length }} arduino connected
+    <ul>
+      <li v-for="(arduino_id, port) in status.connected">
+        {{ arduino_id }} on port {{ port }}
+      </li>
+      <li v-show="Object.keys(status.connected).length == 0">
+        Nothing connected to this arduino
+    </li>
+    </ul>
+
+    </li>
+    </ul>
+
+</div>
+{%endraw%}
+
+
+</body>
+</html>

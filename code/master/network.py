@@ -33,7 +33,7 @@ class MasterNetwork(Thread):
         self.messages_to_slaves = deque([])
         self.arduino_messages = deque([])
         self.status_messages = deque([])
-        time.sleep(2)
+        time.sleep(2)  # needed to wait for the slave slow connection
         self.socket_to_slaves.send_multipart([b"100", b"init"])
 
     def configure_socket_from_slaves(self):
@@ -82,18 +82,14 @@ class MasterNetwork(Thread):
 
         logger.info("from arduinos -- message: {}".format(msg))
 
-        if 'slave' in msg[0]:
-            device_id, status, connected = msg
-            self.status_messages.append((device_id, status, connected))
-        else:
-            # button from arduino
-            try:
-                device_id, message_string = msg
-            except Exception as e:
-                logger.error("Unknown message from arduino : {}".format(msg))
-                logger.exception(e)
-                return
-            self.arduino_messages.append((device_id, message_string))
+        # button from arduino
+        try:
+            device_id, message_string = msg
+        except Exception as e:
+            logger.error("Unknown message from arduino : {}".format(msg))
+            logger.exception(e)
+            return
+        self.arduino_messages.append((device_id, message_string))
 
     def send_command(self):
         """Send a command to the slaves, with a channel and a message."""

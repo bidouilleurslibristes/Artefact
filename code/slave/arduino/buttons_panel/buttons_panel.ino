@@ -148,6 +148,7 @@ void readInput(){
 void parseMessage(String message){
   /*
   Protocol :
+
    * 11AC1C2C3C4... : LED STRIP COLORS, message starts with 1 followed by the strip ID, by 32 led colors as defined in color.h => 34 bytes total
    * 2C1C2C3.... : LED BUTTON COLORS, message starts with 2 followed by 8 bytes for each led RGB color => 9 bytes total
    * 30/1 : SWAG BUTTON ON, message starts with 3 followed by "0" or "1" (resp off and on) => 2 bytes total
