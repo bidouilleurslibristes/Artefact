@@ -16,3 +16,8 @@ wcwidth==0.1.7
 -e git+https://github.com/zacharyvoase/zmqc.git#egg=zmqc
 ipdb
 raven
+
+# master....
+aiohttp
+flask
+aiohttp_debugtoolbar
