@@ -43,6 +43,9 @@ class Game:
             if line.startswith("button"):
                 sub_enigmas.append(ButtonEnigma(line))
 
+            if line.startswith("little"):
+                sub_enigmas.append(ButtonEnigma(line))
+
     @classmethod
     def load_from_file(self, fname):
         enigmas = []

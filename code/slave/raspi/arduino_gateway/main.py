@@ -9,6 +9,7 @@ import logging
 import sys
 from serial_device import SerialDevice, list_devices_connected
 from network import NetworkCommunication
+import json
 
 # from raven.handlers.logging import SentryHandler
 # from raven.conf import setup_logging
@@ -76,7 +77,8 @@ def main():
         connected_devices.pop(broken_device.port)
 
     messages_from_devices.append(
-        ["status", HOSTNAME, "connected devices", str(connected_devices)]
+        ["status", HOSTNAME, "connected devices", json.dumps({i: str(connected_devices[i]) for i in connected_devices})]
+
     )
 
 if __name__ == '__main__':

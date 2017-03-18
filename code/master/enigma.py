@@ -154,7 +154,10 @@ class ButtonEnigma(SubEnigma):
         return [None] * 32
 
     def button_trigger(self, button):
-        return False
+        if button.status == Button.BUTTON_DOWN:
+            return False
+        else:
+            return True
 
     def buttons_of_interest(self):
         return self.buttons
