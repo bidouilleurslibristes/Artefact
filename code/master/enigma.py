@@ -166,14 +166,10 @@ class ButtonEnigma(SubEnigma):
 class LittleEnigma(SubEnigma):
 
     def __init__(self, message):
-        self.name = "Button"
+        self.name = "Little"
         _, panel_id, led_status = message.strip().split()
         self.interest_id = int(panel_id)
         self.init_led_status = [c == "x" for c in led_status]
-
-        self.buttons = []
-        for index, value in enumerate(self.init_led_status):
-            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
 
         self.solved = [not i for i in self.init_led_status]
 
@@ -200,6 +196,40 @@ class LittleEnigma(SubEnigma):
             return True
 
     def buttons_of_interest(self):
+        self.buttons = []
+        for index, value in enumerate(self.solved):
+            if not value:
+                self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+
         return self.buttons
+
+
+class DarkEnigma(SubEnigma):
+
+    def __init__(self, message):
+        self.name = "Dark"
+        _, panel_id = message.strip().split()
+        self.interest_id = int(panel_id)
+        self.mask = True
+
+    def is_solved(self):
+        return True
+
+    def get_led_status(self):
+        if self.mask:
+            return ["noir"] * 32
+        else:
+            return [None] * 32
+
+    def button_trigger(self, button):
+        if button.status == Button.BUTTON_DOWN:
+            self.mask = False
+        else:
+            self.mask = True
+
+        return True
+
+    def buttons_of_interest(self):
+        return [Button((self.interest_id + 4) % 8, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc")]
 
 

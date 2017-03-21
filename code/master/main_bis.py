@@ -47,7 +47,7 @@ class Game:
                 sub_enigmas.append(LittleEnigma(line))
 
             if line.startswith("dark"):
-                raise NotImplementedError
+                sub_enigmas.append(DarkEnigma(line))
 
     @classmethod
     def load_from_file(self, fname):
@@ -92,4 +92,4 @@ def game_loop (device, enigmas):
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=False)
+    main(real=True)

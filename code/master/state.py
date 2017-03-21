@@ -121,3 +121,18 @@ class State():
         for panel_id in range(8):
             self.set_swag_button(panel_id, status)
 
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+
+        return self.led_stripes == other.led_stripes
+
+
+
+
+
+
+
+
+
+
