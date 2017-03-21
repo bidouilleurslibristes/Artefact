@@ -1,13 +1,14 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 #include "Adafruit_TLC5947.h"
+#include "Color.h"
 
 #define TRUE 42
 #define FALSE (!42)
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 10000
+#define TIMEOUT 100000
 
 
 // Functions definitions :
@@ -164,6 +165,39 @@ void parseMessage(String message){
    if(firstChar == '1'){
     setLedStripColor(message);
    }
+   else if(firstChar == '2'){
+    setEndAnimation(message);
+   }
+   else if(firstChar == '3'){
+    setFadeOut(message);
+   }
+}
+
+void setEndAnimation(String message){
+  /*
+   To be defined 
+   */
+}
+
+void setFadeOut(String message){
+  /*
+   Set a fade out on all strips during 2.5s
+   Starts from green.
+   */
+
+   Color green = Color(01, 35, 02);
+   double decrease = 0.99999995; // magic, do not touch, brightness is multipied by this
+   for(int i = 0; i < 50; i++){
+    green = green.decreaseLum(decrease);
+    for(int s = 0; s < 8; s++){
+      for(int p = 0; p < 32; p++){
+        strips[s].setPixelColor(p, green.red, green.green, green.blue);
+      }
+      strips[s].show();
+    }
+    Serial.println(i);
+    delay(50);
+   }
 }
 
 void setLedStripColor(String message){
@@ -188,24 +222,7 @@ void setLedStripColor(String message){
       Serial.println(message);
       return;
     }
-
-    /*Serial.print("set color : ");
-    Serial.print(index) ;
-    Serial.print(" index : ");
-    Serial.print(i) ;
-    Serial.print(" to ledstrip : ");
-    Serial.println(strip_id);*/
     uint32_t color = colors[index];
-
-    /*switch (strip_id % 2) {
-      case 0:
-        _a.setPixelColor(i-2, color);
-        break;
-      case 1:
-        _b.setPixelColor(i-2, color);
-        break;
-    }*/
-
     strips[strip_id].setPixelColor(i-2, color);
   }
 
