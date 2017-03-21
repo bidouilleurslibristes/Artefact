@@ -6,7 +6,7 @@ import logging
 from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
 
-from enigma import SwagEnigma, Enigma, ButtonEnigma
+from enigma import *
 from copy import deepcopy
 import time
 
@@ -44,7 +44,10 @@ class Game:
                 sub_enigmas.append(ButtonEnigma(line))
 
             if line.startswith("little"):
-                sub_enigmas.append(ButtonEnigma(line))
+                sub_enigmas.append(LittleEnigma(line))
+
+            if line.startswith("dark"):
+                raise NotImplementedError
 
     @classmethod
     def load_from_file(self, fname):
@@ -89,4 +92,4 @@ def game_loop (device, enigmas):
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=True)
+    main(real=False)

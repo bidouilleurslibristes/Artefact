@@ -161,3 +161,45 @@ class ButtonEnigma(SubEnigma):
 
     def buttons_of_interest(self):
         return self.buttons
+
+
+class LittleEnigma(SubEnigma):
+
+    def __init__(self, message):
+        self.name = "Button"
+        _, panel_id, led_status = message.strip().split()
+        self.interest_id = int(panel_id)
+        self.init_led_status = [c == "x" for c in led_status]
+
+        self.buttons = []
+        for index, value in enumerate(self.init_led_status):
+            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+
+        self.solved = [not i for i in self.init_led_status]
+
+    def is_solved(self):
+        return all(self.solved)
+
+    def get_led_status(self):
+        status = []
+        for solved in self.solved:
+            color = None if solved else "bleu"
+            for i in range(4):
+                status.append(color)
+
+        return status
+
+    def button_trigger(self, button):
+        if button.status == Button.BUTTON_DOWN:
+            isSolved = self.solved[button.panel]
+            if not isSolved:
+                self.solved[button.panel] = True
+                return True
+            return False
+        else:
+            return True
+
+    def buttons_of_interest(self):
+        return self.buttons
+
+
