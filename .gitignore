@@ -16,3 +16,7 @@ Dockerfile
 
 ## ansible stuff
 *.retry
+
+
+*.img
+*.bz2

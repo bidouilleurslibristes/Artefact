@@ -25,10 +25,15 @@ class AbstractDevice:
 
     def solve_enigma(self):
         """ Game loop for an enigma """
+        state = self.enigma.get_state()
         while not self.enigma.is_solved():
             self.wait_for_event()
             if self.enigma.on_error:
                 return False
+
+            if state != self.enigma.get_state():
+                state = self.enigma.get_state()
+                self.send_state()
         return True
 
     def wait_for_event(self):

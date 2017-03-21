@@ -154,7 +154,82 @@ class ButtonEnigma(SubEnigma):
         return [None] * 32
 
     def button_trigger(self, button):
-        return False
+        if button.status == Button.BUTTON_DOWN:
+            return False
+        else:
+            return True
 
     def buttons_of_interest(self):
         return self.buttons
+
+
+class LittleEnigma(SubEnigma):
+
+    def __init__(self, message):
+        self.name = "Little"
+        _, panel_id, led_status = message.strip().split()
+        self.interest_id = int(panel_id)
+        self.init_led_status = [c == "x" for c in led_status]
+
+        self.solved = [not i for i in self.init_led_status]
+
+    def is_solved(self):
+        return all(self.solved)
+
+    def get_led_status(self):
+        status = []
+        for solved in self.solved:
+            color = None if solved else "bleu"
+            for i in range(4):
+                status.append(color)
+
+        return status
+
+    def button_trigger(self, button):
+        if button.status == Button.BUTTON_DOWN:
+            isSolved = self.solved[button.panel]
+            if not isSolved:
+                self.solved[button.panel] = True
+                return True
+            return False
+        else:
+            return True
+
+    def buttons_of_interest(self):
+        self.buttons = []
+        for index, value in enumerate(self.solved):
+            if not value:
+                self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+
+        return self.buttons
+
+
+class DarkEnigma(SubEnigma):
+
+    def __init__(self, message):
+        self.name = "Dark"
+        _, panel_id = message.strip().split()
+        self.interest_id = int(panel_id)
+        self.mask = True
+
+    def is_solved(self):
+        return True
+
+    def get_led_status(self):
+        if self.mask:
+            return ["noir"] * 32
+        else:
+            return [None] * 32
+
+    def button_trigger(self, button):
+        if button.status == Button.BUTTON_DOWN:
+            self.mask = False
+        else:
+            self.mask = True
+
+        return True
+
+    def buttons_of_interest(self):
+        return [Button((self.interest_id + 4) % 8, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc")]
+
+

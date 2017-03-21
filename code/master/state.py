@@ -14,7 +14,8 @@ COLORS = {
 }
 
 ARDUINOS_CONNECTED_TO_PANELS = [
-    14, 11, 1, 13, 4, 5, 6, 7
+    15, 11, 14, 13, 4, 5, 6, 7
+    #14, 11, 1, 13, 4, 5, 6, 7
     #15, 11, 14, 13, 4, 5, 6, 7  # index : panel ID and value : arduino ID
 ]
 ARDUINO_LED_STRIPS_ID = 8  # we use only one arduino for the led strips.
@@ -119,4 +120,19 @@ class State():
         """Set all swag buttons to the same status (True or False)."""
         for panel_id in range(8):
             self.set_swag_button(panel_id, status)
+
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+
+        return self.led_stripes == other.led_stripes
+
+
+
+
+
+
+
+
+
 

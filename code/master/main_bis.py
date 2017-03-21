@@ -6,7 +6,7 @@ import logging
 from hardware.debug import Device as DebugDevice
 from hardware.real import Device as RealDevice
 
-from enigma import SwagEnigma, Enigma, ButtonEnigma
+from enigma import *
 from copy import deepcopy
 import time
 
@@ -42,6 +42,12 @@ class Game:
 
             if line.startswith("button"):
                 sub_enigmas.append(ButtonEnigma(line))
+
+            if line.startswith("little"):
+                sub_enigmas.append(LittleEnigma(line))
+
+            if line.startswith("dark"):
+                sub_enigmas.append(DarkEnigma(line))
 
     @classmethod
     def load_from_file(self, fname):

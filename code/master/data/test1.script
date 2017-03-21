@@ -1,18 +1,42 @@
 # swag 1
-swag 0 xxxxx...
+swag 0 xx....xx
+dark 0
+
+# little 1
+little 5 xxxxxxxx
+
+# swag 1
+swag 0 xxxxxxxx
+buttons 1 ........T
 
 # swag 2
-swag 0 xxxxxxxx
+swag 1 xxxxxxxx
+buttons 0 ........T
 
-# swag 3
+# swag 2
+swag 2 xxxxxxxx
+buttons 1 ........T
+
+# swag 2
+swag 3 xxxxxxxx
+buttons 1 ........T
+
+# swag 2
+swag 4 xxxxxxxx
+buttons 1 ........T
+
+# swag 2
+swag 5 xxxxxxxx
+buttons 1 ........T
+
+# swag 2
 swag 6 xxxxxxxx
-buttons 0 rb......T
-buttons 1 lb......T
-buttons 2 vb......T
-buttons 3 jb......T
-buttons 4 tb......T
-buttons 5 ob......T
-buttons 6 bb.......
-buttons 7 mb......T
+buttons 1 ........T
+
+# swag 2
+swag 7 xxxxxxxx
+buttons 1 ........T
+
+
 
 
