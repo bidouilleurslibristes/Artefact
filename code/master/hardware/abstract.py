@@ -32,6 +32,7 @@ class AbstractDevice:
                 return False
 
             if state != self.enigma.get_state():
+                print ("Not solved")
                 state = self.enigma.get_state()
                 self.send_state()
         return True
