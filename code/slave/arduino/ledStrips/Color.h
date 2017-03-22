@@ -23,7 +23,7 @@ class Color
     void set_color_hsb(byte h, byte s, byte b);
 
     void rgbToHsl(double hsl[]);
-    Color decreaseLum(double decrease);
+    Color multiplyLum(double decrease, double capping);
     static Color hslToRgb(double h, double s, double l);
     byte red;
     byte green;

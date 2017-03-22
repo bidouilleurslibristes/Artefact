@@ -173,32 +173,104 @@ void parseMessage(String message){
    }
 }
 
-void setEndAnimation(String message){
+void setFadeOut(String message){
   /*
-   To be defined 
-   */
+   Set a fade out on all strips during 2.5s
+   Starts from green.
+  */
+
+   Color green = Color(01, 35, 02);
+   Color green2;
+   double factor = 0.97; // magic, do not touch, brightness is multipied by this
+   double cumulatedFactor = factor;
+   for(int i = 0; i < 100; i++){
+    cumulatedFactor *= factor;
+    green2 = green.multiplyLum(cumulatedFactor, 1);
+    setAllLedStrips(green2.red, green2.green, green2.blue);
+    delay(25);
+    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
+   }
+   setAllLedStrips(0, 0, 0);
 }
 
-void setFadeOut(String message){
+void setAllLedStrips(int r, int g, int b){
+   for(int s = 0; s < 8; s++){
+     for(int p = 0; p < 32; p++){
+      strips[s].setPixelColor(p, r, g, b);
+     }
+     strips[s].show();
+   }
+}
+
+void setEndAnimation(String message){
   /*
    Set a fade out on all strips during 2.5s
    Starts from green.
    */
 
    Color green = Color(01, 35, 02);
-   double decrease = 0.99999995; // magic, do not touch, brightness is multipied by this
-   for(int i = 0; i < 50; i++){
-    green = green.decreaseLum(decrease);
-    for(int s = 0; s < 8; s++){
-      for(int p = 0; p < 32; p++){
-        strips[s].setPixelColor(p, green.red, green.green, green.blue);
-      }
-      strips[s].show();
-    }
-    Serial.println(i);
-    delay(50);
+   Color green2;
+   double factor = 1.02; // magic, do not touch, brightness is multipied by this
+   double cumulatedFactor = factor;
+   for(int i = 0; i < 150; i++){
+    cumulatedFactor *= factor;
+    green2 = green.multiplyLum(cumulatedFactor, 0.8); // color luminosity is capped 
+    setAllLedStrips(green2.red, green2.green, green2.blue);
+    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
+    delay(35);
+   }   
+   setAllLedStrips(0, 0, 0);
+
+   endFlicker();
+}
+
+
+void endFlicker(){
+   byte startColor = 220;
+   double factor = 0.96;
+   double cumulatedFactor = factor;
+   byte decallage = 10;
+
+   byte nbFlickers = 100;
+   byte ledStripIds[nbFlickers];
+   byte ledIds[nbFlickers];
+   byte colors[nbFlickers]; 
+   
+   // tronche de la courbe de luminosite : https://www.wolframalpha.com/input/?i=220+*+0.96**x+for+x+in+0..100
+   // initialisation tableaux
+   for(int i=0; i < nbFlickers; i++){
+    byte col = startColor * cumulatedFactor + random(10) - 5;
+    if(col <= 0)
+      col = 1;
+    if (col > 200)
+      col = 200;
+
+    ledStripIds[i] = random(8);;
+    ledIds[i] = random(32);;
+    colors[i] = col;
+    cumulatedFactor *= factor;
+   }
+
+   // mise à jour des couleurs
+   for(int i=0; i < nbFlickers; i++){
+    Serial.println(String("strip id : ") + ledStripIds[i] + String(" led id : ") + ledIds[i] + String(" col : ") + colors[i]);
+    strips[ledStripIds[i]].setPixelColor(ledIds[i], colors[i], colors[i], colors[i]);
+    strips[ledStripIds[i]].show();
+    delay(100);
+
+    if(i >= decallage){
+      strips[ledStripIds[i-10]].setPixelColor(ledIds[i-10], 0, 0, 0);
+      strips[ledStripIds[i-10]].show();    
+    } 
+   }
+
+   for(int i=0; i < decallage; i++){
+      strips[ledStripIds[nbFlickers - 10 + i]].setPixelColor(ledIds[nbFlickers - 10 + i], 0, 0, 0);
+      strips[ledStripIds[nbFlickers - 10 + i]].show();   
+      delay(100);
    }
 }
+
 
 void setLedStripColor(String message){
   // AIC*32 (annimation + 32 colors (between 0 and 8))

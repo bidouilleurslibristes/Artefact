@@ -106,11 +106,13 @@ double Color::threeway_min(double a, double b, double c)
 }
 
 
-Color Color::decreaseLum(double decrease){
+Color Color::multiplyLum(double factor, double capping){
   double hsl [3];
   this->rgbToHsl(hsl);
-  double new_l = hsl[2] * decrease;
+  double new_l = hsl[2] * factor;
   if(new_l < 0)
     new_l = hsl[2];
+  if(new_l > capping)
+    new_l = capping;
   return Color::hslToRgb(hsl[0], hsl[1], new_l);
 }
