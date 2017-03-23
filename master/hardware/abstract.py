@@ -1,3 +1,4 @@
+import time
 from state import State
 
 
@@ -35,8 +36,18 @@ class AbstractDevice:
                 print ("Not solved")
                 state = self.enigma.get_state()
                 self.send_state()
+
+        self.send_fade_out()
+        time.sleep(3)
+
         return True
 
     def wait_for_event(self):
         """ waiting for game event """
         raise NotImplementedError
+
+    def send_fade_out(self):
+        pass
+
+    def send_win_animation(self):
+        pass

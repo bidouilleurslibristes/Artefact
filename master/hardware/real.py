@@ -6,7 +6,7 @@ These is used to control the physical hardware.
 from hardware.abstract import AbstractDevice
 
 
-from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID
+from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID, REBOOT_ARDUINO
 from network import MasterNetwork
 
 import time
@@ -34,7 +34,15 @@ class Device(AbstractDevice):
         time.sleep(0.1)
         while self.network.arduino_messages:
             arduino_id, msg = self.network.arduino_messages.popleft()
+            if arduino_id == REBOOT_ARDUINO:  # button to restart the game
+                self.enigma.on_error = True
+                self.reboot = True
+                while self.network.arduino_messages:
+                    self.network.arduino_messages.popleft()
+                return
+
             panel_id = ARDUINOS_CONNECTED_TO_PANELS.index(int(arduino_id))
+
             if not msg.startswith("button"):
                 continue
 
@@ -51,6 +59,10 @@ class Device(AbstractDevice):
 
     def send_fade_out(self):
         message = (str(ARDUINO_LED_STRIPS_ID), "3")
+        self.network.messages_to_slaves.append(message)
+
+    def send_win_animation(self):
+        message = (str(ARDUINO_LED_STRIPS_ID), "2")
         self.network.messages_to_slaves.append(message)
 
     def build_led_strip_strings(self):

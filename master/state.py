@@ -24,6 +24,8 @@ SWAG_BUTTON_ID = 8
 BUTTON_DOWN = ["DOWN", False]
 BUTTON_UP = ["UP", True]
 
+REBOOT_ARDUINO = 42
+
 
 class State():
     """Class to store the game state.

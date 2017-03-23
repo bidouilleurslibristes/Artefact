@@ -18,7 +18,7 @@ J'ai la version `2.2.0.0`
 
 ### Problème slave4 ?
 
-Très long à démarer.  
+Très long à démarer.
 
 
 ## Installation du master

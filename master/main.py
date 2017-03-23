@@ -96,7 +96,7 @@ def game_loop (device, enigmas):
             device.set_enigma(dup)
         device.send_state()
         time.sleep(3)
-
+    device.send_win_animation()
 
 if __name__ == "__main__":
     print("===============================================")
