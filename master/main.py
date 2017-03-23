@@ -37,17 +37,21 @@ class Game:
                 [e.add_sub_enigma(se) for se in sub_enigmas]
                 return e
 
-            if line.startswith("swag"):
+            if line.startswith("swagLittle"):
+                sub_enigmas.append(SwagLittleEnigma(line))
+
+            elif line.startswith("swag"):
                 sub_enigmas.append(SwagEnigma(line))
 
-            if line.startswith("button"):
+            elif line.startswith("button"):
                 sub_enigmas.append(ButtonEnigma(line))
 
-            if line.startswith("little"):
+            elif line.startswith("little"):
                 sub_enigmas.append(LittleEnigma(line))
 
-            if line.startswith("dark"):
+            elif line.startswith("dark"):
                 sub_enigmas.append(DarkEnigma(line))
+
 
     @classmethod
     def load_from_file(self, fname):
@@ -92,4 +96,4 @@ def game_loop (device, enigmas):
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=True)
+    main(real=False)
