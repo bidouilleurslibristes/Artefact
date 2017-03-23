@@ -214,61 +214,43 @@ void setEndAnimation(String message){
    double cumulatedFactor = factor;
    for(int i = 0; i < 150; i++){
     cumulatedFactor *= factor;
-    green2 = green.multiplyLum(cumulatedFactor, 0.8); // color luminosity is capped 
+    green2 = green.multiplyLum(cumulatedFactor, 0.9); // color luminosity is capped 
     setAllLedStrips(green2.red, green2.green, green2.blue);
-    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
+    //Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
     delay(35);
-   }   
-   setAllLedStrips(0, 0, 0);
-
+   }
    endFlicker();
 }
 
 
+#define NB_STEPS 100
 void endFlicker(){
-   byte startColor = 220;
-   double factor = 0.96;
-   double cumulatedFactor = factor;
-   byte decallage = 10;
+  byte colors[8][32];
+  for(int step=0; step < NB_STEPS; step++){
+    delay(15);
+    //byte currentLuminosity = (byte) (255.0 - (step * 1.0) / NB_STEPS);
+    double threshold = ((double)(NB_STEPS - step) / NB_STEPS) * 100;
 
-   byte nbFlickers = 100;
-   byte ledStripIds[nbFlickers];
-   byte ledIds[nbFlickers];
-   byte colors[nbFlickers]; 
-   
-   // tronche de la courbe de luminosite : https://www.wolframalpha.com/input/?i=220+*+0.96**x+for+x+in+0..100
-   // initialisation tableaux
-   for(int i=0; i < nbFlickers; i++){
-    byte col = startColor * cumulatedFactor + random(10) - 5;
-    if(col <= 0)
-      col = 1;
-    if (col > 200)
-      col = 200;
+    for(int strip=0; strip < 8; strip++){
+      for(int led=0; led < 32; led++){
+        int proba = random(100);
+        colors[strip][led] = 0;
+        if(proba < threshold)
+          colors[strip][led] = 100;
+        //Serial.print(proba); Serial.print(" "); Serial.print(threshold); Serial.print(" -> "); Serial.println(colors[strip][led]);
+      }
+    }
 
-    ledStripIds[i] = random(8);;
-    ledIds[i] = random(32);;
-    colors[i] = col;
-    cumulatedFactor *= factor;
-   }
 
-   // mise à jour des couleurs
-   for(int i=0; i < nbFlickers; i++){
-    Serial.println(String("strip id : ") + ledStripIds[i] + String(" led id : ") + ledIds[i] + String(" col : ") + colors[i]);
-    strips[ledStripIds[i]].setPixelColor(ledIds[i], colors[i], colors[i], colors[i]);
-    strips[ledStripIds[i]].show();
-    delay(100);
+    for(int strip=0; strip < 8; strip++){
+      for(int led=0; led < 32; led++){
+        strips[strip].setPixelColor(led, colors[strip][led], colors[strip][led], colors[strip][led]);
+      }
+      strips[strip].show();
+    }
+  }
 
-    if(i >= decallage){
-      strips[ledStripIds[i-10]].setPixelColor(ledIds[i-10], 0, 0, 0);
-      strips[ledStripIds[i-10]].show();    
-    } 
-   }
-
-   for(int i=0; i < decallage; i++){
-      strips[ledStripIds[nbFlickers - 10 + i]].setPixelColor(ledIds[nbFlickers - 10 + i], 0, 0, 0);
-      strips[ledStripIds[nbFlickers - 10 + i]].show();   
-      delay(100);
-   }
+  setAllLedStrips(0, 0, 0);
 }
 
 
