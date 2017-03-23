@@ -1,5 +1,6 @@
 import asyncio
 import sys
+import time
 
 import zmq
 import zmq.asyncio
@@ -25,7 +26,7 @@ def recv_and_process():
 
     while True:
         msg = yield from sock.recv_multipart()
-        print(msg)
+        print(time.time(), msg)
 
 
 @asyncio.coroutine

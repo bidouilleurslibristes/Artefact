@@ -1,13 +1,14 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 #include "Adafruit_TLC5947.h"
+#include "Color.h"
 
 #define TRUE 42
 #define FALSE (!42)
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 10000
+#define TIMEOUT 100000
 
 
 // Functions definitions :
@@ -164,7 +165,112 @@ void parseMessage(String message){
    if(firstChar == '1'){
     setLedStripColor(message);
    }
+   else if(firstChar == '2'){
+    setEndAnimation(message);
+   }
+   else if(firstChar == '3'){
+    setFadeOut(message);
+   }
 }
+
+void setFadeOut(String message){
+  /*
+   Set a fade out on all strips during 2.5s
+   Starts from green.
+  */
+
+   Color green = Color(01, 35, 02);
+   Color green2;
+   double factor = 0.97; // magic, do not touch, brightness is multipied by this
+   double cumulatedFactor = factor;
+   for(int i = 0; i < 100; i++){
+    cumulatedFactor *= factor;
+    green2 = green.multiplyLum(cumulatedFactor, 1);
+    setAllLedStrips(green2.red, green2.green, green2.blue);
+    delay(25);
+    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
+   }
+   setAllLedStrips(0, 0, 0);
+}
+
+void setAllLedStrips(int r, int g, int b){
+   for(int s = 0; s < 8; s++){
+     for(int p = 0; p < 32; p++){
+      strips[s].setPixelColor(p, r, g, b);
+     }
+     strips[s].show();
+   }
+}
+
+void setEndAnimation(String message){
+  /*
+   Set a fade out on all strips during 2.5s
+   Starts from green.
+   */
+
+   Color green = Color(01, 35, 02);
+   Color green2;
+   double factor = 1.02; // magic, do not touch, brightness is multipied by this
+   double cumulatedFactor = factor;
+   for(int i = 0; i < 150; i++){
+    cumulatedFactor *= factor;
+    green2 = green.multiplyLum(cumulatedFactor, 0.8); // color luminosity is capped 
+    setAllLedStrips(green2.red, green2.green, green2.blue);
+    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
+    delay(35);
+   }   
+   setAllLedStrips(0, 0, 0);
+
+   endFlicker();
+}
+
+
+void endFlicker(){
+   byte startColor = 220;
+   double factor = 0.96;
+   double cumulatedFactor = factor;
+   byte decallage = 10;
+
+   byte nbFlickers = 100;
+   byte ledStripIds[nbFlickers];
+   byte ledIds[nbFlickers];
+   byte colors[nbFlickers]; 
+   
+   // tronche de la courbe de luminosite : https://www.wolframalpha.com/input/?i=220+*+0.96**x+for+x+in+0..100
+   // initialisation tableaux
+   for(int i=0; i < nbFlickers; i++){
+    byte col = startColor * cumulatedFactor + random(10) - 5;
+    if(col <= 0)
+      col = 1;
+    if (col > 200)
+      col = 200;
+
+    ledStripIds[i] = random(8);;
+    ledIds[i] = random(32);;
+    colors[i] = col;
+    cumulatedFactor *= factor;
+   }
+
+   // mise à jour des couleurs
+   for(int i=0; i < nbFlickers; i++){
+    Serial.println(String("strip id : ") + ledStripIds[i] + String(" led id : ") + ledIds[i] + String(" col : ") + colors[i]);
+    strips[ledStripIds[i]].setPixelColor(ledIds[i], colors[i], colors[i], colors[i]);
+    strips[ledStripIds[i]].show();
+    delay(100);
+
+    if(i >= decallage){
+      strips[ledStripIds[i-10]].setPixelColor(ledIds[i-10], 0, 0, 0);
+      strips[ledStripIds[i-10]].show();    
+    } 
+   }
+
+   for(int i=0; i < decallage; i++){
+      strips[ledStripIds[nbFlickers - 10 + i]].setPixelColor(ledIds[nbFlickers - 10 + i], 0, 0, 0);
+      strips[ledStripIds[nbFlickers - 10 + i]].show();   
+      delay(100);
+   }
+}
+
 
 void setLedStripColor(String message){
   // AIC*32 (annimation + 32 colors (between 0 and 8))
@@ -188,24 +294,7 @@ void setLedStripColor(String message){
       Serial.println(message);
       return;
     }
-
-    /*Serial.print("set color : ");
-    Serial.print(index) ;
-    Serial.print(" index : ");
-    Serial.print(i) ;
-    Serial.print(" to ledstrip : ");
-    Serial.println(strip_id);*/
     uint32_t color = colors[index];
-
-    /*switch (strip_id % 2) {
-      case 0:
-        _a.setPixelColor(i-2, color);
-        break;
-      case 1:
-        _b.setPixelColor(i-2, color);
-        break;
-    }*/
-
     strips[strip_id].setPixelColor(i-2, color);
   }
 

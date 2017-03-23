@@ -49,6 +49,10 @@ class Device(AbstractDevice):
         messages_to_slaves.extend(self.build_led_buttons_strings())
         return messages_to_slaves
 
+    def send_fade_out(self):
+        message = (str(ARDUINO_LED_STRIPS_ID), "3")
+        self.network.messages_to_slaves.append(message)
+
     def build_led_strip_strings(self):
         """Build the messages to set the led strips colors."""
         commande = "1"

@@ -2,6 +2,7 @@
 
 
 void setup() {
+  Serial.begin(9600);
   // initialize the LED pin as an output.
   pinMode(13, OUTPUT);
   // turn the LED on when we're done
