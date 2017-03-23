@@ -71,7 +71,8 @@ def main(real=False):
         device = DebugDevice()
 
     enigmas = Game.load_from_file(sys.argv[1])
-    game_loop(device, enigmas)
+    while True:
+        game_loop(device, enigmas)
 
     if not real:
         # device.webserver.shutdown_server()
@@ -82,6 +83,10 @@ def game_loop (device, enigmas):
         dup = deepcopy(enigma)
         device.set_enigma(dup)
         while not device.solve_enigma():
+            # On reboot
+            if device.reboot:
+                return
+
             # On error set colors
             device.send_state()
             time.sleep(3)
