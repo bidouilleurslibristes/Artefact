@@ -289,12 +289,10 @@ class SequenceEnigma(SubEnigma):
 
     def __init__(self, message):
         self.name = "Sequence"
-        _, panel_id, led_status = message.strip().split()
-        self.init_led_status = [c == "x" for c in led_status]
-        self.status = ["jaune" if value else None for value in self.init_led_status]
-        self.interest_id = int(panel_id)
+        _, self.interest_id, led_status = message.strip().split()
+        self.interest_id = int(self.interest_id)
 
-        self.colors = {
+        colors_macro = {
             "r" : "rouge",
             "l" : "bleu",
             "j" : "jaune",
@@ -306,46 +304,58 @@ class SequenceEnigma(SubEnigma):
             "n" : "noir"
         }
 
+        self.stack = []
+        self.colors = [None] * 16
+        self.solved = [True] * 16
+        for i in range(16):
+            # No color
+            if led_status[i] == ".":
+                continue
+
+            # color
+            self.colors[i] = colors_macro[led_status[i]]
+            self.solved[i] = False
+            self.stack.append(self.colors[i])
+
+        self.buttons = []
+        idx = 0
+        for val in colors_macro.values():
+            if val == "noir":
+                continue
+            self.buttons.append(Button(self.interest_id, idx, Button.BUTTON_UP, val))
+            idx += 1
+
+
     def is_solved(self):
-        solved = [value == None for value in self.status]
-        return all(solved)
+        return all(self.solved)
 
     def get_led_status(self):
         leds = []
-        for status in self.status:
-            for i in range(4):
-                leds.append(status)
+        for idx, color in enumerate(self.colors):
+            for _ in range(2):
+                if not self.solved[idx]:
+                    leds.append(color)
+                else:
+                    leds.append(None)
 
         return leds
 
     def button_trigger(self, button):
         if button.status == Button.BUTTON_DOWN:
-            # Swag button
-            if button.button == SWAG_BUTTON_ID:
-                completed = [value != "jaune" for value in self.status]
-                if all(completed):
-                    self.status = [None] * 8
-                    return True
-                else:
-                    return False
-            # Little button
-            else:
-                if self.status[button.panel] == "jaune":
-                    self.status[button.panel] = "mauve"
-                    return True
-                else:
-                    return False
+            if not self.stack:
+                return False
+
+            color = self.stack.pop(0)
+            if button.state == color:
+                for idx, val in enumerate(self.solved):
+                    if not val:
+                        self.solved[idx] = True        
+                        return True
+            return False
         else:
             return True
 
     def buttons_of_interest(self):
-        # SWAG button
-        self.buttons = [Button(self.interest_id, SWAG_BUTTON_ID, Button.BUTTON_UP, "blanc")]
-        # little buttons
-        for index, value in enumerate(self.status):
-            if value != None:
-                self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, value))
-
         return self.buttons
 
 

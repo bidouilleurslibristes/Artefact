@@ -52,6 +52,9 @@ class Game:
             elif line.startswith("dark"):
                 sub_enigmas.append(DarkEnigma(line))
 
+            elif line.startswith("sequence"):
+                sub_enigmas.append(SequenceEnigma(line))
+
 
     @classmethod
     def load_from_file(self, fname):

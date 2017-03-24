@@ -12,6 +12,7 @@ class AbstractDevice:
         self.SWAG_BUTTON_ID = 8
         self.BUTTON_DOWN_CODE = "DOWN"
         self.enigma = None
+        self.reboot = False
 
     def send_state(self):
         """Send the state to the hardware."""

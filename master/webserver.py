@@ -77,13 +77,15 @@ def update_state():
     status = Button.BUTTON_DOWN if pressed else Button.BUTTON_UP
     print("{} : {} in panel {}".format(pressed_text, button_id, panel_id))
 
+    color = None
     if "button" in button_id:
         if "swag" in button_id:
             button_id = SWAG_BUTTON_ID
         else:
             button_id = button_id[7]
+            color = state.buttons[int(panel_id[6])][int(button_id)].state
 
-    hardware.enigma.button_triggered(Button(panel_id[6], button_id, status))
+    hardware.enigma.button_triggered(Button(panel_id[6], button_id, status, color))
     return "ok"
 
 

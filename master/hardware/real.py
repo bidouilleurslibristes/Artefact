@@ -47,7 +47,8 @@ class Device(AbstractDevice):
                 continue
 
             _, button_id, status = msg.strip().split("-")
-            self.enigma.button_triggered(Button(panel_id, button_id, status))
+            color = state.buttons[panel_id][int(button_id)].state
+            self.enigma.button_triggered(Button(panel_id, button_id, status, color))
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
