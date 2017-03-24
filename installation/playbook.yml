@@ -51,7 +51,6 @@
     - name: Install pip dependancies
       pip:
         requirements={{ zoomachine.path }}/{{ zoomachine.requirement_path }} executable="/usr/bin/pip3"
-      when: 1 == 2
       tags:
         - deploy
         - internet
@@ -74,7 +73,7 @@
         - boot-config
         - local
 
-    - name: Copy master systemd init script
+    - name: Copy systemd init script (server)
       copy: src=init_zoomachine3_master.service dest=/lib/systemd/system/init_zoomachine3_master.service owner=root group=root force=yes
       when: '"master" in inventory_hostname'
       tags:
