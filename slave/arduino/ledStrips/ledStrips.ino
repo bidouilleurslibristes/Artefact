@@ -8,7 +8,7 @@
 #define BOOL char
 
 #define EEPROM_ID_ADDRESS 0
-#define TIMEOUT 100000
+#define TIMEOUT 10000
 
 
 // Functions definitions :
@@ -184,11 +184,16 @@ void setFadeOut(String message){
    double factor = 0.97; // magic, do not touch, brightness is multipied by this
    double cumulatedFactor = factor;
    for(int i = 0; i < 100; i++){
+    // Ping
+    if (i % 10 == 0) {
+      if (Serial.available())
+        readInput();
+    }
+    
     cumulatedFactor *= factor;
     green2 = green.multiplyLum(cumulatedFactor, 1);
     setAllLedStrips(green2.red, green2.green, green2.blue);
     delay(25);
-    Serial.print(green2.red);Serial.print(" ");Serial.print(green2.green);Serial.print(" ");Serial.println(green2.blue);
    }
    setAllLedStrips(0, 0, 0);
 }
@@ -280,10 +285,13 @@ void setLedStripColor(String message){
     strips[strip_id].setPixelColor(i-2, color);
   }
 
+  strips[strip_id].show();
+  /*
   for(int i=0; i<8; i++){
     //Serial.print("Show Strip : "); Serial.println(i);
     strips[i].show();
   }
+  */
 }
 
 

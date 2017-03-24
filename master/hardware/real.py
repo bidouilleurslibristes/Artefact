@@ -10,7 +10,11 @@ from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID, RE
 from network import MasterNetwork
 
 import time
+import logging
 from hardware.button import Button
+
+
+logger = logging.getLogger('root')
 
 
 class Device(AbstractDevice):
@@ -27,6 +31,7 @@ class Device(AbstractDevice):
         """Send the state to the hardware."""
         self.state = self.enigma.get_state()
         messages = self.notify_slaves()
+        #import ipdb; ipdb.set_trace()
         for message in messages:
             self.network.messages_to_slaves.append(message)
 
@@ -41,13 +46,17 @@ class Device(AbstractDevice):
                     self.network.arduino_messages.popleft()
                 return
 
-            panel_id = ARDUINOS_CONNECTED_TO_PANELS.index(int(arduino_id))
+            try:
+                panel_id = ARDUINOS_CONNECTED_TO_PANELS.index(int(arduino_id))
+            except Exception as e:
+                logger.exception("Got message {} from unknown arduino: {}".format(msg, arduino_id))
+                continue
 
             if not msg.startswith("button"):
                 continue
 
             _, button_id, status = msg.strip().split("-")
-            color = state.buttons[panel_id][int(button_id)].state
+            color = self.state.buttons[panel_id][int(button_id)].state
             self.enigma.button_triggered(Button(panel_id, button_id, status, color))
 
     def notify_slaves(self):

@@ -34,12 +34,11 @@ class AbstractDevice:
                 return False
 
             if state != self.enigma.get_state():
-                print ("Not solved")
                 state = self.enigma.get_state()
                 self.send_state()
 
         self.send_fade_out()
-        time.sleep(3)
+        time.sleep(5)
 
         return True
 

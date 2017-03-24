@@ -97,11 +97,9 @@ def game_loop (device, enigmas):
             # Reinit the current enigma
             dup = deepcopy(enigma)
             device.set_enigma(dup)
-        device.send_state()
-        time.sleep(3)
     device.send_win_animation()
 
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=False)
+    main(real=True)
