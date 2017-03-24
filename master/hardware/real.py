@@ -31,7 +31,6 @@ class Device(AbstractDevice):
         """Send the state to the hardware."""
         self.state = self.enigma.get_state()
         messages = self.notify_slaves()
-        #import ipdb; ipdb.set_trace()
         for message in messages:
             self.network.messages_to_slaves.append(message)
 
@@ -40,10 +39,12 @@ class Device(AbstractDevice):
         while self.network.arduino_messages:
             arduino_id, msg = self.network.arduino_messages.popleft()
             if arduino_id == REBOOT_ARDUINO:  # button to restart the game
+                if "DOWN" not in msg:
+                    return
+
                 self.enigma.on_error = True
                 self.reboot = True
-                while self.network.arduino_messages:
-                    self.network.arduino_messages.popleft()
+                self.network.arduino_messages.clear()
                 return
 
             try:
