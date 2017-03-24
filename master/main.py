@@ -98,6 +98,7 @@ def game_loop (device, enigmas):
             dup = deepcopy(enigma)
             device.set_enigma(dup)
     device.send_win_animation()
+    time.sleep(30)
 
 if __name__ == "__main__":
     print("===============================================")

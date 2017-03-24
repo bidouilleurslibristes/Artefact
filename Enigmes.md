@@ -57,8 +57,8 @@ Résolution : Aller sur la console correspondant au bandeau puis appuyer sur les
 
 ## Fichier config
 
-sequence 3 brrjtv.....  
-Explication : Séquence de couleurs sur le bandeau 3. Les couleurs vont toujours par deux. Ici on a donc deux leds bleus puis quatre leds rouges, deux jaunes, deux turquoises et deux vertes.
+sequence 3 brrjtn.....  
+Explication : Séquence de couleurs sur le bandeau 3. Les couleurs vont toujours par deux. Ici on a donc deux leds bleus puis quatre leds rouges, deux jaunes, deux turquoises et deux noirs.
 
 
 

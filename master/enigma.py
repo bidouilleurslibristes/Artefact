@@ -298,7 +298,6 @@ class SequenceEnigma(SubEnigma):
             "j" : "jaune",
             "m" : "mauve",
             "o" : "orange",
-            "v" : "vert",
             "t" : "turquoise",
             "b" : "blanc",
             "n" : "noir"
@@ -320,8 +319,6 @@ class SequenceEnigma(SubEnigma):
         self.buttons = []
         idx = 0
         for val in colors_macro.values():
-            if val == "noir":
-                continue
             self.buttons.append(Button(self.interest_id, idx, Button.BUTTON_UP, val))
             idx += 1
 
