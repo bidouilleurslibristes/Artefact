@@ -218,6 +218,12 @@ void setEndAnimation(String message){
    double factor = 1.02; // magic, do not touch, brightness is multipied by this
    double cumulatedFactor = factor;
    for(int i = 0; i < 150; i++){
+    // Ping
+    if (i % 10 == 0) {
+      if (Serial.available())
+        readInput();
+    }
+    
     cumulatedFactor *= factor;
     green2 = green.multiplyLum(cumulatedFactor, 0.9); // color luminosity is capped 
     setAllLedStrips(green2.red, green2.green, green2.blue);
