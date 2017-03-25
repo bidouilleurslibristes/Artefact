@@ -21,7 +21,6 @@ class Play(threading.Thread):
 
     def run(self):
         play(self._sound)
-        print("is end")
         self.running = False
 
     def stop(self):
@@ -47,9 +46,7 @@ class Manager:
             return
         
         if self.is_ended(name):
-            print("Process is ended")
             self.play(name)
-        print("Process isn't ended")
 
     def play(self, name):
         if not self._is_avaible(name):
@@ -89,6 +86,13 @@ if __name__ == "__main__":
         "validation": "validation.mp3"
     }
     m = Manager()
+
+    # wait keyboard input
+    # play validation
+    # wait keyboard input
+    input()
+    m.play("validation")
+    input()
 
     # 4 repetition of validation separated by 1 second
     for _ in range(4):
