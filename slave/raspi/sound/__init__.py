@@ -1,5 +1,9 @@
 from subprocess import Popen
 import time
+import logging
+
+logger = logging.getLogger("root")
+
 class Manager:
     
     def __init__(self):
@@ -12,8 +16,8 @@ class Manager:
         try:
             args = ["cvlc", filename]
             self._filename2process[filename] = Popen(args)
-        except:
-            pass
+        except Exception as e:
+            logger.exception(e)
 
     def stop(self, filename = None):
         if not filename:
