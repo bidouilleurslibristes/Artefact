@@ -28,6 +28,7 @@
         - python3-dev
         - libzmq-dev
         - rsync
+        - emacs
         # - libavbin-dev
         # - libavbin0
       tags:
