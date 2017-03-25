@@ -4,15 +4,13 @@ import logging
 
 logger = logging.getLogger("root")
 
-ATMOSPHERE = ""
-VALIDATION = ""
-
 class Manager:
     
     def __init__(self):
         self._filename2process = {}
-        self._name2filename = {"atmosphere": ATMOSPHERE,
-                               "validation": VALIDATION}
+        self._name2filename = {"atmosphere": "/home/pi/ZooMachine-3/slave/raspi/sound/atmosphere.mp3",
+                               "validation": "/home/pi/ZooMachine-3/slave/raspi/sound/validation.mp3"
+                               }
 
     def is_ended(self, name):
         if name not in self._name2filename:
@@ -34,7 +32,7 @@ class Manager:
         if filename in self._filename2process:
             self._stop(filename)
         try:
-            args = ["cvlc", filename]
+            args = ["cvlc", "--play-and-exit", filename]
             self._filename2process[filename] = Popen(args)
         except Exception as e:
             logger.exception(e)
