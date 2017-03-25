@@ -7,6 +7,7 @@ We use zmq for the communication.
 
 from threading import Thread
 import logging
+from ..sound import Manager as SoundManager
 
 import zmq
 
@@ -52,6 +53,7 @@ class NetworkCommunication(Thread):
         self.messages_to_master = outbox
 
         self._running = True
+        self._sound_manager = SoundManager()
         logger.debug("new network")
 
     def run(self):
@@ -113,6 +115,10 @@ class NetworkCommunication(Thread):
             return
         msg = self.sock_in.recv_multipart()  # we only have one listening socket
         msg = [s.decode() for s in msg]
+
+        if msg[0] == "sound":
+            self._sound_manager.play(msg[1])
+
         logger.info("received {} from master".format(msg))
         device_id, message_string = msg
         self.messages_from_master[device_id].append(
