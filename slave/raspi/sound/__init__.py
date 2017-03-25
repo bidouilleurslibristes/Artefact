@@ -9,8 +9,11 @@ class Manager:
     def play(self, filename):
         if filename in self._filename2process:
             self.stop(filename)
-        args = ["cvlc", filename]
-        self._filename2process[filename] = Popen(args)
+        try:
+            args = ["cvlc", filename]
+            self._filename2process[filename] = Popen(args)
+        except:
+            pass
 
     def stop(self, filename = None):
         if not filename:
