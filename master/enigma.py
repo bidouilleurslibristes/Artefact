@@ -22,6 +22,8 @@ class Enigma:
         if button in self.buttons_mapping:
             enigma = self.buttons_mapping[button]
             self.on_error = not enigma.button_trigger(button)
+            return True
+        return False
 
     def set_wrong(self):
         self.buttons_mapping = []
@@ -346,7 +348,7 @@ class SequenceEnigma(SubEnigma):
             if button.state == color:
                 for idx, val in enumerate(self.solved):
                     if not val:
-                        self.solved[idx] = True        
+                        self.solved[idx] = True
                         return True
             return False
         else:

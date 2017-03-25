@@ -23,8 +23,6 @@ logging.basicConfig(format=FORMAT)
 logger.setLevel(logging.CRITICAL)
 
 
-
-
 class Game:
 
     @classmethod

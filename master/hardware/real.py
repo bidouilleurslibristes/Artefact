@@ -58,7 +58,9 @@ class Device(AbstractDevice):
 
             _, button_id, status = msg.strip().split("-")
             color = self.state.buttons[panel_id][int(button_id)].state
-            self.enigma.button_triggered(Button(panel_id, button_id, status, color))
+            button_exists_in_enigma = self.enigma.button_triggered(Button(panel_id, button_id, status, color))
+            if button_exists_in_enigma:
+                self.send_button_click()
 
     def notify_slaves(self):
         """Put the current state to the slaves in the message_to_slaves inbox."""
@@ -70,6 +72,10 @@ class Device(AbstractDevice):
 
     def send_fade_out(self):
         message = (str(ARDUINO_LED_STRIPS_ID), "3")
+        self.network.messages_to_slaves.append(message)
+
+    def send_button_click(self):
+        message = ("sound", "validation")
         self.network.messages_to_slaves.append(message)
 
     def send_win_animation(self):
