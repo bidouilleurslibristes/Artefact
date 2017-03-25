@@ -1,0 +1,38 @@
+# Intro SWAG Button
+swag 3 xxxxxxxx
+
+# Intro SWAG Button
+swag 7 xxxxxxxx
+buttons 0 ........T
+buttons 1 ........T
+buttons 2 ........T
+buttons 3 ........T
+buttons 4 ........T
+buttons 5 ........T
+buttons 6 ........T
+
+# Intro SWAG Button
+swag 2 xxxxxxxx
+swag 6 xxxxxxxx
+buttons 0 ........T
+buttons 1 ........T
+buttons 3 ........T
+buttons 4 ........T
+buttons 5 ........T
+buttons 7 ........T
+
+# Intro little buttons
+little 0 xxxxxxxx
+
+# Intro little buttons
+little 0 x........
+little 1 x........
+little 2 x........
+little 3 x........
+little 4 x........
+little 5 x........
+little 6 x........
+little 7 x........
+
+
+

@@ -38,7 +38,7 @@ class Device(AbstractDevice):
         time.sleep(0.1)
         while self.network.arduino_messages:
             arduino_id, msg = self.network.arduino_messages.popleft()
-            if arduino_id == REBOOT_ARDUINO:  # button to restart the game
+            if int(arduino_id) == REBOOT_ARDUINO:  # button to restart the game
                 if "DOWN" not in msg:
                     return
 

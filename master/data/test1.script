@@ -1,23 +1,11 @@
-# swag 1
-swag 6 xxxxxxxx
-buttons 1 ........T
-
-# swag 2
-swag 3 x.x.x..x
-buttons 0 ........T
-
-# Sequence 1
-sequence 2 rljmontb........
-
 # Swag Little
-swagLittle 5 xxx..xxx
-
-# swag dark 1
-swag 0 xx....xx
-dark 0
-
-# little 1
-little 5 xxxxxxxx
-
+swagLittle 0 xxxxxxxx
+swagLittle 1 xxxxxxxx
+swagLittle 2 xxxxxxxx
+swagLittle 3 xxxxxxxx
+swagLittle 4 xxxxxxxx
+swagLittle 5 xxxxxxxx
+swagLittle 6 xxxxxxxx
+swagLittle 7 xxxxxxxx
 
 
