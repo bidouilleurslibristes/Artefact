@@ -150,7 +150,7 @@ little 5 xxx.....
 swag 6 xx....xx
 dark 6
 little 7 ......xx
-buttons 0 ..lll.l..
+buttons 0 ..l.l.l..
 buttons 6 vmv.mvm..
 
 
