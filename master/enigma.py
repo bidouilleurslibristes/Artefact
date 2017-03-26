@@ -174,6 +174,10 @@ class LittleEnigma(SubEnigma):
         self.init_led_status = [c == "x" for c in led_status]
         self.solved = [not i for i in self.init_led_status]
 
+        self.buttons = []
+        for index, value in enumerate(self.solved):
+            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+
     def is_solved(self):
         return all(self.solved)
 
@@ -195,10 +199,6 @@ class LittleEnigma(SubEnigma):
         return True
 
     def buttons_of_interest(self):
-        self.buttons = []
-        for index, value in enumerate(self.solved):
-            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
-
         return self.buttons
 
 
