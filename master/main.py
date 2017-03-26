@@ -101,4 +101,4 @@ def game_loop (device, enigmas):
 if __name__ == "__main__":
     print("===============================================")
     print("====== launching simulated device =============")
-    main(real=True)
+    main(real=False)

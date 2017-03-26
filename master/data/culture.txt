@@ -42,18 +42,20 @@ little 7 x........
 
 # Intro to direction little buttons
 little 1 ..x......
-buttons 2 ll.lllll
+buttons 2 l.llllll.
 
 # Intro to little buttons
-little 5 ..x......
-buttons 0 lllll.ll
-buttons 1 lllll.ll
-buttons 2 lllll.ll
-buttons 3 lllll.ll
-buttons 4 lllll.ll
-buttons 5 lllll.ll
-buttons 6 lllll.ll
-buttons 7 lllll.ll
+little 5 xxxxxxxx
+buttons 0 lllll.ll.
+buttons 1 lllll.ll.
+buttons 2 lllll.ll.
+buttons 3 lllll.ll.
+buttons 4 lllll.ll.
+buttons 5 lllll.ll.
+buttons 6 lllll.ll.
+buttons 7 lllll.ll.
+
+
 
 
 

@@ -176,7 +176,8 @@ class LittleEnigma(SubEnigma):
 
         self.buttons = []
         for index, value in enumerate(self.solved):
-            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+            if not value:
+                self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
 
     def is_solved(self):
         return all(self.solved)
