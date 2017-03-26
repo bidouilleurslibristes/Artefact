@@ -188,19 +188,16 @@ class LittleEnigma(SubEnigma):
 
     def button_trigger(self, button):
         if button.status == Button.BUTTON_DOWN:
-            isSolved = self.solved[button.panel]
-            if not isSolved:
+            if not self.solved[button.panel]:
                 self.solved[button.panel] = True
-                return True
-            return False
-        else:
-            return True
+            else:
+                self.solved[button.panel] = False
+        return True
 
     def buttons_of_interest(self):
         self.buttons = []
         for index, value in enumerate(self.solved):
-            if not value:
-                self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
+            self.buttons.append(Button(index, self.interest_id, Button.BUTTON_UP, "bleu"))
 
         return self.buttons
 
@@ -269,9 +266,9 @@ class SwagLittleEnigma(SubEnigma):
             else:
                 if self.status[button.panel] == "jaune":
                     self.status[button.panel] = "mauve"
-                    return True
                 else:
-                    return False
+                    self.status[button.panel] = "jaune"
+                return True
         else:
             return True
 
