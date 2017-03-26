@@ -63,7 +63,6 @@ def _main():
         serial_device.start()
         connected_devices[port] = serial_device
 
-    nc._sound_manager.restart_if_ended("atmosphere")
     print(connected_devices)
 
 

@@ -42,9 +42,6 @@ class Manager:
         self._name2process = {}
 
     def is_ended(self, name):
-        if name == "atmosphere":
-            return False
-
         if not self._is_avaible(name):
             return True
         if name not in self._name2process:
