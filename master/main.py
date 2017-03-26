@@ -82,12 +82,15 @@ def main(real=False):
         device.webserver._thread.join()
 
 def game_loop (device, enigmas):
+    print("Start game loop")
+
     for enigma in enigmas:
         dup = deepcopy(enigma)
         device.set_enigma(dup)
         while not device.solve_enigma():
             # On reboot
             if device.reboot:
+                device.reboot = False
                 return
 
             # On error set colors
