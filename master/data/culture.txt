@@ -95,6 +95,15 @@ sequence 3 ......mrbo......
 # Intro sequences
 sequence 7 mobbrnnntjlrjomt
 
+# Multiple enigma 1 led strip
+swag 4 xxxxxxxx
+little 4 xxxxxxxx
+
+# Multiple enigma 1 led strip
+swag 7 xxxxx...
+little 4 ....xxxx
+sequence 2 nnnnnnnnnnnnnnnn
+
 # Sequence dark swag
 swag 6 xxxxxxxx
 swag 4 xxxx..x.
