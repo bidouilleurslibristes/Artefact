@@ -97,14 +97,14 @@ sequence 7 mobbrnnntjlrjomt
 
 # Sequence dark swag
 swag 6 xxxxxxxx
-swag 4 xxxx....
-little 4 ....xxxx
+swag 4 xxxx..x.
+little 4 ....xx.x
 sequence 6 ......otro......
 dark 1
 dark 6
 dark 3
 buttons 0 vl...lb.T
-buttons 6 ........T
+buttons 6 .........
 buttons 1 vrlbotjm.
 buttons 4 lbbj.llj.
 buttons 5 llll.lll.

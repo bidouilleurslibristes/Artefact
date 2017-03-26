@@ -72,7 +72,7 @@ Résolution : Appuyer sur le bouton permet d'afficher le vrai contenu du bandeau
 
 ## Fichier config
 
-mask 4  
+dark 4  
 Explication : Éteint le bandeau 4 a moins de maintenir le bouton swag
 
 
