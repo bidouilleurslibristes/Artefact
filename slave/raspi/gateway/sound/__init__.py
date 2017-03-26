@@ -13,8 +13,7 @@ try :
 except ImportError as e:
     logger.exception(e)
 
-name2filename = {"atmosphere":
-                 "/home/pi/ZooMachine-3/slave/raspi/sound/atmosphere.mp3", 
+name2filename = {
                  "validation":
                  "/home/pi/ZooMachine-3/slave/raspi/sound/validation.mp3"
                  }
@@ -36,7 +35,7 @@ class Manager:
 
     def __init__(self):
         if imported_pydub :
-            self._name2sound = {name: AudioSegment.from_mp3(filename) for 
+            self._name2sound = {name: AudioSegment.from_mp3(filename) for
                                name, filename in name2filename.items()}
         else :
             self._name2sound = {}
@@ -56,20 +55,17 @@ class Manager:
     def restart_if_ended(self, name):
         if not self._is_avaible(name):
             return
-        
+
         if self.is_ended(name):
             self.play(name)
 
     def play(self, name):
-        if name == "atmosphere":
-            subprocess.call(["cvlc", "--loop", name2filename["atmosphere"]])
-
         if not self._is_avaible(name):
             return
 
         if name in self._name2process:
             self._name2process[name].stop()
-        
+
         self._name2process[name] = Play(self._name2sound[name])
         self._name2process[name].start()
 
@@ -88,9 +84,6 @@ class Manager:
                 self._name2process.pop(name)
 
     def _is_avaible(self, name):
-        if name == "atmosphere":
-            return True
-
         if name not in self._name2sound:
             logger.error("Unknow sound name {} ".format(name))
             return False
@@ -100,8 +93,7 @@ if __name__ == "__main__":
 
     import time
     name2filename = {
-        "atmosphere": "atmosphere.mp3",
-        "validation": "validation.mp3"
+        "validation": "validation.mp3",
     }
     m = Manager()
 
@@ -120,9 +112,7 @@ if __name__ == "__main__":
     # run atmosphere
     # 4 repetition of validation separated by 1 second
     # stop atmosphere
-    m.play("atmosphere")
     for _ in range(4):
         m.restart_if_ended("validation")
         time.sleep(1)
-    m.stop("atmosphere")
 

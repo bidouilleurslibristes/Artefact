@@ -59,7 +59,7 @@ class Device(AbstractDevice):
             _, button_id, status = msg.strip().split("-")
             color = self.state.buttons[panel_id][int(button_id)].state
             button_exists_in_enigma = self.enigma.button_triggered(Button(panel_id, button_id, status, color))
-            if button_exists_in_enigma:
+            if button_exists_in_enigma and status == Button.BUTTON_DOWN:
                 self.send_button_click()
 
     def notify_slaves(self):
