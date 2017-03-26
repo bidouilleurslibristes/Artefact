@@ -14,7 +14,7 @@ COLORS = {
 }
 
 ARDUINOS_CONNECTED_TO_PANELS = [
-    14, 11, 15, 13, 4, 5, 6, 7
+    15, 11, 14, 13, 4, 5, 6, 7
     #14, 11, 1, 13, 4, 5, 6, 7
     #15, 11, 14, 13, 4, 5, 6, 7  # index : panel ID and value : arduino ID
 ]
