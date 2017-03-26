@@ -15,7 +15,7 @@ except ImportError as e:
 
 name2filename = {
                  "validation":
-                 "/home/pi/ZooMachine-3/slave/raspi/sound/validation.mp3"
+                 "/home/pi/ZooMachine-3/slave/raspi/gateway/sound/validation.mp3"
                  }
 
 class Play(threading.Thread):
