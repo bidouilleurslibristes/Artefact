@@ -88,6 +88,9 @@ class Manager:
                 self._name2process.pop(name)
 
     def _is_avaible(self, name):
+        if name == "atmosphere":
+            return True
+
         if name not in self._name2sound:
             logger.error("Unknow sound name {} ".format(name))
             return False
