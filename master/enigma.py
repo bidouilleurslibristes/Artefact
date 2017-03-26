@@ -112,10 +112,10 @@ class SwagEnigma(SubEnigma):
     def button_trigger(self, button):
         if button.status == Button.BUTTON_DOWN:
             if self.solved:
-                return False
+                self.solved = False
             else:
                 self.solved = True
-                return True
+            return True
         return True
 
     def buttons_of_interest(self):
