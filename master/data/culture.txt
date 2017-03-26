@@ -141,7 +141,7 @@ swagLittle 7 xxxxxxxx
 swag 1 xxxxxxxx
 little 1 .x......
 sequence 3 mmmmbbnnnnbbmmmm
-swagLittle 3 ..x..x..
+swagLittle 3 ..x.x...
 little 3 ......xx
 swag 4 xxxxxxxx
 dark 4
@@ -151,7 +151,7 @@ swag 6 xx....xx
 dark 6
 little 7 ......xx
 buttons 0 ..lll.l..
-buttons 6 vmv.mvmv.
+buttons 6 vmv.mvm..
 
 
 
