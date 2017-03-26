@@ -2,10 +2,15 @@
 import logging
 import threading
 
-from pydub import AudioSegment
-from pydub.playback import play
-
 logger = logging.getLogger("root")
+
+imported_pydub=False
+try :
+    from pydub import AudioSegment
+    from pydub.playback import play
+    imported_pydub=True
+except ImportError as e:
+    logger.exception(e)
 
 name2filename = {"atmosphere":
                  "/home/pi/ZooMachine-3/slave/raspi/sound/atmosphere.mp3", 
@@ -29,8 +34,11 @@ class Play(threading.Thread):
 class Manager:
 
     def __init__(self):
-        self._name2sound = {name: AudioSegment.from_mp3(filename) for 
-                            name, filename in name2filename.items()}  
+        if imported_pydub :
+            self._name2sound = {name: AudioSegment.from_mp3(filename) for 
+                               name, filename in name2filename.items()}
+        else :
+            self._name2sound = {}
         self._name2process = {}
 
     def is_ended(self, name):
