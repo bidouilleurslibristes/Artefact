@@ -67,8 +67,10 @@ class Game:
 def main(real=False):
     """main de test."""
     if real:
+        print("====== launching real device =============")
         device = RealDevice()
     else:
+        print("====== launching simulated device =============")
         device = DebugDevice()
 
     enigmas = Game.load_from_file(sys.argv[1])
@@ -100,5 +102,4 @@ def game_loop (device, enigmas):
 
 if __name__ == "__main__":
     print("===============================================")
-    print("====== launching simulated device =============")
-    main(real=False)
+    main(real=True)
