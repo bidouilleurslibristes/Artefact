@@ -7,7 +7,7 @@ We use zmq for the communication.
 
 from threading import Thread
 import logging
-from ..sound import Manager as SoundManager
+from sound import Manager as SoundManager
 
 import zmq
 
