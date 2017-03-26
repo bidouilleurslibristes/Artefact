@@ -1,6 +1,7 @@
 
 import logging
 import threading
+import subprocess
 
 logger = logging.getLogger("root")
 
@@ -42,6 +43,9 @@ class Manager:
         self._name2process = {}
 
     def is_ended(self, name):
+        if name == "atmosphere":
+            return False
+
         if not self._is_avaible(name):
             return True
         if name not in self._name2process:
@@ -57,6 +61,9 @@ class Manager:
             self.play(name)
 
     def play(self, name):
+        if name == "atmosphere":
+            subprocess.call(["cvlc", "--loop", name2filename["atmosphere"]])
+
         if not self._is_avaible(name):
             return
 
