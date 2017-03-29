@@ -18,6 +18,9 @@ class Enigma:
     def is_solved(self):
         return all((se.is_solved() for se in self.sub_enigmas))
 
+    def vector_solved(self):
+        return [se.is_solved() for se in self.sub_enigmas]
+
     def button_triggered(self, button):
         if button in self.buttons_mapping:
             enigma = self.buttons_mapping[button]

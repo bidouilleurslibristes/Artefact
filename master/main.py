@@ -1,6 +1,8 @@
 """Main de test."""
 
 import sys
+import os
+import time
 import logging
 
 from hardware.debug import Device as DebugDevice
@@ -21,6 +23,11 @@ FORMAT = (
 logging.basicConfig(format=FORMAT)
 #setup_logging(handler)
 logger.setLevel(logging.CRITICAL)
+
+try:
+    os.mkdir("./game_log")
+except FileExistsError:
+    pass
 
 
 class Game:
@@ -64,6 +71,7 @@ class Game:
                     enigmas.append(self.parse_enigma(f))
         return enigmas
 
+
 def main(real=False):
     """main de test."""
     if real:
@@ -75,24 +83,34 @@ def main(real=False):
 
     enigmas = Game.load_from_file(sys.argv[1])
     while True:
-        game_loop(device, enigmas)
+        nb_logs_in_dir = len(os.listdir("./game_log"))
+        game_log_file = "./game_log/{}.log".format(nb_logs_in_dir)
+        with open(game_log_file, "w") as f:
+            device.log_file = f
+            game_loop(device, enigmas, f)
 
     if not real:
         # device.webserver.shutdown_server()
         device.webserver._thread.join()
 
-def game_loop (device, enigmas):
-    print("Start game loop")
+def game_loop(device, enigmas, log_file):
+    log_file.write("{}\t{}\n".format(time.time(), "new game"))
+    print("gamelog : new game")
 
     for enigma in enigmas:
         dup = deepcopy(enigma)
+        log_file.write("{}\t{}\n".format(time.time(), "new enigma"))
+        print("gamelog : new enigma")
+
         device.set_enigma(dup)
         while not device.solve_enigma():
             # On reboot
             if device.reboot:
                 device.reboot = False
+                log_file.write("{}\t{}\n".format(time.time(), "reboot"))
+                print("gamelog : new enigma")
                 return
-
+            log_file.flush()
             # On error set colors
             device.send_state()
             time.sleep(3)
@@ -105,4 +123,4 @@ def game_loop (device, enigmas):
 
 if __name__ == "__main__":
     print("===============================================")
-    main(real=True)
+    main(real=False)

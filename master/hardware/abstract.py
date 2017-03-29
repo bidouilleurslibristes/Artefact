@@ -25,12 +25,33 @@ class AbstractDevice:
     def set_one_led_in_panel(self, panel_id, led_id, color):
         self.state.buttons[panel_id][led_id].state = color
 
+    def log_game(self, message, parameters=None):
+        if parameters:
+            self.log_file.write("{}\t{}\t{}\n".format(
+                time.time(),
+                message,
+                parameters
+            ))
+        else:
+            self.log_file.write("{}\t{}\n".format(
+                time.time(),
+                message,
+            ))
+        self.log_file.flush()
+
     def solve_enigma(self):
         """ Game loop for an enigma """
         state = self.enigma.get_state()
+        vs = None
         while not self.enigma.is_solved():
             self.wait_for_event()
+
+            if vs != self.enigma.vector_solved():
+                vs = self.enigma.vector_solved()
+                self.log_game("vector subenigmas solved", vs)
+
             if self.enigma.on_error:
+                self.log_game("on error")
                 return False
 
             if state != self.enigma.get_state():
