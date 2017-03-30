@@ -123,4 +123,4 @@ def game_loop(device, enigmas, log_file):
 
 if __name__ == "__main__":
     print("===============================================")
-    main(real=False)
+    main(real=True)
