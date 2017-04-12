@@ -6,6 +6,7 @@ Code for aiohttp inspired from :
  * http://aiohttp.readthedocs.io/en/stable/web.html#static-file-handling
 """
 
+import os
 import asyncio
 import json
 import time
@@ -32,7 +33,11 @@ def recv_statuses(statuses):
     while True:
         msg = yield from sock.recv_multipart()
         msg = [s.decode() for s in msg]
-        _, device_id, status, connected = msg
+        try:
+            _, device_id, status, connected = msg
+        except ValueError:
+            print("error on message : {}".format(msg))
+            continue
 
         if status == "connected devices":
             connected = json.loads(connected)
@@ -75,7 +80,8 @@ def init_web(loop):
     if DEBUG:
         aiohttp_debugtoolbar.setup(app)
 
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('.'))
+    script_folder = os.path.dirname(os.path.realpath(__file__))
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(script_folder))
     app.router.add_route('GET', '/', index)
     app.router.add_route('GET', '/data', data)
     app.router.add_static('/static', 'static', name='static')

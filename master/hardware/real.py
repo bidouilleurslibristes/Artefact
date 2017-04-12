@@ -58,7 +58,9 @@ class Device(AbstractDevice):
 
             _, button_id, status = msg.strip().split("-")
             color = self.state.buttons[panel_id][int(button_id)].state
-            button_exists_in_enigma = self.enigma.button_triggered(Button(panel_id, button_id, status, color))
+            button_changed = Button(panel_id, button_id, status, color)
+            button_exists_in_enigma = self.enigma.button_triggered(button_changed)
+            self.log_game("button pushed", button_changed)
             if button_exists_in_enigma and status == Button.BUTTON_DOWN:
                 self.send_button_click()
 

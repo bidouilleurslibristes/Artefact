@@ -85,7 +85,9 @@ def update_state():
             button_id = button_id[7]
             color = state.buttons[int(panel_id[6])][int(button_id)].state
 
-    hardware.enigma.button_triggered(Button(panel_id[6], button_id, status, color))
+    button_changed = Button(panel_id[6], button_id, status, color)
+    hardware.log_game("button pushed", button_changed)
+    hardware.enigma.button_triggered(button_changed)
     return "ok"
 
 

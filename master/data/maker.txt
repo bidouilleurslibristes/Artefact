@@ -1,0 +1,81 @@
+# 1 SWAG Button
+swag 3 xxxxxxxx
+
+# 2 SWAG Button
+swag 2 xxxxxxxx
+swag 6 xxxxxxxx
+buttons 0 ........T
+buttons 1 ........T
+buttons 3 ........T
+
+# 4 SWAG Button
+swag 0 xxxxxxxx
+swag 2 xxxxxxxx
+swag 4 xxxxxxxx
+swag 6 xxxxxxxx
+buttons 1 ........T
+buttons 3 ........T
+buttons 5 ........T
+buttons 7 ........T
+
+# Intro sequences
+sequence 1 .......m........
+
+# sequences SWAG Button
+swag 0 xxxxxxxx
+sequence 3 ......mrbo......
+swag 5 .x.x.x.x
+sequence 7 ....rnnntjlr....
+
+# mix sequence swag
+swag 3 xxxxxxxx 
+sequence 3 .....trbmnt.....
+
+# mix sequence swag
+swag 4 xxxxxxxx
+sequence 4 .....jbbort.....
+swag 1 xxxxxxxx
+sequence 1 .....rnrnnr.....
+
+# Intro little buttons
+little 0 ...x....
+
+# Intro little buttons
+little 6 ...xx...
+buttons 3 l........
+buttons 4 .l......l
+
+# Intro little buttons
+little 3 x.x.x.x.
+little 7 .x.x.x.x
+buttons 0 ......l.l
+buttons 1 .l.......
+buttons 2 l...l....
+buttons 3 ......l..
+buttons 4 .l....l..
+buttons 5 .........
+buttons 6 .....l...
+buttons 7 lll..l...
+
+# mix little swag
+little 0 xxxxxxx.
+buttons 0 ......l.l
+buttons 1 .l.......
+buttons 2 ..l.l..l.
+buttons 3 ......l..
+buttons 4 .l....l..
+buttons 5 .........
+buttons 6 .....l...
+buttons 7 .ll..l.ll
+swag 0 .......x
+swag 1 xxxxxxxx
+swag 4 xxxxxxxx
+swag 6 xxxxxxxx
+
+# mix sequence little
+swag 0 ........
+sequence 0 ...rlljtobnr....
+little 2 .xxxxx.x
+sequence 6 ...rnrnlrlrnrnr..
+little 6 .xxxxx.x
+
