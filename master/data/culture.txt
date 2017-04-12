@@ -1,1 +1,1 @@
-maker.txt
+/home/pi/ZooMachine-3/master/data/normal.txt
