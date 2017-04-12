@@ -1,9 +1,5 @@
 #include <EEPROM.h>
 
-#define TRUE 42
-#define FALSE (!42)
-#define BOOL char
-
 #define EEPROM_ID_ADDRESS 0
 #define TIMEOUT 5000
 
@@ -11,28 +7,42 @@
 // Functions definitions :
 void connection ();
 void readInput();
+void scanButton();
+void scanAllButtons();
 
 
 int easyButton = 2;
 int normalButton = 3;
 int hardButton = 4;
 
-char status[5] = {0, 0, 0, 0, 0};
+int easyLed = 8;
+int normalLed = 9;
+int hardLed = 10;
+
+char status[5] = {1, 1, 1, 1, 1};
 
 long last_ping = 0;
-BOOL connected = FALSE;
+bool connected = false;
 
 char ledPin = LED_BUILTIN;
 
 void setupButton(){
   pinMode(easyButton, INPUT);
   digitalWrite(easyButton, INPUT_PULLUP); // connect internal pull-up
+  
   pinMode(normalButton, INPUT);
   digitalWrite(normalButton, INPUT_PULLUP); // connect internal pull-up
+  
   pinMode(hardButton, INPUT);
   digitalWrite(hardButton, INPUT_PULLUP); // connect internal pull-up
 }
 
+void setupLed(){
+    pinMode(easyLed
+    , OUTPUT);
+    pinMode(normalLed, OUTPUT);
+    pinMode(hardLed, OUTPUT);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -42,34 +52,31 @@ void setup() {
   digitalWrite(ledPin, LOW);
 
   setupButton ();
-
-  while (42) {
-    main_loop();
-  }
+  setupLed();
 }
 
 
-void scanButton();
-
-void main_loop () {
+void loop() {
   if (!connected) {
     connection();
-  } else {
+  } 
+  else {
     if (millis() - last_ping > TIMEOUT)
-      connected = FALSE;
+      connected = false;
 
     if (Serial.available())
       readInput();
-    scanAllButton();
+
+
+    scanAllButtons();
   }
 }
 
-void loop () {}
 
 void connection () {
   Serial.flush();
 
-  connected = FALSE;
+  connected = false;
   char ARDUINO_ID = EEPROM.read(EEPROM_ID_ADDRESS);
 
   // Connection
@@ -80,7 +87,7 @@ void connection () {
       int val = str.toInt();
 
       if(val == ARDUINO_ID)
-        connected = TRUE;
+        connected = true;
     } else {
       Serial.print("BONJOUR ");
       Serial.println((int)ARDUINO_ID);
@@ -107,33 +114,57 @@ void readInput(){
     pong();
 }
 
-bool scanButton(int pin, int* button_pressed) {
-  button_pressed = digitalRead(pin) == LOW;
+bool scanButton(int pin, bool* button_pressed) {
+  *button_pressed = (digitalRead(pin) == HIGH);
   bool changed = false;
 
-  if(button_pressed && status[pin] == 0) {
+  if(*button_pressed && status[pin] == 0) {
     changed = true;
     status[pin] = 1;
   }
 
-  if(!button_pressed && status[pin] == 1) {
+  if(!*button_pressed && status[pin] == 1) {
     changed = true;
     status[pin] = 0;
   }
 
+  if(changed)
+    lighLedForButton(pin);
+  
   return changed;
 }
 
-void scanAllButton(){
+void allLedOff(){
+  digitalWrite(easyLed, LOW);
+  digitalWrite(normalLed, LOW);
+  digitalWrite(hardLed, LOW);
+}
+
+void lighLedForButton(int buttonPin){
+  allLedOff();
+  if(buttonPin == easyButton){
+    digitalWrite(easyLed, HIGH);
+  }
+  else if (buttonPin == normalButton){
+    digitalWrite(normalLed, HIGH);
+  }
+  else if (buttonPin == hardButton){
+    digitalWrite(hardLed, HIGH);
+  }
+  else{
+  }
+}
+
+void scanAllButtons(){
   String button = "-";
-  int button_pressed = 0;
+  bool button_pressed = 0;
   
   if (scanButton(easyButton, &button_pressed)) {
-    button = "0";
+    button = "easy";
   } else if (scanButton(normalButton, &button_pressed)) {
-    button = "1";
+    button = "normal";
   } else if (scanButton(hardButton, &button_pressed)) {
-    button = "2";
+    button = "hard";
   }
   
   if (button != "-") {
@@ -156,7 +187,7 @@ void scanAllButton(){
 void pong () {
   String pong = "PONG !";
 
-  connected = TRUE;
+  connected = true;
 
   if (connected) {
     Serial.println(pong);
