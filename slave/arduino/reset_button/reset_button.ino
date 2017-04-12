@@ -1,6 +1,4 @@
 #include <EEPROM.h>
-#include <Adafruit_NeoPixel.h>
-#include "Adafruit_TLC5947.h"
 
 #define TRUE 42
 #define FALSE (!42)
@@ -15,9 +13,11 @@ void connection ();
 void readInput();
 
 
-int resetButton = 2;
-char status;
+int easyButton = 2;
+int normalButton = 3;
+int hardButton = 4;
 
+char status[5] = {0, 0, 0, 0, 0};
 
 long last_ping = 0;
 BOOL connected = FALSE;
@@ -25,9 +25,12 @@ BOOL connected = FALSE;
 char ledPin = LED_BUILTIN;
 
 void setupButton(){
-  pinMode(resetButton, INPUT);
-  digitalWrite(resetButton, INPUT_PULLUP); // connect internal pull-up
-  status = 0;
+  pinMode(easyButton, INPUT);
+  digitalWrite(easyButton, INPUT_PULLUP); // connect internal pull-up
+  pinMode(normalButton, INPUT);
+  digitalWrite(normalButton, INPUT_PULLUP); // connect internal pull-up
+  pinMode(hardButton, INPUT);
+  digitalWrite(hardButton, INPUT_PULLUP); // connect internal pull-up
 }
 
 
@@ -57,12 +60,11 @@ void main_loop () {
 
     if (Serial.available())
       readInput();
-    scanButton();
+    scanAllButton();
   }
 }
 
 void loop () {}
-
 
 void connection () {
   Serial.flush();
@@ -105,24 +107,38 @@ void readInput(){
     pong();
 }
 
-
-void scanButton(){
-  int button_pressed = digitalRead(resetButton) == LOW;
+bool scanButton(int pin, int* button_pressed) {
+  button_pressed = digitalRead(pin) == LOW;
   bool changed = false;
 
-  if(button_pressed && status == 0) {
+  if(button_pressed && status[pin] == 0) {
     changed = true;
-    status = 1;
+    status[pin] = 1;
   }
 
-  if(!button_pressed && status == 1) {
+  if(!button_pressed && status[pin] == 1) {
     changed = true;
-    status = 0;
+    status[pin] = 0;
   }
 
-  if (changed) {
+  return changed;
+}
+
+void scanAllButton(){
+  String button = "-";
+  int button_pressed = 0;
+  
+  if (scanButton(easyButton, &button_pressed)) {
+    button = "0";
+  } else if (scanButton(normalButton, &button_pressed)) {
+    button = "1";
+  } else if (scanButton(hardButton, &button_pressed)) {
+    button = "2";
+  }
+  
+  if (button != "-") {
     Serial.print("button-");
-    Serial.print("0");
+    Serial.print(button);
     Serial.print("-");
     if (button_pressed) {
       Serial.print("DOWN");

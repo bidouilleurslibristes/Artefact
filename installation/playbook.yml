@@ -29,6 +29,9 @@
         - libzmq-dev
         - rsync
         - emacs
+        - mplayer
+        - vlc
+
         # - libavbin-dev
         # - libavbin0
       tags:
