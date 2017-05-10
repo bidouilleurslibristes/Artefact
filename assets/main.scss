@@ -9,6 +9,7 @@
     align-items: center;
 }
 
+@media screen and (max-width: 768px) { .vertical-align {flex-direction: column;} }
 
 // Width of the content area
 
