@@ -11,7 +11,7 @@ description: > # this means to ignore newlines until "author:"
   Site web du projet artefact, un dispositif d'interaction ludique.
 author: Matthieu Falce
 keyword: Artefact, Arduino, Maker, DIY,
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/Artefact" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  ice3
 
