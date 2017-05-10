@@ -1,0 +1,22 @@
+video:
+  name: artefact_video.webm
+  extension: webm
+
+header: Une ambiance mystérieuse, un espace confiné, des lumières s’allument, des boutons s’éclairent. L'expérience commence là.
+
+
+description:
+  - paragraph:
+    line:
+      - Sous l'impulsion des membres de l'association ABL, regroupant étudiants, personnels de l'université de Lille sciences et technologies et extérieurs, un projet de dispositif immersif a vu le jour. Lors du festival ZooMachine, l’association a collaboré avec des personnes du domaine du jeu vidéo et réalisé un prototype de cette installation.
+    image: artefact-12.jpg
+
+  - paragraph:
+    line:
+      - Artefact est un dispositif vidéo ludique immersif qui a la particularité de n'utiliser ni écran, ni clavier, ni souris. Dans une pièce noire, des panneaux lumineux et des bandeaux de LED s'éclairent.
+      - À travers ses différentes actions, le participant pourra faire évoluer l’univers lumineux et communiquer avec le dispositif.
+    image: artefact-17.jpg
+
+  - paragraph:
+    line:
+      - Tout le système repose donc sur des interfaces composés de boutons et de lumière permettant d'interagir avec le dispositif, et de plusieurs bandeaux de LED permettant de faire de l'affichage. Les différentes interfaces et bandeaux sont spatialisés dans la pièce afin de permettre des interactions diverses et multiples pour les participants.

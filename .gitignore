@@ -1,22 +1,5 @@
-## generated file
-examples/flash_eeprom/flash_eeprom.ino
-
-## pyc
-__pycache__/
-
-## virtualenvs
-venv
-
-## sublime text stuff
-*.sublime-project
-*.sublime-workspace
-
-## dockerfile
-Dockerfile
-
-## ansible stuff
-*.retry
-
-
-*.img
-*.bz2
+*.gem
+.bundle
+.jekyll-metadata
+.sass-cache
+_site

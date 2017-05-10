@@ -1,0 +1,14 @@
+principaux:
+  - name: "Culture Maker"
+    icon: "cogs"
+    description: "Entièrement réalisé en Do It Yourself (DIY), vous pouvez en fabriquer un en utilisant les outils d'un fablab près de chez vous."
+
+  - name: "Matériel"
+    icon: "shopping-cart"
+    description: "Le matériel est facilement accessible au grand public (raspberry pi, arduino, NeoPixels...). Il faudra compter dans les 350 euros pour acheter le matériel."
+
+  - name: "Code libre"
+    icon: "code"
+    description: "Le code et les plans de construction sont entièrements libres. Vous pouvez les retrouver et les modifier sur github."
+
+texte: N'hésitez pas à aller retrouver le code <a href="https://github.com/bidouilleurslibristes/Artefact">ici</a>

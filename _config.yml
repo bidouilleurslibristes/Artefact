@@ -1,0 +1,32 @@
+# Welcome to Agency Jekyll Theme!
+
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+
+title: Artefact
+email: abl-ca@univ-lille1.fr
+description: > # this means to ignore newlines until "author:"
+  Site web du projet artefact, un dispositif d'interaction ludique.
+author: Matthieu Falce
+keyword: Artefact, Arduino, Maker, DIY,
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+github_username:  ice3
+
+# Build settings
+
+markdown: kramdown
+
+#theme: agency-jekyll-theme #The "agency-jekyll-theme" is not supported by GitHub Pages.
+
+gems:
+  - jekyll-feed
+exclude:
+  - agency-jekyll-theme.gemspec
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md
+  - screenshot.png

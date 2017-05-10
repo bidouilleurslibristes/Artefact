@@ -1,0 +1,65 @@
+<!-- About Section -->
+<section id="description">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Description</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <h3 class="section-subheading text-muted text-center">{{site.data.desc.header}}</h3>
+
+            <div class="col-lg-12 text-center embed-responsive embed-responsive-16by9">
+               <video width="800" class="embed-responsive-item" controls>
+                  <source class="embed-responsive-item" src="/assets/videos/{{site.data.desc.video.name}}" type="video/{{site.data.desc.video.extension}}">
+                    Votre navigateur ne supporte pas la lecture de vidéo.
+                </video>
+            </div>
+
+            <div class="col-lg-12" style="margin:2em;">
+                {% for para in site.data.desc.description %}
+                    {% assign mod = forloop.index | modulo: 2 %}
+                    {%if mod == 0 %}
+                    <div class="vertical-align" style="margin:1em;">
+                        {% if para.image %}
+                        <div class="col-lg-8">
+                        {% else %}
+                        <div class="col-lg-12">
+                        {% endif %}
+
+                            {%for line in para.line %}
+                                <p style="margin-top: 0.5em" class="large text-muted">{{line}}</p>
+                            {% endfor %}
+                        </div>
+
+                        {% if para.image %}
+                        <div class="col-lg-4">
+                            <img src="/assets/img/description/{{ para.image }}" class="img-responsive center-block" width="275" alt="Utilisation d'artefact">
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="vertical-align">
+                        {% if para.image %}
+                        <div class="col-lg-4">
+                            <img src="/assets/img/description/{{ para.image }}" class="img-responsive center-block" width="275" alt="Utilisation d'artefact">
+                        </div>
+                        {% endif %}
+
+                        {% if para.image %}
+                        <div class="col-lg-8">
+                        {% else %}
+                        <div class="col-lg-12">
+                        {% endif %}
+                            {%for line in para.line %}
+                                <p style="margin-top: 0.5em" class="large text-muted">{{line}}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>

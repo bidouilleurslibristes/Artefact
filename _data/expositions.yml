@@ -1,0 +1,17 @@
+expositions:
+  - location: "Université Lille 1, Espace culture"
+    img-alt: "Logo Université Lille 1"
+    logo: "espace_culture.jpg"
+    web: "http://culture.univ-lille1.fr/accueil.html"
+    text: "Exposition dans le cadre du cycle du jeu"
+    date: "Du 8 au 10 mars 2017"
+
+  - location: "Maker Faire Paris"
+    img-alt: "Logo Maker Faire"
+    logo: "mfp.png"
+    web: "http://paris.makerfaire.com/"
+    text: "Démonstration de l'installation au côté de plus de 800 makers"
+    date: "Du 9 au 11 juin 2017"
+
+call_to_action_header: N'hésitez pas à nous contacter pour toute demande d'exposition ou d'adaptation du projet.
+call_to_action_text: "Nous nous ferons une joie de discuter avec vous de vos projets et voir si Artefact peut convenir à vos besoins."

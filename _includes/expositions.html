@@ -1,0 +1,34 @@
+<!-- Clients Aside -->
+<section id="expositions">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Exposition</h2>
+                <h3 class="section-subheading text-muted">Ils nous ont fait confiance</h3>
+            </div>
+        </div>
+
+
+        <div class="row">
+          {% for expo in site.data.expositions.expositions %}
+            <div class="col-md-6 col-sm-6 text-center">
+                <a href="{{ expo.web }}" target="_blank" style="margin-bottom: 0.5em">
+                    <img src="/assets/img/logos/{{ expo.logo }}" class="img-responsive img-centered" width="200px" alt="{{ expo.img-alt }}">
+                </a>
+                <div style="margin-top: 1em;">
+                   <p><em>{{expo.text}}</em></p>
+                    <p><i class="fa fa-calendar" aria-hidden="true" style="margin-right: 10px"></i> {{expo.date}}</p>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="row" style="margin-top: 1em;">
+            <div class="col-lg-12 text-center">
+                <h4 class="section-subheading" style="margin-bottom: 1em;">{{site.data.expositions.call_to_action_header}}</h4>
+                <p class="text-muted">{{site.data.expositions.call_to_action_text}}</p>
+            </div>
+        </div>
+
+    </div>
+</section>
