@@ -10,7 +10,7 @@
           {% for member in site.data.team %}
             <div class="col-sm-4">
                 <div class="team-member">
-                    <img src="/assets/img/team/{{ member.photo }}" class="img-responsive img-circle" alt="{{ member.name }}" width="250px">
+                    <img src="{{ site.baseurl }}/assets/img/team/{{ member.photo }}" class="img-responsive img-circle" alt="{{ member.name }}" width="250px">
                     <h4>{{ member.name }}</h4>
                     <p class="text-muted">{{ member.bio }}</p>
                     <p> {% if member.twitter %}<a href="http://twitter.com/{{ member.twitter }}"><i class="fa fa-twitter"></i></a> / {% endif %}

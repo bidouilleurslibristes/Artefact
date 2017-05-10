@@ -13,7 +13,7 @@
           {% for expo in site.data.expositions.expositions %}
             <div class="col-md-6 col-sm-6 text-center">
                 <a href="{{ expo.web }}" target="_blank" style="margin-bottom: 0.5em">
-                    <img src="/assets/img/logos/{{ expo.logo }}" class="img-responsive img-centered" width="200px" alt="{{ expo.img-alt }}">
+                    <img src="{{ site.baseurl }}/assets/img/logos/{{ expo.logo }}" class="img-responsive img-centered" width="200px" alt="{{ expo.img-alt }}">
                 </a>
                 <div style="margin-top: 1em;">
                    <p><em>{{expo.text}}</em></p>
