@@ -10,13 +10,13 @@
   photo: yd.jpg
   linkedin: yoann-dufresne-02ba14b7
 
-- name: "Camille Lihouck"
-  bio: "Chef de projet (electronique, construction)"
-  photo: placeholder.jpg
-
 - name: "Pierre Marijon"
   bio: "Chef artistique (développement, son)"
   twitter: Natir_chan
   mastodon: Natir
   linkedin: pierre-marijon
   photo: pm.jpg
+
+- name: "Camille Lihouck"
+  bio: "Cheffe de projet (electronique, construction)"
+  photo: placeholder.jpg
