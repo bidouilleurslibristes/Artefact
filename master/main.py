@@ -81,8 +81,8 @@ def main(real=False):
         print("====== launching simulated device =============")
         device = DebugDevice()
 
-    enigmas = Game.load_from_file(sys.argv[1])
     while True:
+        enigmas = Game.load_from_file(sys.argv[1])
         nb_logs_in_dir = len(os.listdir("./game_log"))
         game_log_file = "./game_log/{}.log".format(nb_logs_in_dir)
         with open(game_log_file, "w") as f:
@@ -113,7 +113,7 @@ def game_loop(device, enigmas, log_file):
             log_file.flush()
             # On error set colors
             device.send_state()
-            time.sleep(3)
+            time.sleep(2)
 
             # Reinit the current enigma
             dup = deepcopy(enigma)

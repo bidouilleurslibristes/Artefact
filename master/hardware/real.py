@@ -3,18 +3,44 @@
 These is used to control the physical hardware.
 """
 
+import os
+import time
+import logging
+import errno
+
 from hardware.abstract import AbstractDevice
 
 
 from state import State, ARDUINOS_CONNECTED_TO_PANELS, ARDUINO_LED_STRIPS_ID, REBOOT_ARDUINO
 from network import MasterNetwork
 
-import time
-import logging
 from hardware.button import Button
 
 
 logger = logging.getLogger('root')
+
+
+def symlink_force(target, link_name):
+    try:
+        os.symlink(target, link_name)
+    except OSError as e:
+        if e.errno == errno.EEXIST:
+            os.remove(link_name)
+            os.symlink(target, link_name)
+        else:
+            raise e
+
+
+def change_difficulty(fname):
+    """Change the game difficulty.
+
+    We change the symlink to the "data" file and restart the service.
+    """
+    file_dir = os.path.dirname(os.path.realpath(__file__))
+    data_dir = os.path.normpath(os.path.join(file_dir, "..", "data"))
+    src = os.path.join(data_dir, fname)
+    dst = os.path.join(data_dir, "culture.txt")
+    symlink_force(src, dst)
 
 
 class Device(AbstractDevice):
@@ -42,9 +68,14 @@ class Device(AbstractDevice):
                 if "DOWN" not in msg:
                     return
 
+                # msg : button-(easy/normal/hard)-UP
+
+                # change difficulty
                 self.enigma.on_error = True
                 self.reboot = True
                 self.network.arduino_messages.clear()
+                difficulty = msg.split("-")[1]
+                change_difficulty(difficulty + ".txt")
                 return
 
             try:
