@@ -38,8 +38,7 @@ void setupButton(){
 }
 
 void setupLed(){
-    pinMode(easyLed
-    , OUTPUT);
+    pinMode(easyLed, OUTPUT);
     pinMode(normalLed, OUTPUT);
     pinMode(hardLed, OUTPUT);
 }
@@ -51,7 +50,7 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
-  setupButton ();
+  setupButton();
   setupLed();
 }
 

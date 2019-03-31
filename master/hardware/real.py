@@ -18,6 +18,7 @@ from hardware.button import Button
 
 
 logger = logging.getLogger('root')
+THRESHOLD_DOUBLE_CLICK = 1  # seconds
 
 
 def symlink_force(target, link_name):
@@ -52,6 +53,7 @@ class Device(AbstractDevice):
 
         self.network = MasterNetwork()
         self.network.start()
+        self.last_clicks = {}
 
     def send_state(self):
         """Send the state to the hardware."""
@@ -88,6 +90,12 @@ class Device(AbstractDevice):
                 continue
 
             _, button_id, status = msg.strip().split("-")
+            current_ts = time.time()
+            last_click_ts = self.last_clicks.get((panel_id, button_id, status), 0)
+            if (current_ts - last_click_ts) < THRESHOLD_DOUBLE_CLICK:
+                continue
+            self.last_clicks[(panel_id, button_id, status)] = current_ts
+
             color = self.state.buttons[panel_id][int(button_id)].state
             button_changed = Button(panel_id, button_id, status, color)
             button_exists_in_enigma = self.enigma.button_triggered(button_changed)
