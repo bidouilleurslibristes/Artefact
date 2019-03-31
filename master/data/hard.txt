@@ -1,45 +1,45 @@
 # Difficulty hard
 # Intro SWAG Button
-# swag 3 xxxxxxxx
-# 
-# # Intro SWAG Button
-# swag 7 xxxxxxxx
-# buttons 0 ........T
-# buttons 1 ........T
-# buttons 2 ........T
-# buttons 3 ........T
-# buttons 4 ........T
-# buttons 5 ........T
-# buttons 6 ........T
-# 
-# # Intro SWAG Button
-# swag 2 xxxxxxxx
-# swag 6 xxxxxxxx
-# buttons 0 ........T
-# buttons 1 ........T
-# buttons 3 ........T
-# buttons 4 ........T
-# buttons 5 ........T
-# buttons 7 ........T
-# 
-# # Intro little buttons
-# little 0 ...x....
-# 
-# # Intro little buttons
-# little 6 ...xx...
-# buttons 3 l........
-# buttons 4 .l......l
-# 
-# # Intro little buttons
-# little 3 xxxxxxxx
-# buttons 0 ......l.l
-# buttons 1 .l.......
-# buttons 2 l...l..l.
-# buttons 3 ......l..
-# buttons 4 .l....l..
-# buttons 5 .........
-# buttons 6 .....l...
-# buttons 7 lll..l.l.
+swag 3 xxxxxxxx
+
+# Intro SWAG Button
+swag 7 xxxxxxxx
+buttons 0 ........T
+buttons 1 ........T
+buttons 2 ........T
+buttons 3 ........T
+buttons 4 ........T
+buttons 5 ........T
+buttons 6 ........T
+
+# Intro SWAG Button
+swag 2 xxxxxxxx
+swag 6 xxxxxxxx
+buttons 0 ........T
+buttons 1 ........T
+buttons 3 ........T
+buttons 4 ........T
+buttons 5 ........T
+buttons 7 ........T
+
+# Intro little buttons
+little 0 ...x....
+
+# Intro little buttons
+little 6 ...xx...
+buttons 3 l........
+buttons 4 .l......l
+
+# Intro little buttons
+little 3 xxxxxxxx
+buttons 0 ......l.l
+buttons 1 .l.......
+buttons 2 l...l..l.
+buttons 3 ......l..
+buttons 4 .l....l..
+buttons 5 .........
+buttons 6 .....l...
+buttons 7 lll..l.l.
 
 # Intro little buttons
 little 0 x........

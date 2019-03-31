@@ -178,7 +178,6 @@ class SerialDevice(Thread):
         """
         while self.serial.inWaiting():
             message = self.serial.readline()
-            print(message)
             message = message.decode("ascii").strip()
             logger.info("read from device {}: {}".format(self.device_id, message))
             self.msg_in.append((self.device_id, message))
